@@ -1,5 +1,4 @@
-import React, { useRef } from 'react'
-import { Canvas, useFrame } from 'react-three-fiber'
+import React from 'react'
 import GameScene from './scenes/GameScene/GameScene'
 
 

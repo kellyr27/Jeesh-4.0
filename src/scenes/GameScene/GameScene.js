@@ -2,6 +2,7 @@ import React from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import { TrackballControls } from "@react-three/drei";
+import Army from './components/Army';
 
 const GameScene = () => {
     return (
@@ -17,6 +18,7 @@ const GameScene = () => {
                 speed={1}
             />
             <TrackballControls makeDefault rotateSpeed="3" />
+            <Army />
         </Canvas>
     )
 }
