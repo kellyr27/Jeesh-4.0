@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 import {useControls, folder} from 'leva';
 import DirectionSelectors from './components/DirectionSelectors';
 import MoveSelectors from './components/MoveSelectors';
+import PanelTexts from './components/PanelText';
 
 
-const SelectionPanel = ({allowedPositions, directionMap}) => {
+const SelectionPanel = ({allowedPositions, directionMap, setDirectionMap, isPanelLocked}) => {
 
 
     const { panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize } = useControls('Selection Panel', {
@@ -40,12 +41,15 @@ const SelectionPanel = ({allowedPositions, directionMap}) => {
     // TODO: Implement useWatch 
 
     return (
-        <>
+        <>  
             <MoveSelectors
                 panelSize={panelSize}
                 directionSelectorSize={directionSelectorSize}
                 moveSelectorSize={moveSelectorSize}
                 selectorOffsetSize={selectorOffsetSize}
+                directionMap={directionMap}
+                allowedPositions={allowedPositions}
+                isPanelLocked={isPanelLocked}
             />
             <DirectionSelectors 
                 panelSize={panelSize} 
@@ -53,6 +57,17 @@ const SelectionPanel = ({allowedPositions, directionMap}) => {
                 moveSelectorSize={moveSelectorSize} 
                 selectorOffsetSize={selectorOffsetSize}
                 directionMap={directionMap}
+                setDirectionMap={setDirectionMap}
+                isPanelLocked={isPanelLocked}
+            />
+            <PanelTexts
+                panelSize={panelSize}
+                directionSelectorSize={directionSelectorSize}
+                moveSelectorSize={moveSelectorSize}
+                selectorOffsetSize={selectorOffsetSize}
+                directionMap={directionMap}
+                setDirectionMap={setDirectionMap}
+                isPanelLocked={isPanelLocked}
             />
         </>
     );

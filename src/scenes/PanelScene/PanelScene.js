@@ -11,12 +11,13 @@ import SelectionPanel from './SelectionPanel/SelectionPanel';
  * 
  */
 
+
 //TODO: Make 250 a constant
 
 const PanelScene = () => {
 
-    const directionMap = useRef({
-        facing: '-z',
+    const [directionMap, setDirectionMap] = useState({
+        face: '-z',
         left: '-x',
         right: '+x',
         up: '+y',
@@ -30,9 +31,20 @@ const PanelScene = () => {
         [0,0,-1],
     ]
 
+    const [isPanelLocked, setIsPanelLocked] = useState(false);
+
+    // TODO: Implement fully
+    const [currentHoveredPose, setCurrentHoveredPose] = useState(null);
+
     return (
         <Stage width={250} height={250}>
-            <SelectionPanel allowedPositions={allowedPositions} directionMap={directionMap} />
+            <SelectionPanel 
+                allowedPositions={allowedPositions} 
+                directionMap={directionMap}
+                setDirectionMap={setDirectionMap}
+                setCurrentHoveredPose={setCurrentHoveredPose} 
+                isPanelLocked={isPanelLocked} 
+            />
         </Stage>
     );
 };
