@@ -19,4 +19,14 @@ const addArrays = (arr1, arr2) => {
     })
 }
 
-export { subtractArrays, addArrays }
+const equalArrays = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) {
+        return console.error('Arrays must be of the same length')
+    }
+
+    return arr1.every((el, index) => {
+        return el === arr2[index]
+    })
+}
+
+export { subtractArrays, addArrays, equalArrays }
