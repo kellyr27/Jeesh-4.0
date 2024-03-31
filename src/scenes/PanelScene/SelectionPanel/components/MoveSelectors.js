@@ -1,26 +1,33 @@
 import React, {useEffect} from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
-
+import {useControls, folder} from 'leva';
 
 const MoveSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize}) => {
 
-
+    const { moveSelectorDefaultColor, moveSelectorHoveredColor, moveSelectorSelectedColor, moveSelectorBlockedColor } = useControls('Selection Panel', {
+        'Colors': folder({
+            moveSelectorDefaultColor: '#00D2FF',
+            moveSelectorHoveredColor: '#FF00D2',
+            moveSelectorSelectedColor: '#D200FF',
+            moveSelectorBlockedColor: '#FFD200'
+        })
+    })
 
     const handleMouseEnter = (e) => {
         // Change the color of the square when the mouse enters
-        e.target.fill('green');
+        e.target.fill(moveSelectorHoveredColor);
         e.target.draw();
     };
 
     const handleMouseLeave = (e) => {
         // Change the color back when the mouse leaves
-        e.target.fill('blue');
+        e.target.fill(moveSelectorDefaultColor);
         e.target.draw();
     };
 
     const handleClick = (e) => {
         // Do something when the square is clicked
-        e.target.fill('purple');
+        e.target.fill(moveSelectorSelectedColor);
         e.target.draw();
         console.log('Square clicked!');
     };
@@ -36,7 +43,7 @@ const MoveSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, sele
                     y={j * moveSelectorSize + directionSelectorSize + (j + 1) *selectorOffsetSize}
                     width={moveSelectorSize}
                     height={moveSelectorSize}
-                    fill="blue"
+                    fill={moveSelectorDefaultColor}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     onClick={handleClick}

@@ -1,18 +1,43 @@
 import React, {useEffect} from 'react';
-import { Stage, Layer, Rect, Line } from 'react-konva';
+import {useControls, folder} from 'leva';
 import DirectionSelectors from './components/DirectionSelectors';
 import MoveSelectors from './components/MoveSelectors';
 
 
-const SelectionPanel = () => {
+const SelectionPanel = ({allowedPositions, directionMap}) => {
 
 
+    const { panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize } = useControls('Selection Panel', {
+        'Size Adjustments': folder({
+            panelSize: {
+                value: 250,
+                min: 100,
+                max: 500,
+                step: 1
+            },
+            directionSelectorSize: {
+                value: 40,
+                min: 10,
+                max: 100,
+                step: 1
+            },
+            moveSelectorSize: {
+                value: 50,
+                min: 10,
+                max: 100,
+                step: 1
+            },
+            selectorOffsetSize: {
+                value: 5,
+                min: 1,
+                max: 20,
+                step: 1
+            }
+        })
+    })
 
 
-    const [panelSize, setPanelSize] = React.useState(250)
-    const [directionSelectorSize, setDirectionSelectorSize] = React.useState(40)
-    const [moveSelectorSize, setMoveSelectorSize] = React.useState(50)
-    const [selectorOffsetSize, setSelectorOffsetSize] = React.useState(5)
+    // TODO: Implement useWatch 
 
     return (
         <>
@@ -26,7 +51,8 @@ const SelectionPanel = () => {
                 panelSize={panelSize} 
                 directionSelectorSize={directionSelectorSize} 
                 moveSelectorSize={moveSelectorSize} 
-                selectorOffsetSize={selectorOffsetSize} 
+                selectorOffsetSize={selectorOffsetSize}
+                directionMap={directionMap}
             />
         </>
     );

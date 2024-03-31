@@ -1,8 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
+import {useControls, folder} from 'leva';
 
 
-const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize}) => {
+const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize, directionMap}) => {
+
+    const { directionSelectiorDefaultColor, directionSelectiorHoveredColor, directionSelectiorSelectedColor, directionSelectiorBlockedColor } = useControls('Selection Panel', {
+        'Colors': folder({
+            directionSelectiorDefaultColor: '#00D2FF',
+            directionSelectiorHoveredColor: '#FF00D2',
+            directionSelectiorSelectedColor: '#D200FF',
+            directionSelectiorBlockedColor: '#FFD200'
+        })
+    })
+
 
     const [halfSelectorOffsetSize, setHalfSelectorOffsetSize] = useState(selectorOffsetSize / 2)
 
@@ -13,65 +24,60 @@ const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize,
         setHalfSelectorOffsetSize(selectorOffsetSize / 2)
     }, [selectorOffsetSize])
 
-    const directionSelectorPoints1 = [
-        [0 + halfSelectorOffsetSize, 0 - halfSelectorOffsetSize],
-        [directionSelectorSize + halfSelectorOffsetSize, directionSelectorSize - halfSelectorOffsetSize],
-        [panelSize - directionSelectorSize - halfSelectorOffsetSize, directionSelectorSize - halfSelectorOffsetSize],
-        [panelSize - halfSelectorOffsetSize, 0 - halfSelectorOffsetSize]
-    ]
-    const directionSelectorPoints2 = [
-        [0 + halfSelectorOffsetSize, panelSize + halfSelectorOffsetSize],
-        [directionSelectorSize + halfSelectorOffsetSize, panelSize - directionSelectorSize + halfSelectorOffsetSize],
-        [panelSize - directionSelectorSize - halfSelectorOffsetSize, panelSize - directionSelectorSize + halfSelectorOffsetSize],
-        [panelSize - halfSelectorOffsetSize, panelSize + halfSelectorOffsetSize]
-    ]
-    const directionSelectorPoints3 = [
-        [0 - halfSelectorOffsetSize, 0 + halfSelectorOffsetSize],
-        [directionSelectorSize - halfSelectorOffsetSize, directionSelectorSize + halfSelectorOffsetSize],
-        [directionSelectorSize - halfSelectorOffsetSize, panelSize - directionSelectorSize - halfSelectorOffsetSize],
-        [0 - halfSelectorOffsetSize, panelSize - halfSelectorOffsetSize]
-    ]
-    const directionSelectorPoints4 = [
-        [panelSize + halfSelectorOffsetSize, 0 + halfSelectorOffsetSize],
-        [panelSize - directionSelectorSize + halfSelectorOffsetSize, directionSelectorSize + halfSelectorOffsetSize],
-        [panelSize - directionSelectorSize + halfSelectorOffsetSize, panelSize - directionSelectorSize - halfSelectorOffsetSize],
-        [panelSize + halfSelectorOffsetSize, panelSize - halfSelectorOffsetSize]
-    ]
-
     const directionSelectors = {
         'up': {
-            points: directionSelectorPoints1,
+            points: [
+                [0 + halfSelectorOffsetSize, 0 - halfSelectorOffsetSize],
+                [directionSelectorSize + halfSelectorOffsetSize, directionSelectorSize - halfSelectorOffsetSize],
+                [panelSize - directionSelectorSize - halfSelectorOffsetSize, directionSelectorSize - halfSelectorOffsetSize],
+                [panelSize - halfSelectorOffsetSize, 0 - halfSelectorOffsetSize]
+            ],
         },
         'down': {
-            points: directionSelectorPoints2,
+            points: [
+                [0 + halfSelectorOffsetSize, panelSize + halfSelectorOffsetSize],
+                [directionSelectorSize + halfSelectorOffsetSize, panelSize - directionSelectorSize + halfSelectorOffsetSize],
+                [panelSize - directionSelectorSize - halfSelectorOffsetSize, panelSize - directionSelectorSize + halfSelectorOffsetSize],
+                [panelSize - halfSelectorOffsetSize, panelSize + halfSelectorOffsetSize]
+            ],
         },
         'left': {
-            points: directionSelectorPoints3,
+            points: [
+                [0 - halfSelectorOffsetSize, 0 + halfSelectorOffsetSize],
+                [directionSelectorSize - halfSelectorOffsetSize, directionSelectorSize + halfSelectorOffsetSize],
+                [directionSelectorSize - halfSelectorOffsetSize, panelSize - directionSelectorSize - halfSelectorOffsetSize],
+                [0 - halfSelectorOffsetSize, panelSize - halfSelectorOffsetSize]
+            ],
         },
         'right': {
-            points: directionSelectorPoints4,
+            points: [
+                [panelSize + halfSelectorOffsetSize, 0 + halfSelectorOffsetSize],
+                [panelSize - directionSelectorSize + halfSelectorOffsetSize, directionSelectorSize + halfSelectorOffsetSize],
+                [panelSize - directionSelectorSize + halfSelectorOffsetSize, panelSize - directionSelectorSize - halfSelectorOffsetSize],
+                [panelSize + halfSelectorOffsetSize, panelSize - halfSelectorOffsetSize]
+            ],
         }
     }
 
     return (
         <Layer>
             <Line
-                points={directionSelectorPoints1.flat()}
+                points={directionSelectors['up'].points.flat()}
                 fill="#00D2FF"
                 closed
             />
             <Line
-                points={directionSelectorPoints2.flat()}
+                points={directionSelectors['down'].points.flat()}
                 fill="#00D2FF"
                 closed
             />
             <Line
-                points={directionSelectorPoints3.flat()}
+                points={directionSelectors['left'].points.flat()}
                 fill="#00D2FF"
                 closed
             />
             <Line
-                points={directionSelectorPoints4.flat()}
+                points={directionSelectors['right'].points.flat()}
                 fill="#00D2FF"
                 closed
             />

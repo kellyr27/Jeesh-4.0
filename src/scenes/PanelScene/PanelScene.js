@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 import SelectionPanel from './SelectionPanel/SelectionPanel';
 
@@ -15,10 +15,24 @@ import SelectionPanel from './SelectionPanel/SelectionPanel';
 
 const PanelScene = () => {
 
+    const directionMap = useRef({
+        facing: '-z',
+        left: '-x',
+        right: '+x',
+        up: '+y',
+        down: '-y'
+    });
+
+    const allowedPositions = [
+        [1,1,1],
+        [1,0,-1],
+        [1,1,0],
+        [0,0,-1],
+    ]
 
     return (
         <Stage width={250} height={250}>
-            <SelectionPanel />
+            <SelectionPanel allowedPositions={allowedPositions} directionMap={directionMap} />
         </Stage>
     );
 };
