@@ -1,0 +1,17 @@
+.app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.game-scene {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.panel-scene {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
