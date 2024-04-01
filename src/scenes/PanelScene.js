@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
-import SelectionPanel from './SelectionPanel/SelectionPanel';
+import SelectionPanel from '../components/PanelScene/SelectionPanel/SelectionPanel';
 import {useControls, useWatch , folder} from 'leva';
 
 /**

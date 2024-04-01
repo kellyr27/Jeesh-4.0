@@ -1,16 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 import {useControls, folder} from 'leva';
-
-const getOpposingDirection = (direction) => {
-    const polarity = direction[0]
-
-    if (polarity === '+') {
-        return '-' + direction[1]
-    } else {
-        return '+' + direction[1]
-    }
-}
+import { getOpposingDirection } from '../../../../utils/directionHelpers';
 
 const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize, directionMap, setDirectionMap, isPanelLocked}) => {
 
@@ -69,21 +60,20 @@ const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize,
         }
     }
 
-
+    // Change the color of the square when the mouse enters
     const handleMouseEnter = (e) => {
-        // Change the color of the square when the mouse enters
         e.target.fill(directionSelectiorHoveredColor);
         e.target.draw();
     };
 
+    // Change the color back when the mouse leaves
     const handleMouseLeave = (e) => {
-        // Change the color back when the mouse leaves
         e.target.fill(directionSelectiorDefaultColor);
         e.target.draw();
     };
 
+    // Change the color of the square when it is clicked
     const handleClick = ( e) => {
-        // Do something when the square is clicked
         e.target.fill(directionSelectiorSelectedColor);
         e.target.draw();
         const directionClicked = e.target.name()
@@ -133,10 +123,11 @@ const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize,
                     name={direction}
                     key={direction}
                     points={directionSelectors[direction].points.flat()}
-                    fill={directionSelectiorDefaultColor}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
+                    fill={!isPanelLocked ? directionSelectiorDefaultColor: directionSelectiorBlockedColor}
+                    opacity={!isPanelLocked ? 0.8 : 0.4}
+                    onMouseEnter={!isPanelLocked ? handleMouseEnter: null}
+                    onMouseLeave={!isPanelLocked ? handleMouseLeave: null }
+                    onClick={!isPanelLocked ? handleClick: null}
                     closed
                 />
             ))}

@@ -1,72 +1,47 @@
 import React, {useEffect} from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 import {useControls, folder} from 'leva';
-
-const addCoords = (...coords) => {
-    return coords.reduce((acc, coord) => {
-        return [acc[0] + coord[0], acc[1] + coord[1], acc[2] + coord[2]]
-    }, [0,0,0])
-}
-
-const checkIfPositionInArray = (position, array) => {
-    return array.some((element) => {
-        return element[0] === position[0] && element[1] === position[1] && element[2] === position[2]
-    })
-}
-
-const DIRECTIONS_OFFSETS = {
-    '-x': [-1,0,0],
-    '+x': [1,0,0],
-    '-y': [0,-1,0],
-    '+y': [0,1,0],
-    '-z': [0,0,-1],
-    '+z': [0,0,1]
-}
+import { addArrays } from '../../../../utils/arrayHelpers';
+import MoveSelector from './MoveSelector';
+import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
+import { checkIfPositionInArray } from '../../../../utils/poseHelpers';
 
 const getRelativePosition = (xOffset, yOffset, directionMap) => {
     if (xOffset === -1 && yOffset === -1) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.left], DIRECTIONS_OFFSETS[directionMap.up], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.left), getRelativeDirectionArray(directionMap.up), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === 0 && yOffset === -1) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.up], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.up), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === 1 && yOffset === -1) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.right], DIRECTIONS_OFFSETS[directionMap.up], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.right), getRelativeDirectionArray(directionMap.up), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === -1 && yOffset === 0) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.left], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.left), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === 0 && yOffset === 0) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === 1 && yOffset === 0) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.right], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.right), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === -1 && yOffset === 1) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.left], DIRECTIONS_OFFSETS[directionMap.down], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.left), getRelativeDirectionArray(directionMap.down), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === 0 && yOffset === 1) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.down], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.down), getRelativeDirectionArray(directionMap.face))
     } else if (xOffset === 1 && yOffset === 1) {
-        return addCoords(DIRECTIONS_OFFSETS[directionMap.right], DIRECTIONS_OFFSETS[directionMap.down], DIRECTIONS_OFFSETS[directionMap.face])
+        return addArrays(getRelativeDirectionArray(directionMap.right), getRelativeDirectionArray(directionMap.down), getRelativeDirectionArray(directionMap.face))
     }
 }
 
-
-const MoveSelector = ({ x, y, width, height, fill, onMouseEnter, onMouseLeave, onClick, isBlocked, name}) => {
-
-    
-    return (
-        <Rect
-            name={name}
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            fill={fill}
-            onMouseEnter={isBlocked ? null : onMouseEnter}
-            onMouseLeave={isBlocked ? null : onMouseLeave}
-            onClick={isBlocked ? null : onClick}
-        />
-    )
-}
-
-const MoveSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize, allowedPositions, directionMap, isPanelLocked}) => {
-
-    console.log(allowedPositions)
+const MoveSelectors = ({
+    allowedPositions, 
+    directionMap, 
+    setDirectionMap, 
+    isPanelLocked,
+    currentHoveredPose,
+    setCurrentHoveredPose,
+    currentSelectedPose,
+    setCurrentSelectedPose,
+    panelSize, 
+    directionSelectorSize, 
+    moveSelectorSize, 
+    selectorOffsetSize
+}) => {
 
     const { moveSelectorDefaultColor, moveSelectorHoveredColor, moveSelectorSelectedColor, moveSelectorBlockedColor } = useControls('Selection Panel', {
         'Colors': folder({
@@ -78,23 +53,32 @@ const MoveSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, sele
     })
 
     const handleMouseEnter = (e) => {
-        // Change the color of the square when the mouse enters
         e.target.fill(moveSelectorHoveredColor);
         e.target.draw();
+
+        const hoveredPosition = e.target.name().split(',').map(Number)
+        setCurrentHoveredPose({
+            position: hoveredPosition,
+            direction: directionMap.face
+        })
     };
 
     const handleMouseLeave = (e) => {
-        // Change the color back when the mouse leaves
         e.target.fill(moveSelectorDefaultColor);
         e.target.draw();
+
+        setCurrentHoveredPose(null)
     };
 
     const handleClick = (e) => {
-        // Do something when the square is clicked
         e.target.fill(moveSelectorSelectedColor);
         e.target.draw();
 
-        console.log(e.target.name())
+        const selectedPosition = e.target.name().split(',').map(Number)
+        setCurrentSelectedPose({
+            position: selectedPosition,
+            direction: directionMap.face
+        })
     };
 
     return (

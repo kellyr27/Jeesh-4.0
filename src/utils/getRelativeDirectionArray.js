@@ -1,3 +1,6 @@
+
+// TODO: Make redundant 
+
 const directionMap = {
     '+x': [1, 0, 0],
     '-x': [-1, 0, 0],

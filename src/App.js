@@ -1,6 +1,6 @@
 import React from 'react'
 import GameScene from './scenes/GameScene/GameScene'
-import PanelScene from './scenes/PanelScene/PanelScene'
+import PanelScene from './scenes/PanelScene'
 import './App.css';
 
 function App() {

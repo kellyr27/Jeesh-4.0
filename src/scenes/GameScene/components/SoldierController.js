@@ -129,7 +129,6 @@ const SoldierController = () => {
             //     animationPhase.current = 'Phase 3';
             //     return
             // }
-            console.log('In Phase 2')
             
 
             const { direction } = testPoses[testPositionIndex - 1]
@@ -148,7 +147,6 @@ const SoldierController = () => {
 
                 setSoldier1Rotation(rotation)
             } else {
-                console.log(currentRotation, startOffsetRotation)
                 animationPhase.current = 'Phase 3'
             }
 
