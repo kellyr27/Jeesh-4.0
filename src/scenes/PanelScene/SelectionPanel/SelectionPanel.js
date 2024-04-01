@@ -5,69 +5,64 @@ import MoveSelectors from './components/MoveSelectors';
 import PanelTexts from './components/PanelText';
 
 
-const SelectionPanel = ({allowedPositions, directionMap, setDirectionMap, isPanelLocked}) => {
-
-
-    const { panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize } = useControls('Selection Panel', {
-        'Size Adjustments': folder({
-            panelSize: {
-                value: 250,
-                min: 100,
-                max: 500,
-                step: 1
-            },
-            directionSelectorSize: {
-                value: 40,
-                min: 10,
-                max: 100,
-                step: 1
-            },
-            moveSelectorSize: {
-                value: 50,
-                min: 10,
-                max: 100,
-                step: 1
-            },
-            selectorOffsetSize: {
-                value: 5,
-                min: 1,
-                max: 20,
-                step: 1
-            }
-        })
-    })
-
-
-    // TODO: Implement useWatch 
+const SelectionPanel = ({
+    allowedPositions, 
+    directionMap, 
+    setDirectionMap, 
+    isPanelLocked,
+    currentHoveredPose,
+    setCurrentHoveredPose,
+    currentSelectedPose,
+    setCurrentSelectedPose,
+    panelSize, 
+    directionSelectorSize, 
+    moveSelectorSize, 
+    selectorOffsetSize
+}) => {
 
     return (
         <>  
             <MoveSelectors
+                allowedPositions={allowedPositions} 
+                directionMap={directionMap}
+                setDirectionMap={setDirectionMap}
+                isPanelLocked={isPanelLocked} 
+                currentHoveredPose={currentHoveredPose}
+                setCurrentHoveredPose={setCurrentHoveredPose} 
+                currentSelectedPose={currentSelectedPose}
+                setCurrentSelectedPose={setCurrentSelectedPose}
                 panelSize={panelSize}
                 directionSelectorSize={directionSelectorSize}
                 moveSelectorSize={moveSelectorSize}
                 selectorOffsetSize={selectorOffsetSize}
-                directionMap={directionMap}
-                allowedPositions={allowedPositions}
-                isPanelLocked={isPanelLocked}
             />
             <DirectionSelectors 
-                panelSize={panelSize} 
-                directionSelectorSize={directionSelectorSize} 
-                moveSelectorSize={moveSelectorSize} 
-                selectorOffsetSize={selectorOffsetSize}
+                allowedPositions={allowedPositions} 
                 directionMap={directionMap}
                 setDirectionMap={setDirectionMap}
-                isPanelLocked={isPanelLocked}
-            />
-            <PanelTexts
+                isPanelLocked={isPanelLocked} 
+                currentHoveredPose={currentHoveredPose}
+                setCurrentHoveredPose={setCurrentHoveredPose} 
+                currentSelectedPose={currentSelectedPose}
+                setCurrentSelectedPose={setCurrentSelectedPose}
                 panelSize={panelSize}
                 directionSelectorSize={directionSelectorSize}
                 moveSelectorSize={moveSelectorSize}
                 selectorOffsetSize={selectorOffsetSize}
+            />
+            <PanelTexts
+                allowedPositions={allowedPositions} 
                 directionMap={directionMap}
                 setDirectionMap={setDirectionMap}
-                isPanelLocked={isPanelLocked}
+                isPanelLocked={isPanelLocked} 
+                currentHoveredPose={currentHoveredPose}
+                setCurrentHoveredPose={setCurrentHoveredPose} 
+                currentSelectedPose={currentSelectedPose}
+                setCurrentSelectedPose={setCurrentSelectedPose}
+                panelSize={panelSize}
+                directionSelectorSize={directionSelectorSize}
+                moveSelectorSize={moveSelectorSize}
+                selectorOffsetSize={selectorOffsetSize}
             />
         </>
     );

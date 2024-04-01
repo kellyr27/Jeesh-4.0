@@ -12,7 +12,7 @@ const getOpposingDirection = (direction) => {
     }
 }
 
-const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize, directionMap, setDirectionMap}) => {
+const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize, directionMap, setDirectionMap, isPanelLocked}) => {
 
     const { directionSelectiorDefaultColor, directionSelectiorHoveredColor, directionSelectiorSelectedColor, directionSelectiorBlockedColor } = useControls('Selection Panel', {
         'Colors': folder({
