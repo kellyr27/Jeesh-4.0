@@ -16,6 +16,7 @@ const MoveSelector = ({ x, y, width, height, fill, onMouseEnter, onMouseLeave, o
             onMouseEnter={isBlocked ? null : onMouseEnter}
             onMouseLeave={isBlocked ? null : onMouseLeave}
             onClick={isBlocked ? null : onClick}
+            cornerRadius={3}
         />
     )
 }

@@ -116,6 +116,7 @@ const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize,
         }
     }
 
+    // TODO: Round the corners
     return (
         <Layer>
             {['up', 'down', 'left', 'right'].map(direction => (

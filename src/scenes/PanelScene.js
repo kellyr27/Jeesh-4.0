@@ -11,7 +11,17 @@ import {useControls, useWatch , folder} from 'leva';
  * Direction Selector: The selector that allows the user to choose a direction.
  */
 
-const PanelScene = ({panelSize}) => {
+const PanelScene = ({
+    panelSize, 
+    allowedPositions, 
+    setAllowedPositions, 
+    isPanelLocked, 
+    setIsPanelLocked,
+    currentHoveredPose, 
+    setCurrentHoveredPose,
+    currentSelectedPose, 
+    setCurrentSelectedPose
+}) => {
 
     const [directionMap, setDirectionMap] = useState({
         face: '-z',
@@ -20,15 +30,6 @@ const PanelScene = ({panelSize}) => {
         up: '+y',
         down: '-y'
     });
-    const [allowedPositions, setAllowedPositions] = useState([
-        [1,1,1],
-        [1,0,-1],
-        [1,1,0],
-        [0,0,-1],
-    ])
-    const [isPanelLocked, setIsPanelLocked] = useState(false);
-    const [currentHoveredPose, setCurrentHoveredPose] = useState(null);
-    const [currentSelectedPose, setCurrentSelectedPose] = useState(null);
     
     const [directionSelectorSize, setDirectionSelectorSize] = useState(40);
     const [moveSelectorSize, setMoveSelectorSize] = useState(50);

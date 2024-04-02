@@ -2,6 +2,7 @@ import React from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars, TrackballControls } from "@react-three/drei";
 import Army from '../components/GameScene/Army/Army';
+import Arena from '../components/GameScene/Arena/Arena';
 import { useControls, folder } from 'leva';
 
 //TODO: Merge into utils
@@ -9,10 +10,7 @@ const equalMeshes = (mesh1, mesh2) => {
     return mesh1.uuid === mesh2.uuid
 }
 
-const GameScene = () => {
-
-    const [hoveredSoldier, setHoveredSoldier] = React.useState(null)
-    const [selectedSoldier, setSelectedSoldier] = React.useState(null)
+const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelectedSoldier, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose }) => {
 
     const { soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, soldierBlockedColor } = useControls('Soldiers', {
         'Colors': folder({
@@ -66,6 +64,7 @@ const GameScene = () => {
                 speed={1}
             />
             <TrackballControls makeDefault rotateSpeed="3" />
+            <Arena />
             <Army 
                 armyNum={1}
                 hoveredSoldier={hoveredSoldier}
@@ -76,6 +75,10 @@ const GameScene = () => {
                 soldierHoveredColor={soldierHoveredColor}
                 soldierSelectedColor={soldierSelectedColor}
                 soldierBlockedColor={soldierBlockedColor}
+                movingMode={movingMode}
+                setMovingMode={setMovingMode}
+                currentSelectedPose={currentSelectedPose}
+                setCurrentSelectedPose={setCurrentSelectedPose}
             />
             <axesHelper args={[5]} />
         </Canvas>
