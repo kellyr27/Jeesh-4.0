@@ -1,21 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars, TrackballControls } from "@react-three/drei";
 import Army from '../components/GameScene/Army/Army';
 import Arena from '../components/GameScene/Arena/Arena';
 import { useControls, folder } from 'leva';
-
-//TODO: Merge into utils
-const equalMeshes = (mesh1, mesh2) => {
-    return mesh1.uuid === mesh2.uuid
-}
+import {INITIAL_SOLDIERS} from '../globals';
 
 const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelectedSoldier, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose }) => {
 
     const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
     const [soldier1Direction, setSoldier1Direction] = React.useState('-z')
 
-    const { soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, soldierBlockedColor } = useControls('Soldiers', {
+    const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS);
+
+    const soldierColors = useControls('Soldiers', {
         'Colors': folder({
             soldierDefaultColor: '#00D2FF',
             soldierHoveredColor: '#FF00D2',
@@ -80,16 +78,14 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 setHoveredSoldier={setHoveredSoldier}
                 selectedSoldier={selectedSoldier}
                 setSelectedSoldier={setSelectedSoldier}
-                soldierDefaultColor={soldierDefaultColor}
-                soldierHoveredColor={soldierHoveredColor}
-                soldierSelectedColor={soldierSelectedColor}
-                soldierBlockedColor={soldierBlockedColor}
                 movingMode={movingMode}
                 setMovingMode={setMovingMode}
                 currentSelectedPose={currentSelectedPose}
                 setCurrentSelectedPose={setCurrentSelectedPose}
                 soldier1Position={soldier1Position}
                 setSoldier1Position={setSoldier1Position}
+                soldiers={soldiers}
+                soldierColors={soldierColors}
             />
             <axesHelper args={[5]} />
         </Canvas>

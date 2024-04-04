@@ -33,4 +33,23 @@ const equalDirections = (direction1, direction2) => {
     return direction1 === direction2
 }
 
-export { getOpposingDirection, getRelativeDirectionArray, equalDirections }
+const getRotationFromDirection = (direction) => {
+    const directionMap = {
+        '+x': [0, 0, Math.PI / 2],
+        '-x': [0, 0, - Math.PI / 2],
+        '+y': [0, 0, Math.PI],
+        '-y': [0, 0, 0],
+        '+z': [- Math.PI/2, 0, 0],
+        '-z': [Math.PI/2, 0, 0],
+    }
+
+    if (directionMap.hasOwnProperty(direction)) {
+        return directionMap[direction]
+    } else {
+        console.error('Invalid direction inputted into getRotationFromDirection')
+        return [0, 0, 0]
+    }
+
+}
+
+export { getOpposingDirection, getRelativeDirectionArray, equalDirections, getRotationFromDirection }

@@ -1,5 +1,7 @@
 import { ARENA_LENGTH } from "../globals"
-import {equalDirections} from "./directionHelpers"
+import {equalDirections, getRelativeDirectionArray} from "./directionHelpers"
+import {LineCurve3, QuadraticBezierCurve3, Vector3} from "three"
+import { subtractArrays, equalArrays } from './arrayHelpers';
 
 /**
  * Takes a coordinate and positions it to the centre of the Cube
@@ -57,8 +59,6 @@ const getAttackedPositions = (position, direction) => {
         }
     }
 
-    console.log(attackedPositions)
-
     // Offset Attacked Coords to match direction
     if (equalDirections(direction, '+x')) {
         attackedPositions = attackedPositions.map((position) => {
@@ -90,11 +90,42 @@ const getAttackedPositions = (position, direction) => {
 }
 
 
+
+const getMovePath = (pose1, pose2) => {
+
+    const { position: position1} = pose1
+    const { position: position2, direction: direction2 } = pose2
+
+    // Find the control point for the curve
+    const controlPoint = subtractArrays(position2, getRelativeDirectionArray(direction2))
+
+    if (equalArrays(controlPoint, position1)) {
+
+        const curve = new LineCurve3(
+            new Vector3(...position1),
+            new Vector3(...position2)
+        )
+
+        return curve
+    } else {
+        const controlPoint = subtractArrays(position2, getRelativeDirectionArray(direction2))
+
+        const curve = new QuadraticBezierCurve3(
+            new Vector3(...position1),
+            new Vector3(...controlPoint),
+            new Vector3(...position2)
+        )
+
+        return curve
+    }
+}
+
 export {
     offsetCoord,
     offsetCoords,
     centerCoord,
     centerCoords,
     checkIfInArena,
-    getAttackedPositions
+    getAttackedPositions,
+    getMovePath
 }
