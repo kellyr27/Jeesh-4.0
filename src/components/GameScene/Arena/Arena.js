@@ -2,7 +2,13 @@ import React, { useRef, useEffect } from 'react';
 import ArenaNodes from './ArenaNodes/ArenaNodes';
 import { useControls, folder } from 'leva';
 
-const Arena = () => {
+const Arena = ({
+    soldier1Position,
+    setSoldier1Position,
+    movingMode,
+    soldier1Direction,
+    setSoldier1Direction,
+}) => {
 
     const {
         'Default': arenaNodesDefaultColor,
@@ -64,7 +70,6 @@ const Arena = () => {
         })
     });
 
-    // console.log(a)
 
     return (
         <>
@@ -87,6 +92,11 @@ const Arena = () => {
                 attackZoneSharedDisplay={arenaNodesAttackZoneSharedDisplay}
                 doorDisplay={arenaNodesDoorDisplay}
                 hoveredDisplay={arenaNodesHoveredDisplay}
+                soldier1Position={soldier1Position}
+                setSoldier1Position={setSoldier1Position}
+                movingMode={movingMode}
+                soldier1Direction={soldier1Direction}
+                setSoldier1Direction={setSoldier1Direction}
             />
         </>
     );

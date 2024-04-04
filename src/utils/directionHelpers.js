@@ -29,4 +29,8 @@ const getRelativeDirectionArray = (direction) => {
     }
 }
 
-export { getOpposingDirection, getRelativeDirectionArray }
+const equalDirections = (direction1, direction2) => {
+    return direction1 === direction2
+}
+
+export { getOpposingDirection, getRelativeDirectionArray, equalDirections }

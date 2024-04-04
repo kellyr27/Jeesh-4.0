@@ -4,12 +4,32 @@ import getRelativeDirectionArray from '../../../../utils/getRelativeDirectionArr
 import { subtractArrays, addArrays, equalArrays } from '../../../../utils/arrayHelpers';
 import { Cone } from '@react-three/drei';
 import { useThree, useFrame } from '@react-three/fiber';
-import { Vector2, Raycaster } from 'three';
+import { Vector2, Raycaster, Euler, Quaternion } from 'three';
 
 //TODO Put a frames/second thing on my project
 
 // Used for the Bezier Curve
 import { Line, BufferGeometry, LineBasicMaterial } from 'three';
+
+function modPi(angle) {
+    return ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+}
+
+function simplifyRotation(rotation) {
+    return rotation.map(angle => {
+        const simplifiedAngle = modPi(angle);
+        console.log(angle, simplifiedAngle)
+        return simplifiedAngle > Math.PI ? simplifiedAngle - 2 * Math.PI : simplifiedAngle;
+    });
+}
+
+function areRotationsEqual(rotation1, rotation2) {
+    const quaternion1 = new Quaternion().setFromEuler(new Euler(...rotation1));
+    const quaternion2 = new Quaternion().setFromEuler(new Euler(...rotation2));
+
+    return quaternion1.equals(quaternion2);
+}
+
 
 const getBezierCurve = (pose1, pose2) => {
 
@@ -44,10 +64,10 @@ const getRotationFromDirection = (direction) => {
     const directionMap = {
         '+x': [0, 0, Math.PI / 2],
         '-x': [0, 0, - Math.PI / 2],
-        '+y': [- Math.PI / 2, 0, 0],
-        '-y': [Math.PI / 2, 0, 0],
-        '+z': [0, 0, 0],
-        '-z': [0, 0, Math.PI],
+        '+y': [0, 0, Math.PI],
+        '-y': [0, 0, 0],
+        '+z': [- Math.PI/2, 0, 0],
+        '-z': [Math.PI/2, 0, 0],
     }
 
     if (directionMap.hasOwnProperty(direction)) {
@@ -73,7 +93,7 @@ function calculateLookAtRotation2(target) {
     dummyObject.lookAt(target);
     dummyObject.rotateOnAxis(new Vector3(1, 0, 0), - Math.PI / 2)
     dummyObject.updateMatrixWorld();  // Ensure the world matrix is updated
-    console.log(target, [dummyObject.rotation.x, dummyObject.rotation.y, dummyObject.rotation.z])
+    // console.log(target, [dummyObject.rotation.x, dummyObject.rotation.y, dummyObject.rotation.z])
     return [dummyObject.rotation.x, dummyObject.rotation.y, dummyObject.rotation.z]
 }
 
@@ -95,7 +115,7 @@ const offsetRotation = (rotation) => {
  * [1, 1, 1]
  */
 
-const Soldier = forwardRef(({position, rotation, setPosition, setRotation, name, color, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose}, ref) => {
+const Soldier = forwardRef(({position, rotation, setPosition, setRotation, name, color, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose, setSelectedSoldier}, ref) => {
 
     const [bezierCurve, setBezierCurve] = useState(null)
 
@@ -137,8 +157,8 @@ const Soldier = forwardRef(({position, rotation, setPosition, setRotation, name,
     let startTime = useRef(null)
     let startPosition = useRef(null)
     let startRotation = useRef(null)
-    const PHASE_3_DURATION = 3
-    const PHASE_2_DURATION = 6
+    const PHASE_3_DURATION = 1
+    const PHASE_2_DURATION = 3
 
     useFrame((state, delta) => {
         const elapsedTime = state.clock.getElapsedTime()
@@ -174,8 +194,7 @@ const Soldier = forwardRef(({position, rotation, setPosition, setRotation, name,
                     return el + t * (phase2Rotation[index] - el)
                 })
                 // console.log('New Rotation is', newRotation)
-                // setRotation(newRotation)
-                setRotation(phase2Rotation)
+                setRotation(newRotation)
             } else {
                 animationPhase.current = 'Phase 3'
             }
@@ -188,47 +207,48 @@ const Soldier = forwardRef(({position, rotation, setPosition, setRotation, name,
             if (t < 1) {
                 const point = bezierCurve.getPointAt(t)
                 const tangent = bezierCurve.getTangentAt(t)
-                // console.log('Tanget is', tangent)
-                const blahRotation = calculateLookAtRotation(tangent)
-                // console.log('Rotation is', blahRotation)
+                const blahRotation = calculateLookAtRotation2(tangent)
                 setPosition([point.x, point.y, point.z])
-                setRotation(offsetRotation([blahRotation.x, blahRotation.y, blahRotation.z]))
+                setRotation(blahRotation)
             } else {
                 animationPhase.current = 'Phase 4'
             }
         } 
         else if (animationPhase.current === 'Phase 4') {
-
+            // Phase 4 may be unneccessary
             const { direction } = currentSelectedPose
+
             const currentRotation = getRotationFromDirection(direction)
-            const newStartRotation = calculateLookAtRotation(bezierCurve.getTangentAt(1))
-            const startOffsetRotation = offsetRotation([newStartRotation.x, newStartRotation.y, newStartRotation.z])
+            const phase4Rotation = calculateLookAtRotation2(bezierCurve.getTangentAt(1))
+
+            // console.log(areRotationsEqual([Math.PI / 2, 0, 0], [-Math.PI / 2, 0, Math.PI]))
 
             const t = (elapsedTime - PHASE_3_DURATION - PHASE_2_DURATION - startTime.current) / PHASE_2_DURATION
 
             if (t < 1) {
                 
-                const rotation = startOffsetRotation.map((el, index) => {
+                const newRotation = phase4Rotation.map((el, index) => {
                     return el + t * (currentRotation[index] - el)
                 })
 
-                setRotation(rotation)
+                // console.log(currentRotation, phase4Rotation, newRotation)
+
+                setRotation(newRotation)
             } else {
                 animationPhase.current = 'Phase 5'
             }
         }
-        // else if (animationPhase.current === 'Phase 5') {
-        //     setMovingMode(false)
+        else if (animationPhase.current === 'Phase 5') {
+            setMovingMode(false)
+            
 
-        //     // Correct small variations in position and rotation
-
-
-        //     animationPhase.current = 'Phase 6'
-        // }
-        // else if (!movingMode && animationPhase.current === 'Phase 6') {
-        //     setCurrentSelectedPose(null)
-        //     animationPhase.current = 'Phase 1'
-        // }
+            animationPhase.current = 'Phase 6'
+        }
+        else if (!movingMode && animationPhase.current === 'Phase 6') {
+            setCurrentSelectedPose(null)
+            setSelectedSoldier(null)
+            animationPhase.current = 'Phase 1'
+        }
 
     })
 

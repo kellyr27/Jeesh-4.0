@@ -1,4 +1,5 @@
 import { ARENA_LENGTH } from "../globals"
+import {equalDirections} from "./directionHelpers"
 
 /**
  * Takes a coordinate and positions it to the centre of the Cube
@@ -39,10 +40,61 @@ const checkIfInArena = (coord) => {
     return true
 }
 
+/**
+ * Get all Attacked Cubes
+ */
+const getAttackedPositions = (position, direction) => {
+
+    let attackedPositions = []
+
+    for (let i = position[0] - 1; i <= position[0] + 1; i++) {
+        for (let j = position[1] - 1; j <= position[1] + 1; j++) {
+            for (let k = position[2] - 1; k <= position[2] + 1; k++) {
+                if (checkIfInArena([i,j,k])) {
+                    attackedPositions.push([i,j,k])
+                }
+            }
+        }
+    }
+
+    console.log(attackedPositions)
+
+    // Offset Attacked Coords to match direction
+    if (equalDirections(direction, '+x')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0] + 2, position[1], position[2]]
+        })
+    } else if (equalDirections(direction, '-x')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0] - 2, position[1], position[2]]
+        })
+    } else if (equalDirections(direction, '+y')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1] + 2, position[2]]
+        })
+    } else if (equalDirections(direction, '-y')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1] - 2, position[2]]
+        })
+    } else if (equalDirections(direction, '+z')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1], position[2] + 2]
+        })
+    } else if (equalDirections(direction, '-z')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1], position[2] - 2]
+        })
+    }
+
+    return attackedPositions
+}
+
+
 export {
     offsetCoord,
     offsetCoords,
     centerCoord,
     centerCoords,
-    checkIfInArena
+    checkIfInArena,
+    getAttackedPositions
 }

@@ -12,6 +12,9 @@ const equalMeshes = (mesh1, mesh2) => {
 
 const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelectedSoldier, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose }) => {
 
+    const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
+    const [soldier1Direction, setSoldier1Direction] = React.useState('-z')
+
     const { soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, soldierBlockedColor } = useControls('Soldiers', {
         'Colors': folder({
             soldierDefaultColor: '#00D2FF',
@@ -64,7 +67,13 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 speed={1}
             />
             <TrackballControls makeDefault rotateSpeed="3" />
-            <Arena />
+            <Arena 
+                soldier1Position={soldier1Position}
+                setSoldier1Position={setSoldier1Position}
+                soldier1Direction={soldier1Direction}
+                setSoldier1Direction={setSoldier1Direction}
+                movingMode={movingMode}
+            />
             <Army 
                 armyNum={1}
                 hoveredSoldier={hoveredSoldier}
@@ -79,6 +88,8 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 setMovingMode={setMovingMode}
                 currentSelectedPose={currentSelectedPose}
                 setCurrentSelectedPose={setCurrentSelectedPose}
+                soldier1Position={soldier1Position}
+                setSoldier1Position={setSoldier1Position}
             />
             <axesHelper args={[5]} />
         </Canvas>

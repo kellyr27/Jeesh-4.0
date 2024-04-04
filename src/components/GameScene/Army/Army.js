@@ -21,9 +21,11 @@ const Army = ({
     movingMode, 
     setMovingMode,
     currentSelectedPose, 
-    setCurrentSelectedPose
+    setCurrentSelectedPose,
+    soldier1Position,
+    setSoldier1Position
 }) => {
-    const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
+    // const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
     const [soldier1Rotation, setSoldier1Rotation] = React.useState([0, 0, 0])
 
     // const [soldier2Position, setSoldier2Position] = React.useState([1, 1, 1])
@@ -128,6 +130,7 @@ const Army = ({
                 setMovingMode={setMovingMode}
                 currentSelectedPose={currentSelectedPose}
                 setCurrentSelectedPose={setCurrentSelectedPose}
+                setSelectedSoldier={setSelectedSoldier}
             />
             {/* <Soldier name={`Soldier_${armyNum}_2`} index={1} position={soldier2Position} rotation={soldier2Rotation} color={soldierDefaultColor} />
             <Soldier name={`Soldier_${armyNum}_3`} index={2} position={soldier3Position} rotation={soldier3Rotation} color={soldierDefaultColor} /> */}
