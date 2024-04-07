@@ -6,12 +6,10 @@ import Arena from '../components/GameScene/Arena/Arena';
 import { useControls, folder } from 'leva';
 import {INITIAL_SOLDIERS} from '../globals';
 
-const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelectedSoldier, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose }) => {
+const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelectedSoldier, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose, soldiers, setSoldiers }) => {
 
     const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
     const [soldier1Direction, setSoldier1Direction] = React.useState('-z')
-
-    const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS);
 
     const soldierColors = useControls('Soldiers', {
         'Colors': folder({
@@ -19,6 +17,14 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
             soldierHoveredColor: '#FF00D2',
             soldierSelectedColor: 'green',
             soldierBlockedColor: '#FFD200'
+        })
+    })
+
+    const phaseTimes = useControls('Soldiers', {
+        'Movement Times': folder({
+            phase2Duration: 1,
+            phase3Duration: 2,
+            phase4Duration: 1
         })
     })
 
@@ -86,6 +92,7 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 setSoldier1Position={setSoldier1Position}
                 soldiers={soldiers}
                 soldierColors={soldierColors}
+                phaseTimes={phaseTimes}
             />
             <axesHelper args={[5]} />
         </Canvas>

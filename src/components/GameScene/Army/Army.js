@@ -22,7 +22,8 @@ const Army = ({
     soldier1Position,
     setSoldier1Position, 
     soldiers,
-    soldierColors
+    soldierColors,
+    phaseTimes
 }) => {
 
     const { soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, soldierBlockedColor } = soldierColors
@@ -97,27 +98,22 @@ const Army = ({
             onPointerOut={onPointerOutHandler}
             onClick={onClickHandler}
         >
-            {/* {soldiers.map((soldier, index) => {
+            {soldiers.map((soldier, index) => {
                    
-                return (<Soldier2 
-                    key={index}
-                    color={'black'}
-                    soldier={soldier}
-                />)
-            })} */}
-            <Soldier 
-                index={0} 
-                position={soldier1Position} 
-                setPosition={setSoldier1Position}
-                rotation={soldier1Rotation} 
-                setRotation={setSoldier1Rotation}
-                color={soldierDefaultColor}
-                movingMode={movingMode}
-                setMovingMode={setMovingMode}
-                currentSelectedPose={currentSelectedPose}
-                setCurrentSelectedPose={setCurrentSelectedPose}
-                setSelectedSoldier={setSelectedSoldier}
-            />
+                return (
+                    <Soldier2 
+                        key={index}
+                        color={soldierDefaultColor}
+                        soldier={soldier}
+                        phaseTimes={phaseTimes}
+                        movingMode={movingMode}
+                        setMovingMode={setMovingMode}
+                        currentSelectedPose={currentSelectedPose}
+                        selectedSoldier={selectedSoldier}
+                    />
+                )
+
+            })}
         </group>
     );
 };

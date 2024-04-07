@@ -1,3 +1,4 @@
+import {Euler, Quaternion} from 'three'
 
 const getOpposingDirection = (direction) => {
     const polarity = direction[0]
@@ -52,4 +53,9 @@ const getRotationFromDirection = (direction) => {
 
 }
 
-export { getOpposingDirection, getRelativeDirectionArray, equalDirections, getRotationFromDirection }
+export { 
+    getOpposingDirection, 
+    getRelativeDirectionArray, 
+    equalDirections, 
+    getRotationFromDirection, 
+}

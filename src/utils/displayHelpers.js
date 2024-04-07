@@ -1,7 +1,8 @@
 import { ARENA_LENGTH } from "../globals"
 import {equalDirections, getRelativeDirectionArray} from "./directionHelpers"
-import {LineCurve3, QuadraticBezierCurve3, Vector3} from "three"
+import {LineCurve3, QuadraticBezierCurve3, Vector3, Object3D, Quaternion, Euler} from "three"
 import { subtractArrays, equalArrays } from './arrayHelpers';
+import {checkIfPositionInArray} from './poseHelpers'
 
 /**
  * Takes a coordinate and positions it to the centre of the Cube
@@ -120,6 +121,62 @@ const getMovePath = (pose1, pose2) => {
     }
 }
 
+function getLookAtRotation(target) {
+
+    const dummyObject = new Object3D();
+    dummyObject.lookAt(target);
+    
+    // Rotate the object to face the right direction for the Cone Object
+    dummyObject.rotateOnAxis(new Vector3(1, 0, 0), - Math.PI / 2)
+
+    dummyObject.updateMatrixWorld()
+    return [dummyObject.rotation.x, dummyObject.rotation.y, dummyObject.rotation.z]
+}
+
+function getShortestRotationQuaternion(lookAtA, lookAtB) {
+    // Create the quaternion representing the rotation from lookAtA to lookAtB
+    const quaternion = new Quaternion().setFromUnitVectors(lookAtA, lookAtB);
+
+    return quaternion;
+}
+
+function generateStarPositions() {
+    const positions = []
+
+    // Generate a random number of stars up to the ARENA_LENGTH squared
+    const numStars = Math.floor(Math.random() * ARENA_LENGTH ** 2)
+
+    while (positions.length < numStars) {
+        const x = Math.floor(Math.random() * ARENA_LENGTH)
+        const y = Math.floor(Math.random() * ARENA_LENGTH)
+        const z = Math.floor(Math.random() * ARENA_LENGTH)
+
+        if (!checkIfPositionInArray([x, y, z], positions)) {
+            positions.push([x, y, z])
+        }
+    }
+
+    return positions
+    
+}
+
+const convertEulerToQuaternion = (rotation) => {
+    let euler = new Euler(...rotation, 'XYZ');
+
+    const quaternion = new Quaternion()
+    quaternion.setFromEuler(euler)
+    return quaternion
+}
+
+/**
+ * Geta Quaternion rotation from an lookAt unit vector
+ */
+const getQuaternionFromLookAt = (lookAt) => {
+    const quaternion = new Quaternion().setFromUnitVectors(new Vector3(0, -1, 0), lookAt);
+    return quaternion
+}
+
+
 export {
     offsetCoord,
     offsetCoords,
@@ -127,5 +184,10 @@ export {
     centerCoords,
     checkIfInArena,
     getAttackedPositions,
-    getMovePath
+    getMovePath,
+    getLookAtRotation,
+    getShortestRotationQuaternion,
+    generateStarPositions,
+    convertEulerToQuaternion,
+    getQuaternionFromLookAt
 }

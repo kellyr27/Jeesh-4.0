@@ -3,27 +3,12 @@ import GameScene from './scenes/GameScene'
 import PanelScene from './scenes/PanelScene'
 import './App.css';
 import { useControls, folder } from 'leva';
+import { INITIAL_SOLDIERS, ARENA_LENGTH} from './globals';
+import {generateStarPositions} from './utils/displayHelpers'
 
 
 // Temporary function to be replaced
 const getAllowedPositions = () => {
-	// const allowedPositions = [[
-	// 	[1,0,1],
-	// 	[-1,0,-1],
-	// 	[1,0,0],
-	// 	[0,-1,-1],
-	// ], [
-	// 	[1,1,1],
-    //     [1,0,-1],
-    //     [1,1,0],
-    //     [0,0,-1],
-	// 	[-1,-1,-1],
-	// 	[1,0,0]
-	// ]]
-	
-	// const randomIndex = Math.floor(Math.random() * allowedPositions.length);
-
-	// return allowedPositions[randomIndex];
 
 	return [
 		[-1, -1, -1],
@@ -57,6 +42,9 @@ const getAllowedPositions = () => {
 
 function App() {
 
+	const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS);
+	const starPositions = generateStarPositions(ARENA_LENGTH)
+
 	const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
 	const [allowedPositions, setAllowedPositions] = useState([])
@@ -76,27 +64,36 @@ function App() {
 		})
 	});
 
-
+	/**
+	 * Update the allowedPositions when a Soldier is selected
+	 */
 	useEffect(() => {
-		if (selectedSoldier) {
-			setIsPanelLocked(false)
-			setAllowedPositions(getAllowedPositions())
-
-		} else {
-			setIsPanelLocked(true)
-		}
+		setAllowedPositions(getAllowedPositions())
 	}, [selectedSoldier])
 
 	/**
-	 * When the Selection Panel is selected
+	 * When the Selection Panel is selected, activate moving mode
 	 */
 	useEffect(() => {
 		if (currentSelectedPose) {
 			setMovingMode(true)
 		}
-
 	}, [currentSelectedPose])
 
+	/**
+	 * When the moving Mode ends, reset the selected Soldier and the currentSelectedPose
+	 */
+	useEffect(() => {
+		if (!movingMode) {
+			setSelectedSoldier(null)
+			setCurrentSelectedPose(null)
+		}
+	}, [movingMode])
+
+	/**
+	 * Update the selection Panel Lock status based on the movingMode and selectedSoldier
+	 * When moving or no soldier is selected, lock the panel
+	 */
 	useEffect(() => {
 		if (movingMode || !selectedSoldier) {
 			setIsPanelLocked(true)
@@ -117,6 +114,8 @@ function App() {
 					setMovingMode={setMovingMode}
 					currentSelectedPose={currentSelectedPose}
 					setCurrentSelectedPose={setCurrentSelectedPose}
+					soldiers={soldiers}
+					setSoldiers={setSoldiers}
 				/>
 			</div>
 			<div className="panel-scene" style={{ width: panelSize, height: panelSize }}>
