@@ -156,7 +156,6 @@ const Soldier2 = memo(forwardRef(({
         switch (animationPhase.current) {
             case 1:
                 if (movingModeActivate && isSelectedSoldier) {
-                    console.log('in')
                     startTime.current = elapsedTime
                 }
                 break

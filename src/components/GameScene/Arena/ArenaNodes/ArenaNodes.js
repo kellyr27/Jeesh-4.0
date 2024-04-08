@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import ArenaNode from './ArenaNode';
 import { ARENA_LENGTH } from '../../../../globals';
-import { getAttackedPositions, getAllAttackedPositions } from '../../../../utils/displayHelpers';
+import { getAllAttackedPositionsKeys } from '../../../../utils/displayHelpers';
 
 const initialState = [];
 for (let x = 0; x < ARENA_LENGTH; x++) {
@@ -11,7 +11,8 @@ for (let x = 0; x < ARENA_LENGTH; x++) {
                 key: `${x}-${y}-${z}`,
                 position: [x, y, z],
                 color: 'blue',
-                opacity: 0.1
+                opacity: 0.1,
+                isDisplay: true
             });
         }
     }
@@ -22,7 +23,7 @@ function reducer(state, action) {
         case 'CHANGE_NODE':
             return state.map(node =>
                 node.key === action.key
-                    ? { ...node, color: action.color, opacity: action.opacity }
+                    ? { ...node, color: action.color, opacity: action.opacity, isDisplay: action.isDisplay}
                     : node
             );
         default:
@@ -66,41 +67,37 @@ const ArenaNodes = ({
         // dispatch({ type: 'CHANGE_NODE', key: '0-1-0', color: 'red', opacity: 0.5 });
 
 
-        if (movingModeDeactivate) {
+        const [positionsAttackedOnceKeys, positionsAttackedMultipleKeys] = getAllAttackedPositionsKeys(soldiers)
 
-            // Get attacked positions
-            const [positionsAttackedOnce, positionsAttackedMultiple] = getAllAttackedPositions(soldiers)
-
-            console.log(positionsAttackedOnce, positionsAttackedMultiple)
-
-            // Round the attacked Positions to the nearest integer
-            // const attackedPositionsKeys = attackedPositions.map(pos => pos.map(Math.round).join('-'));
-
-            // // console.log(attackedPositionsKeys)
-            // for (const node of state) {
-            //     if (attackedPositionsKeys.includes(node.key)) {
-            //         dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'red', opacity: 0.5 });
-            //     } else {
-            //         dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'blue', opacity: 0.1 });
-            //     }
-            // }
-
-            // dispatch({ type: 'CHANGE_NODE', key: `${key}`, color: 'red', opacity: 0.5 });
-
+        for (const node of state) {
+            if (positionsAttackedOnceKeys.includes(node.key)) {
+                dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'red', opacity: 0.1, isDisplay: true});
+            } else if (positionsAttackedMultipleKeys.includes(node.key)) {
+                dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'blue', opacity: 0.1, isDisplay: true });
+            } else {
+                dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'green', opacity: 0.001, isDisplay: false });
+            }
         }
 
-    }, [movingModeDeactivate]);
+        // dispatch({ type: 'CHANGE_NODE', key: `${key}`, color: 'red', opacity: 0.5 });
+
+
+    }, [soldiers, state]);
 
     return (
         <>
-            {state.map(node => (
-                <ArenaNode
-                    key={node.key}
-                    position={node.position}
-                    color={node.color}
-                    opacity={node.opacity}
-                />
-            ))}
+            {state.map(node => {
+                return (
+                    node.isDisplay && (
+                      <ArenaNode
+                        key={node.key}
+                        position={node.position}
+                        color={node.color}
+                        opacity={node.opacity}
+                      />
+                    )
+                  );
+            })}
         </>
     )
 }

@@ -1,15 +1,15 @@
-const ARENA_LENGTH = 11
+const ARENA_LENGTH = 3
 
 const INITIAL_SOLDIERS = [
     {
         id: 1,
-        gamePosition: [0, 0, 0],
+        gamePosition: [5, 5, 4],
         direction: '+z',
     },
     {
         id: 2,
-        gamePosition: [1, 0, 1],
-        direction: '+y',
+        gamePosition: [5, 4, 9],
+        direction: '-z',
     },
     {
         id: 3,

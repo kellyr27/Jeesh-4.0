@@ -90,7 +90,7 @@ const getAttackedPositions = (position, direction) => {
     return attackedPositions
 }
 
-const getAllAttackedPositions = (soldiers) => {
+const getAllAttackedPositionsKeys = (soldiers) => {
     // Count of more many times a position is attack
     let attackedPositionsCount = new Map()
 
@@ -98,10 +98,12 @@ const getAllAttackedPositions = (soldiers) => {
         const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
         
         attackedPositions.forEach((position) => {
-            if (attackedPositionsCount.has(position)) {
-                attackedPositionsCount.set(position, attackedPositionsCount.get(position) + 1)
+            const stringPosition = position.join('-')
+
+            if (attackedPositionsCount.has(stringPosition)) {
+                attackedPositionsCount.set(stringPosition, attackedPositionsCount.get(stringPosition) + 1)
             } else {
-                attackedPositionsCount.set(position, 1)
+                attackedPositionsCount.set(stringPosition, 1)
             }
         })
     }
@@ -110,11 +112,11 @@ const getAllAttackedPositions = (soldiers) => {
     let attackedOnce = []
     let attackedMultiple = []
 
-    for (const [position, count] of attackedPositionsCount) {
+    for (const [stringPosition, count] of attackedPositionsCount) {
         if (count === 1) {
-            attackedOnce.push(position)
+            attackedOnce.push(stringPosition)
         } else {
-            attackedMultiple.push(position)
+            attackedMultiple.push(stringPosition)
         }
     
     }
@@ -218,7 +220,7 @@ export {
     centerCoords,
     checkIfInArena,
     getAttackedPositions,
-    getAllAttackedPositions,
+    getAllAttackedPositionsKeys,
     getMovePath,
     getLookAtRotation,
     getShortestRotationQuaternion,

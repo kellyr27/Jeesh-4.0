@@ -1,12 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import ArenaNodes from './ArenaNodes/ArenaNodes';
 import { useControls, folder } from 'leva';
+import ArenaEdges from './ArenaEdges/ArenaEdges';
 
 const Arena = ({
     soldier1Position,
     setSoldier1Position,
     soldier1Direction,
     setSoldier1Direction,
+    soldiers
 }) => {
 
     const {
@@ -95,8 +97,11 @@ const Arena = ({
                 setSoldier1Position={setSoldier1Position}
                 soldier1Direction={soldier1Direction}
                 setSoldier1Direction={setSoldier1Direction}
+                soldiers={soldiers}
             />
+            <ArenaEdges />
         </>
+
     );
 };
 
