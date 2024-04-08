@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import ArenaNode from './ArenaNode';
 import { ARENA_LENGTH } from '../../../../globals';
-import { getAttackedPositions } from '../../../../utils/displayHelpers';
+import { getAttackedPositions, getAllAttackedPositions } from '../../../../utils/displayHelpers';
 
 const initialState = [];
 for (let x = 0; x < ARENA_LENGTH; x++) {
@@ -52,9 +52,11 @@ const ArenaNodes = ({
     hoveredDisplay,
     soldier1Position,
     setSoldier1Position,
-    movingMode,
     soldier1Direction,
     setSoldier1Direction,
+    movingModeDeactivate,
+    
+    soldiers
 }) => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -64,28 +66,30 @@ const ArenaNodes = ({
         // dispatch({ type: 'CHANGE_NODE', key: '0-1-0', color: 'red', opacity: 0.5 });
 
 
-        if (!movingMode) {
+        if (movingModeDeactivate) {
 
             // Get attacked positions
-            const attackedPositions = getAttackedPositions(soldier1Position, soldier1Direction);
+            const [positionsAttackedOnce, positionsAttackedMultiple] = getAllAttackedPositions(soldiers)
+
+            console.log(positionsAttackedOnce, positionsAttackedMultiple)
 
             // Round the attacked Positions to the nearest integer
-            const attackedPositionsKeys = attackedPositions.map(pos => pos.map(Math.round).join('-'));
+            // const attackedPositionsKeys = attackedPositions.map(pos => pos.map(Math.round).join('-'));
 
-            // console.log(attackedPositionsKeys)
-            for (const node of state) {
-                if (attackedPositionsKeys.includes(node.key)) {
-                    dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'red', opacity: 0.5 });
-                } else {
-                    dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'blue', opacity: 0.1 });
-                }
-            }
+            // // console.log(attackedPositionsKeys)
+            // for (const node of state) {
+            //     if (attackedPositionsKeys.includes(node.key)) {
+            //         dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'red', opacity: 0.5 });
+            //     } else {
+            //         dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'blue', opacity: 0.1 });
+            //     }
+            // }
 
             // dispatch({ type: 'CHANGE_NODE', key: `${key}`, color: 'red', opacity: 0.5 });
 
         }
 
-    }, [movingMode]);
+    }, [movingModeDeactivate]);
 
     return (
         <>

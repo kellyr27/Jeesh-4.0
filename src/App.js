@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import GameScene from './scenes/GameScene'
 import PanelScene from './scenes/PanelScene'
 import './App.css';
@@ -43,7 +43,7 @@ const getAllowedPositions = () => {
 function App() {
 
 	const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS);
-	const starPositions = generateStarPositions(ARENA_LENGTH)
+	const starPositions = useRef(generateStarPositions(ARENA_LENGTH))
 
 	const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
@@ -51,7 +51,8 @@ function App() {
 	const [isPanelLocked, setIsPanelLocked] = useState(false);
 	const [currentHoveredPose, setCurrentHoveredPose] = useState(null);
     const [currentSelectedPose, setCurrentSelectedPose] = useState(null);
-	const [movingMode, setMovingMode] = useState(false)
+	const [movingModeActivate, setMovingModeActivate] = useState(false)
+	const [movingModeDeactivate, setMovingModeDeactivate] = useState(false)
   
 	const { panelSize } = useControls('Selection Panel', {
 		'Size Adjustments': folder({
@@ -76,31 +77,59 @@ function App() {
 	 */
 	useEffect(() => {
 		if (currentSelectedPose) {
-			setMovingMode(true)
+			setMovingModeActivate(true)
 		}
 	}, [currentSelectedPose])
 
 	/**
-	 * When the moving Mode ends, reset the selected Soldier and the currentSelectedPose
+	 * When the moving Mode ends, 
+	 * - Reset the selected Soldier and the currentSelectedPose
+	 * - Update the previously Selected Soldier with the new gamePosition and direction
 	 */
 	useEffect(() => {
-		if (!movingMode) {
+		if (movingModeDeactivate) {
+			// Update the selected soldiers new gamePosition and direction
+			if (selectedSoldier && currentSelectedPose) {
+				const updatedSoldiers = soldiers.map(soldier => {
+					if (soldier.id === selectedSoldier.id) {
+						return {
+							...soldier,
+							gamePosition: currentSelectedPose.position,
+							direction: currentSelectedPose.direction
+						}
+					} else {
+						return soldier
+					}
+				})
+
+				setSoldiers(updatedSoldiers)
+			}
+
 			setSelectedSoldier(null)
 			setCurrentSelectedPose(null)
 		}
-	}, [movingMode])
+	}, [movingModeDeactivate, selectedSoldier, currentSelectedPose, soldiers])
+
+	/**
+	 * Set movingModeDeactivate to false when all conditions are met
+	 */
+	useEffect(() => {
+		if (!selectedSoldier && !currentSelectedPose, movingModeDeactivate) {
+			setMovingModeDeactivate(false)
+		}
+	}, [selectedSoldier, currentSelectedPose, movingModeDeactivate])
 
 	/**
 	 * Update the selection Panel Lock status based on the movingMode and selectedSoldier
 	 * When moving or no soldier is selected, lock the panel
 	 */
 	useEffect(() => {
-		if (movingMode || !selectedSoldier) {
+		if (movingModeActivate || !selectedSoldier) {
 			setIsPanelLocked(true)
 		} else {
 			setIsPanelLocked(false)
 		}
-	}, [movingMode, selectedSoldier])
+	}, [movingModeActivate, selectedSoldier])
 
 	return (
 		<div className="app">
@@ -110,12 +139,15 @@ function App() {
 					setHoveredSoldier={setHoveredSoldier}
 					selectedSoldier={selectedSoldier}
 					setSelectedSoldier={setSelectedSoldier}
-					movingMode={movingMode}
-					setMovingMode={setMovingMode}
 					currentSelectedPose={currentSelectedPose}
 					setCurrentSelectedPose={setCurrentSelectedPose}
 					soldiers={soldiers}
 					setSoldiers={setSoldiers}
+					movingModeActivate={movingModeActivate}
+					setMovingModeActivate={setMovingModeActivate}
+					movingModeDeactivate={movingModeDeactivate}
+					setMovingModeDeactivate={setMovingModeDeactivate}
+					starPositions={starPositions}
 				/>
 			</div>
 			<div className="panel-scene" style={{ width: panelSize, height: panelSize }}>

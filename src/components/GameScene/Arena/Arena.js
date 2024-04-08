@@ -5,7 +5,6 @@ import { useControls, folder } from 'leva';
 const Arena = ({
     soldier1Position,
     setSoldier1Position,
-    movingMode,
     soldier1Direction,
     setSoldier1Direction,
 }) => {
@@ -94,7 +93,6 @@ const Arena = ({
                 hoveredDisplay={arenaNodesHoveredDisplay}
                 soldier1Position={soldier1Position}
                 setSoldier1Position={setSoldier1Position}
-                movingMode={movingMode}
                 soldier1Direction={soldier1Direction}
                 setSoldier1Direction={setSoldier1Direction}
             />

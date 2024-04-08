@@ -5,8 +5,24 @@ import Army from '../components/GameScene/Army/Army';
 import Arena from '../components/GameScene/Arena/Arena';
 import { useControls, folder } from 'leva';
 import {INITIAL_SOLDIERS} from '../globals';
+import StarField from '../components/GameScene/StarField/StarField';
+import { Star } from 'react-konva';
 
-const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelectedSoldier, movingMode, setMovingMode, currentSelectedPose, setCurrentSelectedPose, soldiers, setSoldiers }) => {
+const GameScene = ({
+    hoveredSoldier, 
+    setHoveredSoldier, 
+    selectedSoldier, 
+    setSelectedSoldier,
+    currentSelectedPose, 
+    setCurrentSelectedPose, 
+    soldiers, 
+    setSoldiers,
+    movingModeActivate,
+    setMovingModeActivate,
+    movingModeDeactivate,
+    setMovingModeDeactivate,
+    starPositions
+}) => {
 
     const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
     const [soldier1Direction, setSoldier1Direction] = React.useState('-z')
@@ -29,30 +45,8 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
     })
 
     const onContextMenuHandler = (e) => {
-        // const soldier = e.intersections[0].object;
-        console.log(e)
-
-        // if (soldier && selectedSoldier) {
-        //     // Scenario if deselecting a Soldier with a Selected Soldier
-        //     console.log('1')
-        //     if (equalMeshes(soldier, selectedSoldier)) {
-        //         // Scenario if deselecting a Soldier when the mouse is hovering over it
-        //         soldier.material.color.set(soldierHoveredColor)
-        //     } else {
-        //         // Scenario if deselecting a Soldier when the mouse is hovering over another Soldier
-        //         soldier.material.color.set(soldierDefaultColor)
-        //     }
-        // } else {
-        //     // Scenario if deselecting a Soldier when the mouse is not hovering over any Soldier
-        //     console.log('2')
-        //     if (selectedSoldier) {
-        //         // Scenario if deselecting a Soldier when a Soldier is already selected and the mouse is not hovering over any Soldier
-        //         selectedSoldier.material.color.set(soldierDefaultColor)
-        //     }
-        // }
-
-        // setSelectedSoldier(null)
-        // e.stopPropagation()
+        setSelectedSoldier(null)
+        e.stopPropagation()
     }
 
     return (
@@ -76,7 +70,8 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 setSoldier1Position={setSoldier1Position}
                 soldier1Direction={soldier1Direction}
                 setSoldier1Direction={setSoldier1Direction}
-                movingMode={movingMode}
+                movingModeDeactivate={movingModeDeactivate}
+                soldiers={soldiers}
             />
             <Army 
                 armyNum={1}
@@ -84,8 +79,6 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 setHoveredSoldier={setHoveredSoldier}
                 selectedSoldier={selectedSoldier}
                 setSelectedSoldier={setSelectedSoldier}
-                movingMode={movingMode}
-                setMovingMode={setMovingMode}
                 currentSelectedPose={currentSelectedPose}
                 setCurrentSelectedPose={setCurrentSelectedPose}
                 soldier1Position={soldier1Position}
@@ -93,7 +86,12 @@ const GameScene = ({hoveredSoldier, setHoveredSoldier, selectedSoldier, setSelec
                 soldiers={soldiers}
                 soldierColors={soldierColors}
                 phaseTimes={phaseTimes}
+                movingModeActivate={movingModeActivate}
+                setMovingModeActivate={setMovingModeActivate}
+                movingModeDeactivate={movingModeDeactivate}
+                setMovingModeDeactivate={setMovingModeDeactivate}
             />
+            <StarField starPositions={starPositions.current} />
             <axesHelper args={[5]} />
         </Canvas>
     )

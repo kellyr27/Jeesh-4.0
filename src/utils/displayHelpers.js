@@ -90,6 +90,38 @@ const getAttackedPositions = (position, direction) => {
     return attackedPositions
 }
 
+const getAllAttackedPositions = (soldiers) => {
+    // Count of more many times a position is attack
+    let attackedPositionsCount = new Map()
+
+    for (const soldier of soldiers) {
+        const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
+        
+        attackedPositions.forEach((position) => {
+            if (attackedPositionsCount.has(position)) {
+                attackedPositionsCount.set(position, attackedPositionsCount.get(position) + 1)
+            } else {
+                attackedPositionsCount.set(position, 1)
+            }
+        })
+    }
+
+    // Return two lists, the first one with positions only attacked once, another with positions attacked more than once
+    let attackedOnce = []
+    let attackedMultiple = []
+
+    for (const [position, count] of attackedPositionsCount) {
+        if (count === 1) {
+            attackedOnce.push(position)
+        } else {
+            attackedMultiple.push(position)
+        }
+    
+    }
+
+    return [attackedOnce, attackedMultiple]
+}
+
 
 
 const getMovePath = (pose1, pose2) => {
@@ -171,8 +203,10 @@ const convertEulerToQuaternion = (rotation) => {
 /**
  * Geta Quaternion rotation from an lookAt unit vector
  */
+const upVector = new Vector3(0, -1, 0)
 const getQuaternionFromLookAt = (lookAt) => {
-    const quaternion = new Quaternion().setFromUnitVectors(new Vector3(0, -1, 0), lookAt);
+    const quaternion = new Quaternion()
+    quaternion.setFromUnitVectors(upVector, lookAt);
     return quaternion
 }
 
@@ -184,6 +218,7 @@ export {
     centerCoords,
     checkIfInArena,
     getAttackedPositions,
+    getAllAttackedPositions,
     getMovePath,
     getLookAtRotation,
     getShortestRotationQuaternion,
