@@ -174,7 +174,13 @@ function getShortestRotationQuaternion(lookAtA, lookAtB) {
     return quaternion;
 }
 
-function generateStarPositions() {
+function generateStarPositions(soldiers) {
+
+    // Extract the positions of the Soldiers
+    const soldierPositions = soldiers.map((soldier) => {
+        return soldier.gamePosition
+    })
+
     const positions = []
 
     // Generate a random number of stars up to the ARENA_LENGTH squared
@@ -185,7 +191,7 @@ function generateStarPositions() {
         const y = Math.floor(Math.random() * ARENA_LENGTH)
         const z = Math.floor(Math.random() * ARENA_LENGTH)
 
-        if (!checkIfPositionInArray([x, y, z], positions)) {
+        if (!checkIfPositionInArray([x, y, z], positions) && !checkIfPositionInArray([x, y, z], soldierPositions)) {
             positions.push([x, y, z])
         }
     }

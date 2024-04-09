@@ -4,102 +4,158 @@ import { useControls, folder } from 'leva';
 import ArenaEdges from './ArenaEdges/ArenaEdges';
 
 const Arena = ({
-    soldier1Position,
-    setSoldier1Position,
-    soldier1Direction,
-    setSoldier1Direction,
     soldiers
 }) => {
 
     const {
         'Default': arenaNodesDefaultColor,
-        'Attack Zone - Army 1': arenaNodesAttackZoneArmy1Color,
-        'Attack Zone - Army 2': arenaNodesAttackZoneArmy2Color,
+        'Attack Zone - Single': arenaNodesAttackZoneSingleColor,
         'Attack Zone - Shared': arenaNodesAttackZoneSharedColor,
-        'Door': arenaNodesDoorColor,
         'Hovered': arenaNodesHoveredColor,
     } = useControls('Arena', {
         'Arena Nodes': folder({
             'Colors': folder({
                 'Default': '#ff0000',
-                'Attack Zone - Army 1': '#0000ff',
-                'Attack Zone - Army 2': '#800080',
-                'Attack Zone - Shared': '#ffff00',
-                'Door': '#F98B88',
+                'Attack Zone - Single': 'red',
+                'Attack Zone - Shared': 'blue',
                 'Hovered': '#ffffff',
             })
         })
     })
+    const arenaNodesColors = {
+        default: arenaNodesDefaultColor,
+        attackZoneSingle: arenaNodesAttackZoneSingleColor,
+        attackZoneShared: arenaNodesAttackZoneSharedColor,
+        hovered: arenaNodesHoveredColor
+    }
+
+    const {
+        'Default': arenaEdgesDefaultColor,
+        'Attack Zone': arenaEdgesAttackZoneColor,
+        'Border': arenaEdgesBorderColor,
+        'Hovered': arenaEdgesHoveredColor,
+    } = useControls('Arena', {
+        'Arena Edges': folder({
+            'Colors': folder({
+                'Default': '#ff0000',
+                'Attack Zone': 'red',
+                'Border': 'white',
+                'Hovered': '#ffffff',
+            })
+        })
+    })
+    const arenaEdgesColors = {
+        default: arenaEdgesDefaultColor,
+        attackZone: arenaEdgesAttackZoneColor,
+        border: arenaEdgesBorderColor,
+        hovered: arenaEdgesHoveredColor
+    }
+
+
 
     const {
         'Default': arenaNodesDefaultOpacity,
-        'Attack Zone - Army 1': arenaNodesAttackZoneArmy1Opacity,
-        'Attack Zone - Army 2': arenaNodesAttackZoneArmy2Opacity,
+        'Attack Zone - Single': arenaNodesAttackZoneSingleOpacity,
         'Attack Zone - Shared': arenaNodesAttackZoneSharedOpacity,
-        'Door': arenaNodesDoorOpacity,
         'Hovered': arenaNodesHoveredOpacity,
     } = useControls('Arena', {
         'Arena Nodes': folder({
             'Opacities': folder({
                 'Default': 0.01,
-                'Attack Zone - Army 1': 0.35,
-                'Attack Zone - Army 2': 0.35,
+                'Attack Zone - Single': 0.35,
                 'Attack Zone - Shared': 0.35,
-                'Door': 0.6,
                 'Hovered': 0.1,
             })
         })
-    });
+    })
+    const arenaNodesOpacity = {
+        default: arenaNodesDefaultOpacity,
+        attackZoneSingle: arenaNodesAttackZoneSingleOpacity,
+        attackZoneShared: arenaNodesAttackZoneSharedOpacity,
+        hovered: arenaNodesHoveredOpacity
+    }
+
+    const {
+        'Default': arenaEdgesDefaultOpacity,
+        'Attack Zone': arenaEdgesAttackZoneOpacity,
+        'Border': arenaEdgesBorderOpacity,
+        'Hovered': arenaEdgesHoveredOpacity,
+    } = useControls('Arena', {
+        'Arena Edges': folder({
+            'Opacity': folder({
+                'Default': '#ff0000',
+                'Attack Zone': 'red',
+                'Border': 'white',
+                'Hovered': '#ffffff',
+            })
+        })
+    })
+    const arenaEdgesOpacity = {
+        default: arenaEdgesDefaultOpacity,
+        attackZone: arenaEdgesAttackZoneOpacity,
+        border: arenaEdgesBorderOpacity,
+        hovered: arenaEdgesHoveredOpacity
+    }
+
     
     const {
-        'Default': arenaNodesDefaultDisplay,
-        'Attack Zone - Army 1': arenaNodesAttackZoneArmy1Display,
-        'Attack Zone - Army 2': arenaNodesAttackZoneArmy2Display,
-        'Attack Zone - Shared': arenaNodesAttackZoneSharedDisplay,
-        'Door': arenaNodesDoorDisplay,
-        'Hovered': arenaNodesHoveredDisplay,
+        'Default': arenaNodesDefaultIsDisplay,
+        'Attack Zone - Single': arenaNodesAttackZoneSingleIsDisplay,
+        'Attack Zone - Shared': arenaNodesAttackZoneSharedIsDisplay,
+        'Hovered': arenaNodesHoveredIsDisplay,
     } = useControls('Arena', {
         'Arena Nodes': folder({
-            'Display': folder({
-                'Default': true,
-                'Attack Zone - Army 1': true,
-                'Attack Zone - Army 2': true,
+            'Is Display': folder({
+                'Default': false,
+                'Attack Zone - Single': true,
                 'Attack Zone - Shared': true,
-                'Door': true,
                 'Hovered': true,
             })
         })
-    });
+    })
+    const arenaNodesIsDisplay = {
+        default: arenaNodesDefaultIsDisplay,
+        attackZoneSingle: arenaNodesAttackZoneSingleIsDisplay,
+        attackZoneShared: arenaNodesAttackZoneSharedIsDisplay,
+        hovered: arenaNodesHoveredIsDisplay
+    }
+
+    const {
+        'Default': arenaEdgesDefaultIsDisplay,
+        'Attack Zone': arenaEdgesAttackZoneIsDisplay,
+        'Border': arenaEdgesBorderIsDisplay,
+        'Hovered': arenaEdgesHoveredIsDisplay,
+    } = useControls('Arena', {
+        'Arena Edges': folder({
+            'Is Display': folder({
+                'Default': '#ff0000',
+                'Attack Zone': 'red',
+                'Border': 'white',
+                'Hovered': '#ffffff',
+            })
+        })
+    })
+    const arenaEdgesIsDisplay = {
+        default: arenaEdgesDefaultIsDisplay,
+        attackZone: arenaEdgesAttackZoneIsDisplay,
+        border: arenaEdgesBorderIsDisplay,
+        hovered: arenaEdgesHoveredIsDisplay
+    }
 
 
     return (
         <>
             <ArenaNodes
-                defaultColor={arenaNodesDefaultColor}
-                attackZoneArmy1Color={arenaNodesAttackZoneArmy1Color}
-                attackZoneArmy2Color={arenaNodesAttackZoneArmy2Color}
-                attackZoneSharedColor={arenaNodesAttackZoneSharedColor}
-                doorColor={arenaNodesDoorColor}
-                hoveredColor={arenaNodesHoveredColor}
-                defaultOpacity={arenaNodesDefaultOpacity}
-                attackZoneArmy1Opacity={arenaNodesAttackZoneArmy1Opacity}
-                attackZoneArmy2Opacity={arenaNodesAttackZoneArmy2Opacity}
-                attackZoneSharedOpacity={arenaNodesAttackZoneSharedOpacity}
-                doorOpacity={arenaNodesDoorOpacity}
-                hoveredOpacity={arenaNodesHoveredOpacity}
-                defaultDisplay={arenaNodesDefaultDisplay}
-                attackZoneArmy1Display={arenaNodesAttackZoneArmy1Display}
-                attackZoneArmy2Display={arenaNodesAttackZoneArmy2Display}
-                attackZoneSharedDisplay={arenaNodesAttackZoneSharedDisplay}
-                doorDisplay={arenaNodesDoorDisplay}
-                hoveredDisplay={arenaNodesHoveredDisplay}
-                soldier1Position={soldier1Position}
-                setSoldier1Position={setSoldier1Position}
-                soldier1Direction={soldier1Direction}
-                setSoldier1Direction={setSoldier1Direction}
+                arenaNodesColors={arenaNodesColors}
+                arenaNodesOpacity={arenaNodesOpacity}
+                arenaNodesIsDisplay={arenaNodesIsDisplay}
                 soldiers={soldiers}
             />
-            <ArenaEdges />
+            {/* <ArenaEdges
+                arenaEdgesColors={arenaEdgesColors}
+                arenaEdgesOpacity={arenaEdgesOpacity}
+                arenaEdgesIsDisplay={arenaEdgesIsDisplay}
+            /> */}
         </>
 
     );

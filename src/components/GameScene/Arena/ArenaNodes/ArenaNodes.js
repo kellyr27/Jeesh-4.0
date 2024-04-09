@@ -33,56 +33,57 @@ function reducer(state, action) {
 
 //TODO: Consider useReducer for this component
 const ArenaNodes = ({
-    defaultColor,
-    attackZoneArmy1Color,
-    attackZoneArmy2Color,
-    attackZoneSharedColor,
-    doorColor,
-    hoveredColor,
-    defaultOpacity,
-    attackZoneArmy1Opacity,
-    attackZoneArmy2Opacity,
-    attackZoneSharedOpacity,
-    doorOpacity,
-    hoveredOpacity,
-    defaultDisplay,
-    attackZoneArmy1Display,
-    attackZoneArmy2Display,
-    attackZoneSharedDisplay,
-    doorDisplay,
-    hoveredDisplay,
-    soldier1Position,
-    setSoldier1Position,
-    soldier1Direction,
-    setSoldier1Direction,
+    arenaNodesColors,
+    arenaNodesOpacity,
+    arenaNodesIsDisplay,
     movingModeDeactivate,
-    
     soldiers
 }) => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    // Example of how to change a node
+    // TODO: Move up to Arena component
     useEffect(() => {
-        // dispatch({ type: 'CHANGE_NODE', key: '0-1-0', color: 'red', opacity: 0.5 });
-
-
+  
         const [positionsAttackedOnceKeys, positionsAttackedMultipleKeys] = getAllAttackedPositionsKeys(soldiers)
 
         for (const node of state) {
             if (positionsAttackedOnceKeys.includes(node.key)) {
-                dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'red', opacity: 0.1, isDisplay: true});
+                dispatch({ 
+                    type: 'CHANGE_NODE', 
+                    key: node.key, 
+                    color: arenaNodesColors.attackZoneSingle, 
+                    opacity: arenaNodesOpacity.attackZoneSingle, 
+                    isDisplay: arenaNodesIsDisplay.attackZoneSingle
+                })
             } else if (positionsAttackedMultipleKeys.includes(node.key)) {
-                dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'blue', opacity: 0.1, isDisplay: true });
+                dispatch({ 
+                    type: 'CHANGE_NODE', 
+                    key: node.key, 
+                    color: arenaNodesColors.attackZoneShared, 
+                    opacity: arenaNodesOpacity.attackZoneShared, 
+                    isDisplay: arenaNodesIsDisplay.attackZoneShared
+                });
             } else {
-                dispatch({ type: 'CHANGE_NODE', key: node.key, color: 'green', opacity: 0.001, isDisplay: false });
+                dispatch({ 
+                    type: 'CHANGE_NODE', 
+                    key: node.key, 
+                    color: arenaNodesColors.default, 
+                    opacity: arenaNodesOpacity.default, 
+                    isDisplay: arenaNodesIsDisplay.default
+                });
             }
         }
 
         // dispatch({ type: 'CHANGE_NODE', key: `${key}`, color: 'red', opacity: 0.5 });
 
 
-    }, [soldiers, state]);
+    }, [soldiers, 
+        state, 
+        arenaNodesColors,
+        arenaNodesOpacity,
+        arenaNodesIsDisplay
+    ]);
 
     return (
         <>

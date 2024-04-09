@@ -40,10 +40,16 @@ const getAllowedPositions = () => {
 	]
 }
 
+const getAllowedPositions2 = (starPositions, soldierPositions) => {
+
+}
+
 function App() {
 
 	const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS);
-	const starPositions = useRef(generateStarPositions(ARENA_LENGTH))
+
+	// TODO: Update to soldierPositions
+	const starPositions = useRef(generateStarPositions(soldiers))
 
 	const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
