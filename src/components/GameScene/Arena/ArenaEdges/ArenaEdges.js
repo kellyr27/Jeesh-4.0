@@ -1,30 +1,27 @@
 import {Line} from '@react-three/drei';
-import { useState } from "react";
+import { useEffect, useState, memo } from "react";
 import {getEdgeEndPoints} from '../../../../utils/displayHelpers';
 
-const ArenaEdges = ({edge}) => {
+// TODO: Fix lineWidth casing
+const ArenaEdge = memo(({
+    points,
+    color,
+    linewidth,
+    opacity, 
+    isDisplay
+}) => {
 
-    console.log(edge)
 
     return (
-        <>
-            {/* {edges.map((edge, index) => {
-                
-                return (
-                    <>
-                    {edge ? (
-                        <Line
-                          key={index}
-                          points={getEdgeEndPoints(edge[0][0], edge[0][1])}
-                          color='red'
-                          linewidth={1}
-                        />
-                      ) : null}
-                    </>
-                )
-            })} */}
-        </>
-    )
-}
+        isDisplay && (
+            <Line
+                points={points}
+                color={color}
+                linewidth={linewidth}
+                opacity={opacity}
+            />
+        )
+    );
+})
 
-export default ArenaEdges;
+export default ArenaEdge;

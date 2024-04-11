@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer, memo } from 'react'
 import ArenaNode from './ArenaNode';
+import {equalArrays} from "../../../../utils/arrayHelpers"
 
 //TODO: Consider useReducer for this component
 const ArenaNodes = memo(({
@@ -8,24 +9,27 @@ const ArenaNodes = memo(({
     arenaNodesIsDisplay,
     movingModeDeactivate,
     soldiers,
-    state
+    state,
+    currentHoveredPosition
  }) => {
-
-    console.log(arenaNodesColors[0])
 
     return (
         <>
             {state.map(node => {
+                
 
-                console.log(node)
-
+                const isHovered = currentHoveredPosition ? equalArrays(node.position, currentHoveredPosition) : false;
+                const color = isHovered ? arenaNodesColors['hovered'] : arenaNodesColors[node.state];
+                const opacity = isHovered ? arenaNodesOpacity['hovered'] : arenaNodesOpacity[node.state];
+                const isDisplay = isHovered ? arenaNodesIsDisplay['hovered'] : arenaNodesIsDisplay[node.state];
+                
                 return (
-                    node.isInArena && arenaNodesIsDisplay[node.state] && (
+                    node.isInArena && isDisplay && (
                         <ArenaNode
                             key={node.key}
                             position={node.position}
-                            color={arenaNodesColors[node.state]}
-                            opacity={arenaNodesOpacity[node.state]}
+                            color={color}
+                            opacity={opacity}
                         />
                     )
                 );

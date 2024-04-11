@@ -98,7 +98,7 @@ const getAllAttackedPositionsKeys = (soldiers) => {
         const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
         
         attackedPositions.forEach((position) => {
-            const stringPosition = position.join('-')
+            const stringPosition = position.join('_')
 
             if (attackedPositionsCount.has(stringPosition)) {
                 attackedPositionsCount.set(stringPosition, attackedPositionsCount.get(stringPosition) + 1)

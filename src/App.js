@@ -5,6 +5,7 @@ import './App.css';
 import { useControls, folder } from 'leva';
 import { INITIAL_SOLDIERS, ARENA_LENGTH} from './globals';
 import {generateStarPositions} from './utils/displayHelpers'
+import {addArrays} from './utils/arrayHelpers'
 
 
 // Temporary function to be replaced
@@ -137,6 +138,25 @@ function App() {
 		}
 	}, [movingModeActivate, selectedSoldier])
 
+
+	const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
+	useEffect(() => {
+		if (soldiers && currentHoveredPose && selectedSoldier) {
+			const soldierId = Number(selectedSoldier.name.split('-')[1])
+
+			// Find soldier with the same id
+			const soldier = soldiers.find(soldier => soldier.id === soldierId)
+
+			// Get the soldier's current position
+			const currentHoveredPosition = addArrays(soldier.gamePosition, currentHoveredPose.position)
+
+			setCurrentHoveredPosition(currentHoveredPosition)
+
+		} else {
+			setCurrentHoveredPosition(null)
+		}
+	}, [soldiers, currentHoveredPose, selectedSoldier])
+
 	return (
 		<div className="app">
 			<div className="game-scene">
@@ -154,6 +174,7 @@ function App() {
 					movingModeDeactivate={movingModeDeactivate}
 					setMovingModeDeactivate={setMovingModeDeactivate}
 					starPositions={starPositions}
+					currentHoveredPosition={currentHoveredPosition}
 				/>
 			</div>
 			<div className="panel-scene" style={{ width: panelSize, height: panelSize }}>

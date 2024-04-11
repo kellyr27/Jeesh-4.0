@@ -7,6 +7,7 @@ import { useControls, folder } from 'leva';
 import {INITIAL_SOLDIERS} from '../globals';
 import StarField from '../components/GameScene/StarField/StarField';
 import { Star } from 'react-konva';
+import Arena2 from '../components/GameScene/Arena/Arena2';
 
 const GameScene = ({
     hoveredSoldier, 
@@ -21,7 +22,9 @@ const GameScene = ({
     setMovingModeActivate,
     movingModeDeactivate,
     setMovingModeDeactivate,
-    starPositions
+    starPositions,
+    currentHoveredPose,
+    currentHoveredPosition
 }) => {
 
     const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
@@ -65,12 +68,17 @@ const GameScene = ({
                 speed={1}
             />
             <TrackballControls makeDefault rotateSpeed="3" />
-            <Arena 
+            {/* <Arena 
                 soldier1Position={soldier1Position}
                 setSoldier1Position={setSoldier1Position}
                 soldier1Direction={soldier1Direction}
                 setSoldier1Direction={setSoldier1Direction}
                 movingModeDeactivate={movingModeDeactivate}
+                soldiers={soldiers}
+                currentHoveredPose={currentHoveredPose}
+                currentHoveredPosition={currentHoveredPosition}
+            /> */}
+            <Arena2
                 soldiers={soldiers}
             />
             <Army 

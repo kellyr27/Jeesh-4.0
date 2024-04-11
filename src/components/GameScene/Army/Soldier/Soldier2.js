@@ -10,6 +10,7 @@ import { allPropertiesNotNull } from "../../../../utils/miscHelpers"
 
 
 const Soldier2 = memo(forwardRef(({
+    soldierId,
     color,
     soldier,
     phaseTimes,
@@ -217,7 +218,8 @@ const Soldier2 = memo(forwardRef(({
             ref={ref}
             args={[0.4, 0.8]} 
             position={position} 
-            material-color={color}    
+            material-color={color}
+            name={`Soldier-${soldierId}`}
         />
     )
 }))

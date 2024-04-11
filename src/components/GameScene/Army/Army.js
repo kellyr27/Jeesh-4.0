@@ -85,6 +85,7 @@ const Army = ({
  
                 return (
                     <Soldier2 
+                        soldierId={soldier.id}
                         ref={soldierRefs[index]}
                         key={index}
                         color={soldierDefaultColor}
