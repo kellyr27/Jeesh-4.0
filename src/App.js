@@ -139,6 +139,8 @@ function App() {
 	}, [movingModeActivate, selectedSoldier])
 
 
+	
+
 	const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
 	useEffect(() => {
 		if (soldiers && currentHoveredPose && selectedSoldier) {

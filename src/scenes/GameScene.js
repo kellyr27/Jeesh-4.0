@@ -2,12 +2,11 @@ import React, {useState} from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars, TrackballControls } from "@react-three/drei";
 import Army from '../components/GameScene/Army/Army';
-import Arena from '../components/GameScene/Arena/Arena';
 import { useControls, folder } from 'leva';
 import {INITIAL_SOLDIERS} from '../globals';
 import StarField from '../components/GameScene/StarField/StarField';
 import { Star } from 'react-konva';
-import Arena2 from '../components/GameScene/Arena/Arena2';
+import Arena from '../components/GameScene/Arena/Arena';
 
 const GameScene = ({
     hoveredSoldier, 
@@ -78,8 +77,9 @@ const GameScene = ({
                 currentHoveredPose={currentHoveredPose}
                 currentHoveredPosition={currentHoveredPosition}
             /> */}
-            <Arena2
+            <Arena
                 soldiers={soldiers}
+                currentHoveredPosition={currentHoveredPosition}
             />
             <Army 
                 armyNum={1}
