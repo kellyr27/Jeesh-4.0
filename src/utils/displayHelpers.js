@@ -218,6 +218,183 @@ const getQuaternionFromLookAt = (lookAt) => {
     return quaternion
 }
 
+/**
+ * Get the Edge end points from two nodes
+ */
+const getEdgeEndPoints = (node1Position, node2Position) => {
+
+    const [node1PositionX, node1PositionY, node1PositionZ] = node1Position
+    const [node2PositionX, node2PositionY, node2PositionZ] = node2Position
+
+    const avgX = (node1PositionX + node2PositionX) / 2
+    const avgY = (node1PositionY + node2PositionY) / 2
+    const avgZ = (node1PositionZ + node2PositionZ) / 2
+
+    if (node1PositionX === node2PositionX) {
+        return [
+            [node1PositionX - 1 / 2,avgY,avgZ], 
+            [node1PositionX + 1 / 2,avgY,avgZ]
+        ]
+    } else if (node1PositionY === node2PositionY) {
+        return [
+            [avgX,node1PositionY - 1 / 2,avgZ],
+            [avgX,node1PositionY + 1 / 2,avgZ]
+        ]
+    } else if (node1PositionZ === node2PositionZ) {
+        return [
+            [avgX,avgY,node1PositionZ - 1 / 2],
+            [avgX,avgY,node1PositionZ + 1 / 2]
+        ]
+    }
+}
+
+/**
+ * Checks if an Edge exists between two coordinates
+ */
+const checkIfEdgeBetweenNodes = (a, b) => {
+    const [iDiff, jDiff, kDiff] = [Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]), Math.abs(a[2] - b[2])]
+
+    if (!checkIfInArena(a) && !checkIfInArena(b)) {
+        return false
+    }
+
+    if ((iDiff === 1) && (jDiff === 1) && (kDiff === 0)) {
+        return true
+    } else if ((iDiff === 1) && (jDiff === 0) && (kDiff === 1)) {
+        return true
+    } else if ((iDiff === 0) && (jDiff === 1) && (kDiff === 1)) {
+        return true
+    } else {
+        return false
+    }
+}
+
+const isSharedEdge = (edge1, edge2) => {
+    const edge1Points = getEdgeEndPoints(edge1[0].position, edge1[1].position)
+    const edge2Points = getEdgeEndPoints(edge2[0].position, edge2[1].position)
+
+    if (equalArrays(edge1Points[0], edge2Points[0]) && equalArrays(edge1Points[1], edge2Points[1])) {
+        return true
+    } else if (equalArrays(edge1Points[0], edge2Points[1]) && equalArrays(edge1Points[1], edge2Points[0])) {
+        return true
+    } else {
+        return false
+    }
+}
+
+const isOuterEdgeNode = (node) => {
+
+    // Check if at least two of the coordinates are outside the arena
+    let outsideCount = 0
+
+    for (let i = 0; i < node.length; i++) {
+        if (node[i] < 0 || node[i] >= ARENA_LENGTH) {
+            outsideCount++
+        }
+    }
+
+    return outsideCount >= 2
+
+}
+
+function getCubeEdgeConnections() {
+    
+
+    // Find a list of an Nodes (from -1 to n+1)
+    const nodes = []
+    for (let i = -1; i < ARENA_LENGTH + 1; i++) {
+        for (let j = -1; j < ARENA_LENGTH + 1; j++) {
+            for (let k = -1; k < ARENA_LENGTH + 1; k++) {
+                const node = [i,j,k]
+                nodes.push(node)
+            }
+        }
+    }
+
+    // Now find all the edges that are connected to each node
+    const edges = []
+    for (let i = 0; i < nodes.length - 1; i++) {
+        for (let j = i+1; j < nodes.length; j++) {
+
+            const node1 = nodes[i]
+            const node2 = nodes[j]
+
+            if (checkIfEdgeBetweenNodes(node1, node2)) {
+                const edge = [node1, node2]
+                edges.push(edge)
+            }
+        }
+    }
+
+    const combinedEdges = []
+
+    for (let i = 0; i < edges.length - 1; i++) {
+        for (let j = i+1; j < edges.length; j++) {
+
+            if (isSharedEdge(edges[i], edges[j])) {
+                combinedEdges.push([edges[i], edges[j]])
+                break
+            }
+        }
+    }
+        
+    for (let i = 0; i < edges.length; i++) {
+        const isNode1onOuterBorder = isOuterEdgeNode(edges[i][0])
+        const isNode2onOuterBorder = isOuterEdgeNode(edges[i][1])
+        if ((isNode1onOuterBorder && !isNode2onOuterBorder) || (!isNode1onOuterBorder && isNode2onOuterBorder)) {
+            combinedEdges.push([edges[i], null])
+        }
+    }
+
+
+    return combinedEdges
+
+}
+
+function getCubeEdgeConnections2(nodes) {
+
+    // Now find all the edges that are connected to each node
+    const edges = []
+    for (let i = 0; i < nodes.length - 1; i++) {
+        for (let j = i+1; j < nodes.length; j++) {
+
+            const node1 = nodes[i]
+            const node2 = nodes[j]
+
+            if (checkIfEdgeBetweenNodes(node1.position, node2.position)) {
+                const edge = [node1, node2]
+                edges.push(edge)
+            }
+        }
+    }
+
+    const combinedEdges = []
+
+    for (let i = 0; i < edges.length - 1; i++) {
+        for (let j = i+1; j < edges.length; j++) {
+
+            if (isSharedEdge(edges[i], edges[j])) {
+                combinedEdges.push([edges[i], edges[j]])
+                break
+            }
+        }
+    }
+    
+    for (let i = 0; i < edges.length; i++) {
+
+        const isNode1onOuterBorder = isOuterEdgeNode(edges[i][0].position)
+        const isNode2onOuterBorder = isOuterEdgeNode(edges[i][1].position)
+        if ((isNode1onOuterBorder && !isNode2onOuterBorder) || (!isNode1onOuterBorder && isNode2onOuterBorder)) {
+            combinedEdges.push([edges[i], null])
+        }
+    }
+
+
+    return combinedEdges
+
+}
+
+
 
 export {
     offsetCoord,
@@ -232,5 +409,8 @@ export {
     getShortestRotationQuaternion,
     generateStarPositions,
     convertEulerToQuaternion,
-    getQuaternionFromLookAt
+    getQuaternionFromLookAt,
+    getEdgeEndPoints,
+    getCubeEdgeConnections,
+    getCubeEdgeConnections2
 }

@@ -1,106 +1,37 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect, useReducer, memo } from 'react'
 import ArenaNode from './ArenaNode';
-import { ARENA_LENGTH } from '../../../../globals';
-import { getAllAttackedPositionsKeys } from '../../../../utils/displayHelpers';
-
-const initialState = [];
-for (let x = 0; x < ARENA_LENGTH; x++) {
-    for (let y = 0; y < ARENA_LENGTH; y++) {
-        for (let z = 0; z < ARENA_LENGTH; z++) {
-            initialState.push({
-                key: `${x}-${y}-${z}`,
-                position: [x, y, z],
-                color: 'blue',
-                opacity: 0.1,
-                isDisplay: true
-            });
-        }
-    }
-}
-
-function reducer(state, action) {
-    switch (action.type) {
-        case 'CHANGE_NODE':
-            return state.map(node =>
-                node.key === action.key
-                    ? { ...node, color: action.color, opacity: action.opacity, isDisplay: action.isDisplay}
-                    : node
-            );
-        default:
-            throw new Error();
-    }
-}
 
 //TODO: Consider useReducer for this component
-const ArenaNodes = ({
+const ArenaNodes = memo(({
     arenaNodesColors,
     arenaNodesOpacity,
     arenaNodesIsDisplay,
     movingModeDeactivate,
-    soldiers
-}) => {
+    soldiers,
+    state
+ }) => {
 
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-    // TODO: Move up to Arena component
-    useEffect(() => {
-  
-        const [positionsAttackedOnceKeys, positionsAttackedMultipleKeys] = getAllAttackedPositionsKeys(soldiers)
-
-        for (const node of state) {
-            if (positionsAttackedOnceKeys.includes(node.key)) {
-                dispatch({ 
-                    type: 'CHANGE_NODE', 
-                    key: node.key, 
-                    color: arenaNodesColors.attackZoneSingle, 
-                    opacity: arenaNodesOpacity.attackZoneSingle, 
-                    isDisplay: arenaNodesIsDisplay.attackZoneSingle
-                })
-            } else if (positionsAttackedMultipleKeys.includes(node.key)) {
-                dispatch({ 
-                    type: 'CHANGE_NODE', 
-                    key: node.key, 
-                    color: arenaNodesColors.attackZoneShared, 
-                    opacity: arenaNodesOpacity.attackZoneShared, 
-                    isDisplay: arenaNodesIsDisplay.attackZoneShared
-                });
-            } else {
-                dispatch({ 
-                    type: 'CHANGE_NODE', 
-                    key: node.key, 
-                    color: arenaNodesColors.default, 
-                    opacity: arenaNodesOpacity.default, 
-                    isDisplay: arenaNodesIsDisplay.default
-                });
-            }
-        }
-
-        // dispatch({ type: 'CHANGE_NODE', key: `${key}`, color: 'red', opacity: 0.5 });
-
-
-    }, [soldiers, 
-        state, 
-        arenaNodesColors,
-        arenaNodesOpacity,
-        arenaNodesIsDisplay
-    ]);
+    console.log(arenaNodesColors[0])
 
     return (
         <>
             {state.map(node => {
+
+                console.log(node)
+
                 return (
-                    node.isDisplay && (
-                      <ArenaNode
-                        key={node.key}
-                        position={node.position}
-                        color={node.color}
-                        opacity={node.opacity}
-                      />
+                    node.isInArena && arenaNodesIsDisplay[node.state] && (
+                        <ArenaNode
+                            key={node.key}
+                            position={node.position}
+                            color={arenaNodesColors[node.state]}
+                            opacity={arenaNodesOpacity[node.state]}
+                        />
                     )
-                  );
+                );
             })}
         </>
-    )
-}
+    );
+})
 
 export default ArenaNodes;
