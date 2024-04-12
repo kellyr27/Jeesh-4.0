@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, createRef } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Vector2, Raycaster } from 'three';
-import Soldier2 from './Soldier/Soldier2';
+import Soldier from './Soldier/Soldier';
 import { useControls, folder } from 'leva';
 
 const equalMeshes = (mesh1, mesh2) => {
@@ -84,7 +84,7 @@ const Army = ({
             {soldiers.map((soldier, index) => {
  
                 return (
-                    <Soldier2 
+                    <Soldier 
                         soldierId={soldier.id}
                         ref={soldierRefs[index]}
                         key={index}

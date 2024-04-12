@@ -5,11 +5,10 @@ import { useFrame, useThree } from "react-three-fiber"
 import { getMovePath,  getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
 import { addArrays } from "../../../../utils/arrayHelpers"
 import { Vector3, Quaternion } from "three"
-import { allPropertiesNotNull } from "../../../../utils/miscHelpers"
 
 
 
-const Soldier2 = memo(forwardRef(({
+const Soldier = memo(forwardRef(({
     soldierId,
     color,
     soldier,
@@ -26,11 +25,7 @@ const Soldier2 = memo(forwardRef(({
     const [rotation, setRotation] = useState(getQuaternionFromLookAt(new Vector3(...getRelativeDirectionArray(soldier.direction))))
     const [isSelectedSoldier, setIsSelectedSoldier] = useState(false)
 
-    const {set} = useThree()
-
     const {phase2Duration, phase3Duration, phase4Duration} = phaseTimes
-    // const soldierRef = useRef()
-    const loopRef = useRef()
 
     /**
      * Check if this Soldier is the one currently selected
@@ -41,7 +36,7 @@ const Soldier2 = memo(forwardRef(({
         } else {
             setIsSelectedSoldier(false)
         }
-    }, [selectedSoldier])
+    }, [selectedSoldier, ref])
 
     /**
      * For animation of the Soldier, we use different Phases
@@ -57,10 +52,9 @@ const Soldier2 = memo(forwardRef(({
     let animationPhase = useRef(1)
     let startTime = useRef(null)
 
-    // TODO: Implement phaseSkips
-    let phaseSkips = useRef({
-        phase2Skipped: false,
-        phase4Skipped: false
+    const [phaseSkips, setPhaseSkips] = useState({
+        phase2: false,
+        phase4: false
     })
 
     let moveRotations = useRef(null)
@@ -97,6 +91,16 @@ const Soldier2 = memo(forwardRef(({
 
             let startLookAtRotation = new Vector3(...getRelativeDirectionArray(movePoses.current.startDirection))
             let finishLookAtRotation = new Vector3(...getRelativeDirectionArray(movePoses.current.finishDirection))
+
+            console.log(startMoveTangent, finishMoveTangent, startLookAtRotation, finishLookAtRotation)
+            console.log(startMoveTangent.equals(startLookAtRotation), finishMoveTangent.equals(finishLookAtRotation))
+
+            // Set Phase Skips
+            setPhaseSkips({
+                phase2: startMoveTangent.equals(startLookAtRotation),
+                phase4: finishMoveTangent.equals(finishLookAtRotation)
+            })
+
 
             moveRotations.current = {
                 startRotationQuaternion: getQuaternionFromLookAt(startLookAtRotation),
@@ -161,6 +165,9 @@ const Soldier2 = memo(forwardRef(({
                 }
                 break
             case 2:
+                if (phaseSkips.phase2) {
+                    animationPhase.current = 3
+                }
                 const t2 = (elapsedTime - startTime.current) / phase2Duration
                 if (t2 < 1) {
                     ref.current.quaternion.copy(moveRotations.current.startRotationQuaternion).slerp(moveRotations.current.startMovePathRotationQuaternion, t2)
@@ -182,6 +189,9 @@ const Soldier2 = memo(forwardRef(({
                 }
                 break
             case 4:
+                if (phaseSkips.phase4) {
+                    animationPhase.current = 5
+                }
                 const t4 = (elapsedTime - phase2Duration - phase3Duration - startTime.current) / phase4Duration
                 if (t4 < 1) {
                     ref.current.quaternion.copy(moveRotations.current.finishMovePathRotationQuaternion).slerp(moveRotations.current.finishRotationQuaternion, t4)
@@ -191,7 +201,6 @@ const Soldier2 = memo(forwardRef(({
                 break
             case 5:
                 setMovingModeActivate(false)
-                setMovingModeDeactivate(true)
                 startTime.current = null
                 animationPhase.current = 6
                 break
@@ -210,7 +219,7 @@ const Soldier2 = memo(forwardRef(({
         if (ref.current) {
             ref.current.quaternion.copy(rotation)
         }
-    }, [rotation])
+    }, [rotation, ref])
 
     return (
 
@@ -224,4 +233,4 @@ const Soldier2 = memo(forwardRef(({
     )
 }))
 
-export default Soldier2
+export default Soldier

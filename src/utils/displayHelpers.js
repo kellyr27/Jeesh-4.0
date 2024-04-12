@@ -174,12 +174,7 @@ function getShortestRotationQuaternion(lookAtA, lookAtB) {
     return quaternion;
 }
 
-function generateStarPositions(soldiers) {
-
-    // Extract the positions of the Soldiers
-    const soldierPositions = soldiers.map((soldier) => {
-        return soldier.gamePosition
-    })
+function generateStarPositions(soldierPositions) {
 
     const positions = []
 

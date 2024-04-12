@@ -3,54 +3,54 @@ import GameScene from './scenes/GameScene'
 import PanelScene from './scenes/PanelScene'
 import './App.css';
 import { useControls, folder } from 'leva';
-import { INITIAL_SOLDIERS, ARENA_LENGTH} from './globals';
+import { INITIAL_SOLDIERS } from './globals';
 import {generateStarPositions} from './utils/displayHelpers'
-import {addArrays} from './utils/arrayHelpers'
+import {addArrays, subtractArrays, equalArrays} from './utils/arrayHelpers'
 
 
 // Temporary function to be replaced
-const getAllowedPositions = () => {
+const getAllowedPositions = (selectedSoldierPosition, starPositions, soldierPositions) => {
 
-	return [
-		[-1, -1, -1],
-		[-1, -1, 0],
-		[-1, -1, 1],
-		[-1, 0, -1],
-		[-1, 0, 0], 
-		[-1, 0, 1],
-		[-1, 1, -1],
-		[-1, 1, 0],
-		[-1, 1, 1],
-		[0, -1, -1],
-		[0, -1, 0],
-		[0, -1, 1],
-		[0, 0, -1],
-		[0, 0, 1],
-		[0, 1, -1],
-		[0, 1, 0],
-		[0, 1, 1],
-		[1, -1, -1],
-		[1, -1, 0],
-		[1, -1, 1],
-		[1, 0, -1],
-		[1, 0, 0],
-		[1, 0, 1],
-		[1, 1, -1],
-		[1, 1, 0],
-		[1, 1, 1],
-	]
+	const allRelativeSurroundingPositions = []
+
+	for (let i = -1; i <= 1; i++) {
+		for (let j = -1; j <= 1; j++) {
+			for (let k = -1; k <= 1; k++) {
+				if (!(i === 0 && j === 0 && k === 0)) {
+					allRelativeSurroundingPositions.push([i, j, k])
+				}
+			}
+		}
+	}
+
+	const allSurroundingPositions = allRelativeSurroundingPositions.map((position) => {
+		return addArrays(selectedSoldierPosition, position)
+	})
+
+
+	const surroundingPositions = allSurroundingPositions.filter((position) => {
+		const isSoldierPosition = soldierPositions.some(soldierPosition => equalArrays(soldierPosition, position))
+		const isStarPosition = starPositions.some(starPosition => equalArrays(starPosition, position))
+
+		return (!isSoldierPosition && !isStarPosition)
+	})
+
+	const relativeSurroundingPositions = surroundingPositions.map((position) => {
+		return subtractArrays(position, selectedSoldierPosition)
+	})
+
+	return relativeSurroundingPositions
 }
 
-const getAllowedPositions2 = (starPositions, soldierPositions) => {
-
+const getSoldierPositions = (soldiers) => {
+	return soldiers.map(soldier => soldier.gamePosition)
 }
 
 function App() {
 
-	const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS);
-
-	// TODO: Update to soldierPositions
-	const starPositions = useRef(generateStarPositions(soldiers))
+	const [loadGame, setLoadGame] = useState(true)
+	const [soldiers, setSoldiers] = useState(INITIAL_SOLDIERS)
+	const [starPositions, setStarPositions] = useState([])
 
 	const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
@@ -70,14 +70,34 @@ function App() {
 				step: 1
 			}
 		})
-	});
+	})
+
+	useEffect(() => {
+		if (loadGame && soldiers) {
+			const soldierPositions = getSoldierPositions(soldiers)
+			const starPositions = generateStarPositions(soldierPositions)
+
+			setStarPositions(starPositions)
+			setLoadGame(false)
+		}
+	}, [loadGame, soldiers])
 
 	/**
 	 * Update the allowedPositions when a Soldier is selected
 	 */
 	useEffect(() => {
-		setAllowedPositions(getAllowedPositions())
-	}, [selectedSoldier])
+
+		if (soldiers && selectedSoldier) {
+			const selectedSoldierId = Number(selectedSoldier.name.split('-')[1])
+			const selectedSoldierPosition = soldiers.find(soldier => soldier.id === selectedSoldierId).gamePosition
+			const soldierPositions = getSoldierPositions(soldiers)
+
+			const allowedPositions = getAllowedPositions(selectedSoldierPosition, starPositions, soldierPositions)
+			setAllowedPositions(allowedPositions)
+		} else {
+			setAllowedPositions([])
+		}
+	}, [selectedSoldier, soldiers, starPositions])
 
 	/**
 	 * When the Selection Panel is selected, activate moving mode
@@ -97,11 +117,16 @@ function App() {
 		if (movingModeDeactivate) {
 			// Update the selected soldiers new gamePosition and direction
 			if (selectedSoldier && currentSelectedPose) {
+				console.log(selectedSoldier, currentSelectedPose)
+
+				// Extract the Soldier Id from the selectedSoldier name
+				const soldierId = Number(selectedSoldier.name.split('-')[1])
+
 				const updatedSoldiers = soldiers.map(soldier => {
-					if (soldier.id === selectedSoldier.id) {
+					if (soldier.id === soldierId) {
 						return {
 							...soldier,
-							gamePosition: currentSelectedPose.position,
+							gamePosition: addArrays(currentSelectedPose.position, soldier.gamePosition),
 							direction: currentSelectedPose.direction
 						}
 					} else {
@@ -118,10 +143,19 @@ function App() {
 	}, [movingModeDeactivate, selectedSoldier, currentSelectedPose, soldiers])
 
 	/**
+	 * Once moving Mode activate comes to an end, activate movingModeDeactivate
+	 */
+	useEffect(() => {
+		if (!movingModeActivate) {
+			setMovingModeDeactivate(true)
+		}
+	}, [movingModeActivate])
+
+	/**
 	 * Set movingModeDeactivate to false when all conditions are met
 	 */
 	useEffect(() => {
-		if (!selectedSoldier && !currentSelectedPose, movingModeDeactivate) {
+		if (!selectedSoldier && !currentSelectedPose && movingModeDeactivate) {
 			setMovingModeDeactivate(false)
 		}
 	}, [selectedSoldier, currentSelectedPose, movingModeDeactivate])

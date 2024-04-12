@@ -67,16 +67,6 @@ const GameScene = ({
                 speed={1}
             />
             <TrackballControls makeDefault rotateSpeed="3" />
-            {/* <Arena 
-                soldier1Position={soldier1Position}
-                setSoldier1Position={setSoldier1Position}
-                soldier1Direction={soldier1Direction}
-                setSoldier1Direction={setSoldier1Direction}
-                movingModeDeactivate={movingModeDeactivate}
-                soldiers={soldiers}
-                currentHoveredPose={currentHoveredPose}
-                currentHoveredPosition={currentHoveredPosition}
-            /> */}
             <Arena
                 soldiers={soldiers}
                 currentHoveredPosition={currentHoveredPosition}
@@ -99,7 +89,7 @@ const GameScene = ({
                 movingModeDeactivate={movingModeDeactivate}
                 setMovingModeDeactivate={setMovingModeDeactivate}
             />
-            <StarField starPositions={starPositions.current} />
+            <StarField starPositions={starPositions} />
             <axesHelper args={[5]} />
         </Canvas>
     )
