@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Canvas } from "@react-three/fiber";
+import React, {useState, useRef, useEffect} from 'react';
+import { Canvas, useThree } from "@react-three/fiber";
 import { Stars, TrackballControls } from "@react-three/drei";
 import Army from '../components/GameScene/Army/Army';
 import { useControls, folder } from 'leva';
@@ -7,6 +7,7 @@ import {INITIAL_SOLDIERS} from '../globals';
 import StarField from '../components/GameScene/StarField/StarField';
 import { Star } from 'react-konva';
 import Arena from '../components/GameScene/Arena/Arena';
+import CameraController from '../components/GameScene/CameraController/CameraController';
 
 const GameScene = ({
     hoveredSoldier, 
@@ -26,6 +27,7 @@ const GameScene = ({
     currentHoveredPosition
 }) => {
 
+    //TODO: Remove this
     const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
     const [soldier1Direction, setSoldier1Direction] = React.useState('-z')
 
@@ -51,6 +53,8 @@ const GameScene = ({
         e.stopPropagation()
     }
 
+
+
     return (
         <Canvas 
             style={{ width: '100vw', height: '100vh' }}
@@ -58,15 +62,17 @@ const GameScene = ({
         >
             <color attach="background" args={["#191920"]} />
             <Stars
-                radius={100}
+                radius={50}
                 depth={50}
-                count={5000}
+                count={50000}
                 factor={4}
                 saturation={0}
                 fade
                 speed={1}
             />
-            <TrackballControls makeDefault rotateSpeed="3" />
+            <CameraController 
+                selectedSoldier={selectedSoldier}
+            />
             <Arena
                 soldiers={soldiers}
                 currentHoveredPosition={currentHoveredPosition}

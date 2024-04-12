@@ -98,19 +98,25 @@ const getAllAttackedPositionsKeys = (soldiers) => {
         const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
         
         attackedPositions.forEach((position) => {
-            const stringPosition = position.join('_')
 
-            if (attackedPositionsCount.has(stringPosition)) {
-                attackedPositionsCount.set(stringPosition, attackedPositionsCount.get(stringPosition) + 1)
+            if (!checkIfInArena(position)) {
+                return
+            }
+
+            const positionKey = position.join('_');
+            const count = attackedPositionsCount.get(positionKey);
+
+            if (count !== undefined) {
+                attackedPositionsCount.set(positionKey, count + 1);
             } else {
-                attackedPositionsCount.set(stringPosition, 1)
+                attackedPositionsCount.set(positionKey, 1);
             }
         })
     }
 
     // Return two lists, the first one with positions only attacked once, another with positions attacked more than once
-    let attackedOnce = []
-    let attackedMultiple = []
+    const attackedOnce = []
+    const attackedMultiple = []
 
     for (const [stringPosition, count] of attackedPositionsCount) {
         if (count === 1) {
@@ -118,7 +124,6 @@ const getAllAttackedPositionsKeys = (soldiers) => {
         } else {
             attackedMultiple.push(stringPosition)
         }
-    
     }
 
     return [attackedOnce, attackedMultiple]
@@ -179,7 +184,7 @@ function generateStarPositions(soldierPositions) {
     const positions = []
 
     // Generate a random number of stars up to the ARENA_LENGTH squared
-    const numStars = Math.floor(Math.random() * ARENA_LENGTH ** 2)
+    const numStars = Math.floor(Math.random() * ARENA_LENGTH ** 2 / 2)
 
     while (positions.length < numStars) {
         const x = Math.floor(Math.random() * ARENA_LENGTH)

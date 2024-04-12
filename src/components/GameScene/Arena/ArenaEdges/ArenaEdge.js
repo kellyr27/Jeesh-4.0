@@ -1,6 +1,6 @@
 import {Line} from '@react-three/drei';
 import { useEffect, useState, memo } from "react";
-import {getEdgeEndPoints} from '../../../../utils/displayHelpers';
+import {centerCoords} from '../../../../utils/displayHelpers';
 
 // TODO: Fix lineWidth casing
 const ArenaEdge = memo(({
@@ -15,7 +15,7 @@ const ArenaEdge = memo(({
     return (
         isDisplay && (
             <Line
-                points={points}
+                points={centerCoords(points)}
                 color={color}
                 linewidth={linewidth}
                 opacity={opacity}

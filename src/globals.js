@@ -1,4 +1,4 @@
-const ARENA_LENGTH = 11
+const ARENA_LENGTH = 20
 
 const INITIAL_SOLDIERS = [
     {

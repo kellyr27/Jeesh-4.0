@@ -46,6 +46,67 @@ const getSoldierPositions = (soldiers) => {
 	return soldiers.map(soldier => soldier.gamePosition)
 }
 
+const getDirectionMap = (direction) => {
+	switch (direction) {
+		case '+x':
+			return {
+				face: '+x',
+				left: '-z',
+				right: '+z',
+				up: '+y',
+				down: '-y'
+			}
+		case '-x':
+			return {
+				face: '-x',
+				left: '+z',
+				right: '-z',
+				up: '+y',
+				down: '-y'
+			}
+		case '+y':
+			return {
+				face: '+y',
+				left: '-x',
+				right: '+x',
+				up: '+z',
+				down: '-z'
+			}
+		case '-y':
+			return {
+				face: '-y',
+				left: '-x',
+				right: '+x',
+				up: '-z',
+				down: '+z'
+			}
+		case '+z':
+			return {
+				face: '+z',
+				left: '-x',
+				right: '+x',
+				up: '+y',
+				down: '-y'
+			}
+		case '-z':
+			return {
+				face: '-z',
+				left: '+x',
+				right: '-x',
+				up: '+y',
+				down: '-y'
+			}
+		default:
+			return {
+				face: '+z',
+				left: '-x',
+				right: '+x',
+				up: '+y',
+				down: '-y'
+			}
+	}
+}
+
 function App() {
 
 	const [loadGame, setLoadGame] = useState(true)
@@ -71,6 +132,28 @@ function App() {
 			}
 		})
 	})
+
+	const [directionMap, setDirectionMap] = useState({
+        face: '-z',
+        left: '-x',
+        right: '+x',
+        up: '+y',
+        down: '-y'
+    });
+
+	/**
+	 * When changing the Selected soldier, update the direction map to face the direction of the selected soldier
+	 */
+	useEffect(() => {
+		if (selectedSoldier) {
+			const soldierId = Number(selectedSoldier.name.split('-')[1])
+			const selectedSoldierDirection = soldiers.find(soldier => soldier.id === soldierId).direction
+
+			// Set directionMap
+			setDirectionMap(getDirectionMap(selectedSoldierDirection))
+
+		}
+	}, [selectedSoldier, soldiers])
 
 	useEffect(() => {
 		if (loadGame && soldiers) {
@@ -117,7 +200,6 @@ function App() {
 		if (movingModeDeactivate) {
 			// Update the selected soldiers new gamePosition and direction
 			if (selectedSoldier && currentSelectedPose) {
-				console.log(selectedSoldier, currentSelectedPose)
 
 				// Extract the Soldier Id from the selectedSoldier name
 				const soldierId = Number(selectedSoldier.name.split('-')[1])
@@ -138,6 +220,7 @@ function App() {
 			}
 
 			setSelectedSoldier(null)
+			setCurrentHoveredPose(null)
 			setCurrentSelectedPose(null)
 		}
 	}, [movingModeDeactivate, selectedSoldier, currentSelectedPose, soldiers])
@@ -224,6 +307,8 @@ function App() {
 					setCurrentHoveredPose={setCurrentHoveredPose}
 					currentSelectedPose={currentSelectedPose}
 					setCurrentSelectedPose={setCurrentSelectedPose}
+					directionMap={directionMap}
+					setDirectionMap={setDirectionMap}
 				/>
 			</div>
 		</div>

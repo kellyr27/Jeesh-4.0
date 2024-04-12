@@ -20,16 +20,10 @@ const PanelScene = ({
     currentHoveredPose, 
     setCurrentHoveredPose,
     currentSelectedPose, 
-    setCurrentSelectedPose
+    setCurrentSelectedPose,
+    directionMap, 
+    setDirectionMap
 }) => {
-
-    const [directionMap, setDirectionMap] = useState({
-        face: '-z',
-        left: '-x',
-        right: '+x',
-        up: '+y',
-        down: '-y'
-    });
     
     const [directionSelectorSize, setDirectionSelectorSize] = useState(40);
     const [moveSelectorSize, setMoveSelectorSize] = useState(50);

@@ -1,22 +1,23 @@
 import React, {Fragment} from "react"
+import {centerCoord} from "../../../utils/displayHelpers"
 
 const StarField = ({starPositions}) => {
 
     return (
         <>
-            {starPositions.map((coord, index) => {
+            {starPositions.map((position, index) => {
                 return (
                     <Fragment key={index}>
                         <mesh 
                             visible
-                            position={coord}
+                            position={centerCoord(position)}
                         >
                             <octahedronGeometry args={[0.4]}/>
                             <meshBasicMaterial color="black"/>
                         </mesh>
                         <mesh 
                             visible
-                            position={coord}
+                            position={centerCoord(position)}
                         >
                             <octahedronGeometry args={[0.4]}/>
                             <meshBasicMaterial color="blue" wireframe/>

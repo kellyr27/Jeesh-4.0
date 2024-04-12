@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
 import ArenaNode from "./ArenaNodes/ArenaNode";
 import { getAllAttackedPositionsKeys, getEdgeEndPoints } from '../../../utils/displayHelpers';
-import ArenaEdge from "./ArenaEdges/ArenaEdges";
+import ArenaEdge from "./ArenaEdges/ArenaEdge";
 import useArenaNodeControls from "./Arena.controls";
 import { arrayToKey, keyToArray, getEdgesFromPositionKeys } from "./Arena.utils";
+import { ARENA_LENGTH } from "../../../globals";
 
 const Arena = ({
     soldiers,
@@ -24,6 +25,69 @@ const Arena = ({
     const [attackedTwiceNodes, setAttackedTwiceNodes] = useState([])
     const [attackZoneEdges, setAttackZoneEdges] = useState([])
     const [hoveredPositionEdges, setHoveredPositionEdges] = useState([])
+    const [arenaEdgePoints, setArenaEdgePoints] = useState([])
+
+    /**
+     * Set the arena Edges
+     */
+    useEffect(() => {
+
+        const startEdge = 0 - 1/2
+        const endEdge = ARENA_LENGTH - 1/2
+
+        const edgePoints = [
+            [
+                [startEdge, startEdge, startEdge],
+                [endEdge, startEdge, startEdge]
+            ],
+            [
+                [startEdge, startEdge, startEdge],
+                [startEdge, endEdge, startEdge]
+            ],
+            [
+                [startEdge, startEdge, startEdge],
+                [startEdge, startEdge, endEdge]
+            ],
+            [
+                [endEdge, startEdge, startEdge],
+                [endEdge, endEdge, startEdge]
+            ],
+            [
+                [endEdge, startEdge, startEdge],
+                [endEdge, startEdge, endEdge]
+            ],
+            [
+                [startEdge, endEdge, startEdge],
+                [endEdge, endEdge, startEdge]
+            ],
+            [
+                [startEdge, endEdge, startEdge],
+                [startEdge, endEdge, endEdge]
+            ],
+            [
+                [startEdge, startEdge, endEdge],
+                [endEdge, startEdge, endEdge]
+            ],
+            [
+                [startEdge, startEdge, endEdge],
+                [startEdge, endEdge, endEdge]
+            ],
+            [
+                [endEdge, endEdge, startEdge],
+                [endEdge, endEdge, endEdge]
+            ],
+            [
+                [startEdge, endEdge, endEdge],
+                [endEdge, endEdge, endEdge]
+            ],
+            [
+                [endEdge, startEdge, endEdge],
+                [endEdge, endEdge, endEdge]
+            ]
+        ]
+
+        setArenaEdgePoints(edgePoints)
+    }, [])
 
     /**
      * When the hovered position changes, update the edges that are being hovered over
@@ -121,6 +185,7 @@ const Arena = ({
             {hoveredPositionEdges.map((edge, index) => {
                 const points = getEdgeEndPoints(keyToArray(edge[0]), keyToArray(edge[1]))
                 
+                console.log(points)
                 return (
                     <ArenaEdge
                         key={index}
@@ -130,6 +195,21 @@ const Arena = ({
                         opacity={arenaEdgesOpacity.hovered}
                         isDisplay={arenaEdgesIsDisplay.hovered}
                     />
+                )
+            })}
+            {arenaEdgePoints.map((edgePoints, index) => {
+
+                return (
+                    <ArenaEdge
+                        key={index}
+                        points={edgePoints}
+                        color='white'
+                        linewidth={10}
+                        opacity={1}
+                        isDisplay={true}
+                    />
+                    // <>
+                    // </>
                 )
             })}
         </>

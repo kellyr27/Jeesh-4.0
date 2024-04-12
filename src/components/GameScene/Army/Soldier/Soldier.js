@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, memo, forwardRef } fro
 import { Cone } from "@react-three/drei"
 import { getRotationFromDirection, getRelativeDirectionArray } from "../../../../utils/directionHelpers"
 import { useFrame, useThree } from "react-three-fiber"
-import { getMovePath,  getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
+import { getMovePath,  getQuaternionFromLookAt, centerCoord } from '../../../../utils/displayHelpers'
 import { addArrays } from "../../../../utils/arrayHelpers"
 import { Vector3, Quaternion } from "three"
 
@@ -91,9 +91,6 @@ const Soldier = memo(forwardRef(({
 
             let startLookAtRotation = new Vector3(...getRelativeDirectionArray(movePoses.current.startDirection))
             let finishLookAtRotation = new Vector3(...getRelativeDirectionArray(movePoses.current.finishDirection))
-
-            console.log(startMoveTangent, finishMoveTangent, startLookAtRotation, finishLookAtRotation)
-            console.log(startMoveTangent.equals(startLookAtRotation), finishMoveTangent.equals(finishLookAtRotation))
 
             // Set Phase Skips
             setPhaseSkips({
@@ -226,7 +223,7 @@ const Soldier = memo(forwardRef(({
         <Cone
             ref={ref}
             args={[0.4, 0.8]} 
-            position={position} 
+            position={centerCoord(position)} 
             material-color={color}
             name={`Soldier-${soldierId}`}
         />

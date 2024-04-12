@@ -7,7 +7,7 @@ const ArenaNode = memo(({position, color, opacity}) => {
     return (
         <Box 
             args={[1,1,1]}
-            position={position}
+            position={centerCoord(position)}
             material-color={color}
             material-transparent={true}
             material-opacity={opacity}
