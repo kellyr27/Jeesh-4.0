@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback, memo, forwardRef } from "react"
 import { Cone } from "@react-three/drei"
-import { getRotationFromDirection, getRelativeDirectionArray } from "../../../../utils/directionHelpers"
-import { useFrame, useThree } from "react-three-fiber"
+import { getRelativeDirectionArray } from "../../../../utils/directionHelpers"
+import { useFrame } from "react-three-fiber"
 import { getMovePath,  getQuaternionFromLookAt, centerCoord } from '../../../../utils/displayHelpers'
 import { addArrays } from "../../../../utils/arrayHelpers"
-import { Vector3, Quaternion } from "three"
+import { Vector3 } from "three"
 import PastLine from "./PastLine/PastLine"
 
 function getPointsUpTo(bezierCurve, numPoints, endPosition) {
@@ -266,11 +266,6 @@ const Soldier = memo(forwardRef(({
             setMoveLineToCurrentLine(false)
         }
     }, [moveLineToCurrentLine, currentLine, pastLines])
-    
-
-    useEffect(() => {
-        console.log(pastLines, currentLine)
-    }, [pastLines, currentLine])
 
     return (
         <>

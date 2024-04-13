@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { useControls, folder } from 'leva';
+import React from 'react';
+import { useControls } from 'leva';
 
 const AxesHelperController = () => {
 

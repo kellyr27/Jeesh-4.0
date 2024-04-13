@@ -1,8 +1,6 @@
-import React, { useRef, useEffect, createRef } from 'react';
-import { useThree, useFrame } from '@react-three/fiber';
-import { Vector2, Raycaster } from 'three';
+import React, {useEffect, createRef } from 'react';
 import Soldier from './Soldier/Soldier';
-import { useControls, folder } from 'leva';
+
 
 const equalMeshes = (mesh1, mesh2) => {
     return mesh1.uuid === mesh2.uuid
@@ -16,8 +14,6 @@ const Army = ({
     setSelectedSoldier, 
     currentSelectedPose, 
     setCurrentSelectedPose,
-    soldier1Position,
-    setSoldier1Position, 
     soldiers,
     soldierColors,
     phaseTimes,
@@ -27,7 +23,14 @@ const Army = ({
     setMovingModeDeactivate
 }) => {
 
-    const { soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, soldierBlockedColor } = soldierColors
+    const { 
+        soldierDefaultColor, 
+        soldierHoveredColor, 
+        soldierSelectedColor, 
+        // soldierBlockedColor 
+    } = soldierColors
+
+    // TODO: soldierBlockedColor is not used
 
     const soldierRefs = soldiers.map(() => createRef());
     useEffect(() => {

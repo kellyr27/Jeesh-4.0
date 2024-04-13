@@ -1,5 +1,5 @@
 import {Line} from '@react-three/drei';
-import { useEffect, useState, memo } from "react";
+import { memo } from "react";
 import {centerCoords} from '../../../../utils/displayHelpers';
 
 // TODO: Fix lineWidth casing

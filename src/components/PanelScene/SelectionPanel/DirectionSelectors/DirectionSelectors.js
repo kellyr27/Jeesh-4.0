@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Stage, Layer, Rect, Line } from 'react-konva';
+import { Layer, Line } from 'react-konva';
 import {useControls, folder} from 'leva';
 import { getOpposingDirection } from '../../../../utils/directionHelpers';
 

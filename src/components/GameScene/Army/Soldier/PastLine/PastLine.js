@@ -1,6 +1,5 @@
 import {Line} from '@react-three/drei';
-import {centerCoords} from '../../../../../utils/displayHelpers';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Vector3 } from 'three';
 import { ARENA_LENGTH } from '../../../../../globals';
 

@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
-import {useControls, folder} from 'leva';
+import React from 'react';
 import DirectionSelectors from './DirectionSelectors/DirectionSelectors';
 import MoveSelectors from './MoveSelectors/MoveSelectors';
-import PanelTexts from './PanelText/PanelText';
+import PanelTexts from './PanelTexts/PanelTexts';
 
 
 const SelectionPanel = ({

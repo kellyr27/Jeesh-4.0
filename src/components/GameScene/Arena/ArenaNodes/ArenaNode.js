@@ -1,5 +1,5 @@
 import { Box } from '@react-three/drei';
-import React, { useState, useEffect, memo } from 'react'
+import React, { memo } from 'react'
 import { centerCoord } from '../../../../utils/displayHelpers';
 
 const ArenaNode = memo(({position, color, opacity}) => {

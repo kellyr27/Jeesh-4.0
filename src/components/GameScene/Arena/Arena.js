@@ -18,7 +18,7 @@ const Arena = ({
         arenaEdgesOpacity,
         arenaNodesIsDisplay,
         arenaEdgesIsDisplay,
-        arenaEdgesLineWidth
+        // arenaEdgesLineWidth
     } = useArenaNodeControls()
 
     const [attackedOnceNodes, setAttackedOnceNodes] = useState([])
@@ -207,8 +207,6 @@ const Arena = ({
                         opacity={1}
                         isDisplay={true}
                     />
-                    // <>
-                    // </>
                 )
             })}
         </>

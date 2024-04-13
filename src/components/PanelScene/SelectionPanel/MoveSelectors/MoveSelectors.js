@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import { Stage, Layer, Rect, Line } from 'react-konva';
+import React from 'react';
+import { Layer } from 'react-konva';
 import {useControls, folder} from 'leva';
 import { addArrays } from '../../../../utils/arrayHelpers';
 import MoveSelector from './MoveSelector';
@@ -31,13 +31,9 @@ const getRelativePosition = (xOffset, yOffset, directionMap) => {
 const MoveSelectors = ({
     allowedPositions, 
     directionMap, 
-    setDirectionMap, 
     isPanelLocked,
-    currentHoveredPose,
     setCurrentHoveredPose,
-    currentSelectedPose,
     setCurrentSelectedPose,
-    panelSize, 
     directionSelectorSize, 
     moveSelectorSize, 
     selectorOffsetSize

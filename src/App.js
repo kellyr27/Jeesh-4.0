@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import GameScene from './scenes/GameScene'
 import PanelScene from './scenes/PanelScene'
 import './App.css';

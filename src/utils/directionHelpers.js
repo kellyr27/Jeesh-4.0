@@ -1,4 +1,3 @@
-import {Euler, Quaternion} from 'three'
 
 const getOpposingDirection = (direction) => {
     const polarity = direction[0]

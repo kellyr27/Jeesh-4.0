@@ -1,11 +1,9 @@
-import React, {useState, useRef, useEffect} from 'react';
-import { Canvas, useThree } from "@react-three/fiber";
-import { Stars, TrackballControls } from "@react-three/drei";
+import React from 'react';
+import { Canvas } from "@react-three/fiber";
+import { Stars} from "@react-three/drei";
 import Army from '../components/GameScene/Army/Army';
 import { useControls, folder } from 'leva';
-import {INITIAL_SOLDIERS} from '../globals';
 import StarField from '../components/GameScene/StarField/StarField';
-import { Star } from 'react-konva';
 import Arena from '../components/GameScene/Arena/Arena';
 import CameraController from '../components/GameScene/CameraController/CameraController';
 import AxesHelperController from '../components/GameScene/AxesHelperController/AxesHelperController';
@@ -28,9 +26,6 @@ const GameScene = ({
     currentHoveredPosition
 }) => {
 
-    //TODO: Remove this
-    const [soldier1Position, setSoldier1Position] = React.useState([0, 0, 0])
-    const [soldier1Direction, setSoldier1Direction] = React.useState('-z')
 
     const soldierColors = useControls('Soldiers', {
         'Colors': folder({
@@ -86,8 +81,6 @@ const GameScene = ({
                 setSelectedSoldier={setSelectedSoldier}
                 currentSelectedPose={currentSelectedPose}
                 setCurrentSelectedPose={setCurrentSelectedPose}
-                soldier1Position={soldier1Position}
-                setSoldier1Position={setSoldier1Position}
                 soldiers={soldiers}
                 soldierColors={soldierColors}
                 phaseTimes={phaseTimes}
