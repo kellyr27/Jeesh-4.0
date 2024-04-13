@@ -8,6 +8,7 @@ import StarField from '../components/GameScene/StarField/StarField';
 import { Star } from 'react-konva';
 import Arena from '../components/GameScene/Arena/Arena';
 import CameraController from '../components/GameScene/CameraController/CameraController';
+import AxesHelperController from '../components/GameScene/AxesHelperController/AxesHelperController';
 
 const GameScene = ({
     hoveredSoldier, 
@@ -96,7 +97,7 @@ const GameScene = ({
                 setMovingModeDeactivate={setMovingModeDeactivate}
             />
             <StarField starPositions={starPositions} />
-            <axesHelper args={[5]} />
+            <AxesHelperController />
         </Canvas>
     )
 }

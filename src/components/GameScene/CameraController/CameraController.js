@@ -8,13 +8,12 @@ const CameraController = ({ selectedSoldier }) => {
     const zoomLevel = useRef(camera.zoom)
     const timeoutId = useRef()
 
-    const ZOOM_AFTER_MOVE_TIME = 2000
+    const ZOOM_AFTER_MOVE_TIME = 0
 
     useEffect(() => {
         if (controlsRef.current) {
             if (selectedSoldier) {
                 clearTimeout(timeoutId.current)
-                console.log('here')
                 zoomLevel.current = 40;
             } else {
                 timeoutId.current = setTimeout(() => {

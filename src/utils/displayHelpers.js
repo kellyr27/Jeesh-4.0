@@ -8,9 +8,19 @@ import {checkIfPositionInArray} from './poseHelpers'
  * Takes a coordinate and positions it to the centre of the Cube
  */
 const offsetCoord = (coord) => {
-    const [x, y, z] = coord
     const offset = 0.5
-    return [x + offset, y + offset, z + offset]
+
+    if (Array.isArray(coord)) {
+        const [x, y, z] = coord
+        return [x + offset, y + offset, z + offset]
+    }
+    else if (typeof coord === 'object') {
+        return coord.set(
+            coord.x + offset,
+            coord.y + offset,
+            coord.z + offset
+        )
+    }
 }
 
 const offsetCoords = (coords) => {
@@ -20,12 +30,25 @@ const offsetCoords = (coords) => {
 }
 
 const centerCoord = (coord) => {
-    const [x, y, z] = offsetCoord(coord)
     const centerOffset = - ARENA_LENGTH / 2
-    return [x + centerOffset, y + centerOffset, z + centerOffset]
+
+    if (Array.isArray(coord)) {
+        const [x, y, z] = offsetCoord(coord)
+        return [x + centerOffset, y + centerOffset, z + centerOffset]
+    }
+    else if (typeof coord === 'object') {
+        offsetCoord(coord)
+
+        return coord.set(
+            coord.x + centerOffset,
+            coord.y + centerOffset,
+            coord.z + centerOffset
+        )
+    }
 }
 
 const centerCoords = (coords) => {
+    
     return coords.map((coord) => {
         return centerCoord(coord)
     })

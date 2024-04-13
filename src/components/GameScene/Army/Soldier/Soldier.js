@@ -5,7 +5,28 @@ import { useFrame, useThree } from "react-three-fiber"
 import { getMovePath,  getQuaternionFromLookAt, centerCoord } from '../../../../utils/displayHelpers'
 import { addArrays } from "../../../../utils/arrayHelpers"
 import { Vector3, Quaternion } from "three"
+import PastLine from "./PastLine/PastLine"
 
+function getPointsUpTo(bezierCurve, numPoints, endPosition) {
+
+    if (!bezierCurve || numPoints <= 0 || endPosition <= 0) {
+        return []
+    }
+
+    const points = [];
+
+    for (let i = 0; i < numPoints; i++) {
+        let t = i / (numPoints - 1) * endPosition;
+        t = Math.min(t, 1)
+
+        const point = bezierCurve.getPointAt(t);
+
+        points.push(point);
+    }
+
+
+    return points;
+}
 
 
 const Soldier = memo(forwardRef(({
@@ -20,6 +41,10 @@ const Soldier = memo(forwardRef(({
     movingModeDeactivate,
     setMovingModeDeactivate
 }, ref) => {
+
+    const [pastLines, setPastLines] = useState([])
+    const [currentLine, setCurrentLine] = useState([])
+    const [moveLineToCurrentLine, setMoveLineToCurrentLine] = useState(false)
 
     const [position, setPosition] = useState(soldier.gamePosition)
     const [rotation, setRotation] = useState(getQuaternionFromLookAt(new Vector3(...getRelativeDirectionArray(soldier.direction))))
@@ -110,14 +135,18 @@ const Soldier = memo(forwardRef(({
 
     }, [bezierCurve, movePoses])
 
+
     /**
-     * When moving mode is activated, set the moving parameters is an only if the Soldier is the selected one
+     * When moving mode is activated
+     * - Set the moving parameters is an only if the Soldier is the selected one
+     * 
      */
     useEffect(() => {
 
         if (movingModeActivate && isSelectedSoldier) {
             movePoses.current = updateMovePoses()
             setBezierCurve(updateBezierCurve())
+
         } else {
             setBezierCurve(null)
             movePoses.current = null
@@ -181,6 +210,11 @@ const Soldier = memo(forwardRef(({
     
                     setPosition(currentPhase3Position)
                     setRotation(currentRotationQuaternion)
+
+                    // Set the PastLine
+                    const pastLinePoints = getPointsUpTo(bezierCurve, 10, t3)
+                    setCurrentLine(pastLinePoints)
+
                 } else {
                     animationPhase.current = 4
                 }
@@ -218,15 +252,51 @@ const Soldier = memo(forwardRef(({
         }
     }, [rotation, ref])
 
-    return (
+    useEffect(() => {
+        if (movingModeDeactivate) {
 
-        <Cone
-            ref={ref}
-            args={[0.4, 0.8]} 
-            position={centerCoord(position)} 
-            material-color={color}
-            name={`Soldier-${soldierId}`}
-        />
+            setMoveLineToCurrentLine(true)
+        }
+    }, [movingModeDeactivate])
+
+    useEffect(() => {
+        if (moveLineToCurrentLine) {
+            setPastLines(pastLines => [...pastLines, currentLine])
+            setCurrentLine([])
+            setMoveLineToCurrentLine(false)
+        }
+    }, [moveLineToCurrentLine, currentLine, pastLines])
+    
+
+    useEffect(() => {
+        console.log(pastLines, currentLine)
+    }, [pastLines, currentLine])
+
+    return (
+        <>
+            {pastLines.length > 0 && pastLines.map((line, index) => {
+                return (
+                    line.length > 0 ? (
+                        <PastLine
+                            key={index}
+                            vector3Points={line}
+                        />
+                    ) : null
+                )
+            })}
+            {currentLine.length > 0 && (
+                <PastLine
+                    vector3Points={currentLine}
+                />
+            )}
+            <Cone
+                ref={ref}
+                args={[0.4, 0.8]} 
+                position={centerCoord(position)} 
+                material-color={color}
+                name={`Soldier-${soldierId}`}
+            />
+        </>
     )
 }))
 

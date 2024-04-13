@@ -296,7 +296,12 @@ function App() {
 					currentHoveredPosition={currentHoveredPosition}
 				/>
 			</div>
-			<div className="panel-scene" style={{ width: panelSize, height: panelSize }}>
+			<div className="panel-scene" style={{ 
+				width: `${panelSize}px`, 
+				height: `${panelSize}px`,
+				top: `calc(100vh - ${panelSize}px - 15px)`,
+    			left: `15px`,
+			}}>
 				<PanelScene 
 					panelSize={panelSize}
 					allowedPositions={allowedPositions}

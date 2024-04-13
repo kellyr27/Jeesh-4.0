@@ -185,7 +185,6 @@ const Arena = ({
             {hoveredPositionEdges.map((edge, index) => {
                 const points = getEdgeEndPoints(keyToArray(edge[0]), keyToArray(edge[1]))
                 
-                console.log(points)
                 return (
                     <ArenaEdge
                         key={index}
