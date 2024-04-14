@@ -305,15 +305,7 @@ function App() {
 				<PanelScene 
 					panelSize={panelSize}
 					allowedPositions={allowedPositions}
-					setAllowedPositions={setAllowedPositions}
 					isPanelLocked={isPanelLocked}
-					setIsPanelLocked={setIsPanelLocked}
-					currentHoveredPose={currentHoveredPose}
-					setCurrentHoveredPose={setCurrentHoveredPose}
-					currentSelectedPose={currentSelectedPose}
-					setCurrentSelectedPose={setCurrentSelectedPose}
-					directionMap={directionMap}
-					setDirectionMap={setDirectionMap}
 				/>
 			</div>
 		</div>

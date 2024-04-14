@@ -11,17 +11,9 @@ import SelectionPanel from '../components/PanelScene/SelectionPanel/SelectionPan
  */
 
 const PanelScene = ({
-    panelSize, 
-    allowedPositions, 
-    setAllowedPositions, 
-    isPanelLocked, 
-    setIsPanelLocked,
-    currentHoveredPose, 
-    setCurrentHoveredPose,
-    currentSelectedPose, 
-    setCurrentSelectedPose,
-    directionMap, 
-    setDirectionMap
+    panelSize,
+    allowedPositions,
+    isPanelLocked,
 }) => {
     
     const [selectorSizes, setSelectorSizes] = useState({

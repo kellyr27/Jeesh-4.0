@@ -28,7 +28,7 @@ function getPointsUpTo(bezierCurve, numPoints, endPosition) {
     return points;
 }
 
-
+// TODO: At the end of the movement, Soldier needs to callback to indicate end of movement
 const Soldier = memo(forwardRef(({
     soldierId,
     color,
@@ -38,8 +38,6 @@ const Soldier = memo(forwardRef(({
     selectedSoldier,
     movingModeActivate,
     setMovingModeActivate,
-    movingModeDeactivate,
-    setMovingModeDeactivate
 }, ref) => {
 
     const [pastLines, setPastLines] = useState([])
@@ -251,13 +249,6 @@ const Soldier = memo(forwardRef(({
             ref.current.quaternion.copy(rotation)
         }
     }, [rotation, ref])
-
-    useEffect(() => {
-        if (movingModeDeactivate) {
-
-            setMoveLineToCurrentLine(true)
-        }
-    }, [movingModeDeactivate])
 
     useEffect(() => {
         if (moveLineToCurrentLine) {
