@@ -49,7 +49,7 @@ const GameScene = ({
         e.stopPropagation()
     }
 
-
+    
 
     return (
         <Canvas 
