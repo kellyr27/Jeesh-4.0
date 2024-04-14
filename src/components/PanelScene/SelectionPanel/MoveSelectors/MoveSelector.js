@@ -1,9 +1,14 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 
-const MoveSelector = ({ x, y, width, height, fill, onMouseEnter, onMouseLeave, onClick, isBlocked, name}) => {
+const MoveSelector = (props) => {
 
+    const { x, y, width, height, fill, onMouseEnter, onMouseLeave, onClick, isBlocked, name} = props
     
+    // If the selector is blocked, it should be semi-transparent and non-interactive.
+    const opacity = isBlocked ? 0.4 : 0.9;
+    const eventHandlers = isBlocked ? {} : { onMouseEnter, onMouseLeave, onClick };
+
     return (
         <Rect
             name={name}
@@ -12,11 +17,9 @@ const MoveSelector = ({ x, y, width, height, fill, onMouseEnter, onMouseLeave, o
             width={width}
             height={height}
             fill={fill}
-            opacity={isBlocked ? 0.4 : 0.9}
-            onMouseEnter={isBlocked ? null : onMouseEnter}
-            onMouseLeave={isBlocked ? null : onMouseLeave}
-            onClick={isBlocked ? null : onClick}
+            opacity={opacity}
             cornerRadius={3}
+            {...eventHandlers}
         />
     )
 }

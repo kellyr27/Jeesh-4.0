@@ -5,6 +5,7 @@ import { addArrays } from '../../../../utils/arrayHelpers';
 import MoveSelector from './MoveSelector';
 import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
 import { checkIfPositionInArray } from '../../../../utils/poseHelpers';
+import useMoveSelectorsControls from './MoveSelectors.controls';
 
 const getRelativePosition = (xOffset, yOffset, directionMap) => {
     if (xOffset === -1 && yOffset === -1) {
@@ -36,17 +37,18 @@ const MoveSelectors = ({
     setCurrentSelectedPose,
     directionSelectorSize, 
     moveSelectorSize, 
-    selectorOffsetSize
+    selectorOffsetSize,
+    onMoveSelectorsClick,
+    onMoveSelectorsMouseEnter,
+    onMoveSelectorsMouseLeave,
 }) => {
 
-    const { moveSelectorDefaultColor, moveSelectorHoveredColor, moveSelectorSelectedColor, moveSelectorBlockedColor } = useControls('Selection Panel', {
-        'Colors': folder({
-            moveSelectorDefaultColor: '#00D2FF',
-            moveSelectorHoveredColor: '#FF00D2',
-            moveSelectorSelectedColor: '#D200FF',
-            moveSelectorBlockedColor: '#FFD200'
-        })
-    })
+    const { 
+        moveSelectorDefaultColor, 
+        moveSelectorHoveredColor,
+        moveSelectorSelectedColor, 
+        moveSelectorBlockedColor 
+    } = useMoveSelectorsControls()
 
     const handleMouseEnter = (e) => {
         e.target.fill(moveSelectorHoveredColor);

@@ -19,6 +19,22 @@ const SelectionPanel = ({
     selectorOffsetSize
 }) => {
 
+    const handleDirectionSelectorsClick = (direction) => {
+        console.log(`Direction ${direction} was clicked`);
+    }
+
+    const handleMoveSelectorsClick = (x) => {
+        console.log(`Move ${x} was clicked`);
+    }
+
+    const handleMoveSelectorsMouseEnter = (x) => {
+        console.log(`Move ${x} was clicked`);
+    }
+
+    const handleMoveSelectorsMouseLeave = (x) => {
+        console.log(`Move ${x} was clicked`);
+    }
+
     return (
         <>  
             <MoveSelectors
@@ -34,6 +50,9 @@ const SelectionPanel = ({
                 directionSelectorSize={directionSelectorSize}
                 moveSelectorSize={moveSelectorSize}
                 selectorOffsetSize={selectorOffsetSize}
+                onMoveSelectorsClick={handleMoveSelectorsClick}
+                onMoveSelectorsMouseEnter={handleMoveSelectorsMouseEnter}
+                onMoveSelectorsMouseLeave={handleMoveSelectorsMouseLeave}
             />
             <DirectionSelectors 
                 allowedPositions={allowedPositions} 
@@ -48,6 +67,7 @@ const SelectionPanel = ({
                 directionSelectorSize={directionSelectorSize}
                 moveSelectorSize={moveSelectorSize}
                 selectorOffsetSize={selectorOffsetSize}
+                onDirectionClick={handleDirectionSelectorsClick}
             />
             <PanelTexts
                 allowedPositions={allowedPositions} 

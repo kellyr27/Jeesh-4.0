@@ -3,7 +3,15 @@ import { Layer, Line } from 'react-konva';
 import {useControls, folder} from 'leva';
 import { getOpposingDirection } from '../../../../utils/directionHelpers';
 
-const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize, selectorOffsetSize, directionMap, setDirectionMap, isPanelLocked}) => {
+const DirectionSelectors = ({
+    panelSize, 
+    directionSelectorSize, 
+    selectorOffsetSize, 
+    directionMap, 
+    setDirectionMap, 
+    isPanelLocked, 
+    onDirectionClick
+}) => {
 
     const { directionSelectiorDefaultColor, directionSelectiorHoveredColor, directionSelectiorSelectedColor, directionSelectiorBlockedColor } = useControls('Selection Panel', {
         'Colors': folder({
@@ -79,6 +87,8 @@ const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize,
         const directionClicked = e.target.name()
         updateDirections(directionClicked)
 
+        // Call the onDirectionClick function with the clicked direction
+        onDirectionClick(directionClicked)
     };
 
     const directionSelectors = {
@@ -116,7 +126,6 @@ const DirectionSelectors = ({panelSize, directionSelectorSize, moveSelectorSize,
         }
     }
 
-    // TODO: Round the corners
     return (
         <Layer>
             {['up', 'down', 'left', 'right'].map(direction => (

@@ -3,6 +3,7 @@ import {centerCoord} from "../../../utils/displayHelpers"
 
 const StarField = ({starPositions}) => {
 
+
     return (
         <>
             {starPositions.map((position, index) => {
