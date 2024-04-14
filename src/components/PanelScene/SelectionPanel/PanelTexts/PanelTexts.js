@@ -3,7 +3,7 @@ import { Layer } from 'react-konva';
 import PanelText from './PanelText';
 
 const PanelTexts = ({
-    directionMap, 
+    cardinalDirectionMap, 
     isPanelLocked,
     panelSize, 
     directionSelectorSize
@@ -15,11 +15,11 @@ const PanelTexts = ({
      * (the coordinates of the text on the panel).
      */
     const textElements = [
-        { text: directionMap.face, x: panelSize / 2, y: panelSize / 2 },
-        { text: directionMap.left, x: directionSelectorSize / 2, y: panelSize / 2 },
-        { text: directionMap.right, x: panelSize - directionSelectorSize / 2, y: panelSize / 2 },
-        { text: directionMap.up, x: panelSize / 2, y: directionSelectorSize / 2 },
-        { text: directionMap.down, x: panelSize / 2, y: panelSize - directionSelectorSize / 2 },
+        { text: cardinalDirectionMap.face, x: panelSize / 2, y: panelSize / 2 },
+        { text: cardinalDirectionMap.left, x: directionSelectorSize / 2, y: panelSize / 2 },
+        { text: cardinalDirectionMap.right, x: panelSize - directionSelectorSize / 2, y: panelSize / 2 },
+        { text: cardinalDirectionMap.up, x: panelSize / 2, y: directionSelectorSize / 2 },
+        { text: cardinalDirectionMap.down, x: panelSize / 2, y: panelSize - directionSelectorSize / 2 },
     ];
 
     return (

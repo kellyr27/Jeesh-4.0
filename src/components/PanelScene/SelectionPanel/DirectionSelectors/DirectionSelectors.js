@@ -7,8 +7,6 @@ const DirectionSelectors = ({
     panelSize, 
     directionSelectorSize, 
     selectorOffsetSize, 
-    directionMap, 
-    setDirectionMap, 
     isPanelLocked, 
     onDirectionClick
 }) => {
@@ -32,42 +30,6 @@ const DirectionSelectors = ({
         setHalfSelectorOffsetSize(selectorOffsetSize / 2)
     }, [selectorOffsetSize])
 
-    const updateDirections = (selectedDirection) => {
-        if (selectedDirection === 'up') {
-            setDirectionMap({
-                face: directionMap.up,
-                left: directionMap.left,
-                right: directionMap.right,
-                up: getOpposingDirection(directionMap.face),
-                down: directionMap.face
-            })
-        } else if (selectedDirection === 'down') {
-            setDirectionMap({
-                face: directionMap.down,
-                left: directionMap.left,
-                right: directionMap.right,
-                up: directionMap.face,
-                down: getOpposingDirection(directionMap.face)
-            })
-        } else if (selectedDirection === 'left') {
-            setDirectionMap({
-                face: directionMap.left,
-                left: getOpposingDirection(directionMap.face),
-                right: directionMap.face,
-                up: directionMap.up,
-                down: directionMap.down
-            })
-        } else if (selectedDirection === 'right') {
-            setDirectionMap({
-                face: directionMap.right,
-                left: directionMap.face,
-                right: getOpposingDirection(directionMap.face),
-                up: directionMap.up,
-                down: directionMap.down
-            })
-        }
-    }
-
     // Change the color of the square when the mouse enters
     const handleMouseEnter = (e) => {
         e.target.fill(directionSelectiorHoveredColor);
@@ -85,7 +47,6 @@ const DirectionSelectors = ({
         e.target.fill(directionSelectiorSelectedColor);
         e.target.draw();
         const directionClicked = e.target.name()
-        updateDirections(directionClicked)
 
         // Call the onDirectionClick function with the clicked direction
         onDirectionClick(directionClicked)

@@ -1,5 +1,24 @@
 
+const isValidDirection = (direction) => {
+    return ['+x', '-x', '+y', '-y', '+z', '-z'].includes(direction)
+}
+
+
+/**
+ * This function takes a direction string as input and returns the opposing direction.
+ * The input direction string is expected to start with either '+' or '-' followed by a character representing the axis (e.g., 'x', 'y', 'z').
+ * If the input direction starts with '+', the function returns the direction with '-' and vice versa.
+ * For example, if the input is '-z', the function will return '+z'.
+ *
+ * @param {string} direction - The input direction string. Should start with '+' or '-' followed by the axis character.
+ * @returns {string} The opposing direction string.
+ */
 const getOpposingDirection = (direction) => {
+
+    if (!isValidDirection(direction)) {
+        throw new Error('Invalid direction. Expected one of "+x", "-x", "+y", "-y", "+z", "-z".');
+    }
+
     const polarity = direction[0]
 
     if (polarity === '+') {

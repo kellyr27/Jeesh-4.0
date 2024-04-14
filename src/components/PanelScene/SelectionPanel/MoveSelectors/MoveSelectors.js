@@ -1,40 +1,14 @@
 import React from 'react';
 import { Layer } from 'react-konva';
-import {useControls, folder} from 'leva';
-import { addArrays } from '../../../../utils/arrayHelpers';
 import MoveSelector from './MoveSelector';
-import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
 import { checkIfPositionInArray } from '../../../../utils/poseHelpers';
 import useMoveSelectorsControls from './MoveSelectors.controls';
-
-const getRelativePosition = (xOffset, yOffset, directionMap) => {
-    if (xOffset === -1 && yOffset === -1) {
-        return addArrays(getRelativeDirectionArray(directionMap.left), getRelativeDirectionArray(directionMap.up), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === 0 && yOffset === -1) {
-        return addArrays(getRelativeDirectionArray(directionMap.up), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === 1 && yOffset === -1) {
-        return addArrays(getRelativeDirectionArray(directionMap.right), getRelativeDirectionArray(directionMap.up), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === -1 && yOffset === 0) {
-        return addArrays(getRelativeDirectionArray(directionMap.left), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === 0 && yOffset === 0) {
-        return addArrays(getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === 1 && yOffset === 0) {
-        return addArrays(getRelativeDirectionArray(directionMap.right), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === -1 && yOffset === 1) {
-        return addArrays(getRelativeDirectionArray(directionMap.left), getRelativeDirectionArray(directionMap.down), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === 0 && yOffset === 1) {
-        return addArrays(getRelativeDirectionArray(directionMap.down), getRelativeDirectionArray(directionMap.face))
-    } else if (xOffset === 1 && yOffset === 1) {
-        return addArrays(getRelativeDirectionArray(directionMap.right), getRelativeDirectionArray(directionMap.down), getRelativeDirectionArray(directionMap.face))
-    }
-}
+import { getRelativePosition } from '../SelectionPanel.utils';
 
 const MoveSelectors = ({
     allowedPositions, 
-    directionMap, 
+    cardinalDirectionMap,
     isPanelLocked,
-    setCurrentHoveredPose,
-    setCurrentSelectedPose,
     directionSelectorSize, 
     moveSelectorSize, 
     selectorOffsetSize,
@@ -53,30 +27,21 @@ const MoveSelectors = ({
     const handleMouseEnter = (e) => {
         e.target.fill(moveSelectorHoveredColor);
         e.target.draw();
-
-        const hoveredPosition = e.target.name().split(',').map(Number)
-        setCurrentHoveredPose({
-            position: hoveredPosition,
-            direction: directionMap.face
-        })
+        const hoveredRelativePosition = e.target.name().split(',').map(Number)
+        onMoveSelectorsMouseEnter(hoveredRelativePosition)
     };
 
     const handleMouseLeave = (e) => {
         e.target.fill(moveSelectorDefaultColor);
         e.target.draw();
-
-        setCurrentHoveredPose(null)
+        onMoveSelectorsMouseLeave()
     };
 
     const handleClick = (e) => {
         e.target.fill(moveSelectorSelectedColor);
         e.target.draw();
-
         const selectedPosition = e.target.name().split(',').map(Number)
-        setCurrentSelectedPose({
-            position: selectedPosition,
-            direction: directionMap.face
-        })
+        onMoveSelectorsClick(selectedPosition)
     };
 
     return (
@@ -86,7 +51,7 @@ const MoveSelectors = ({
             [...Array(3)].map((_, j) => {
                 
                 const [xOffset, yOffset] = [i - 1, j - 1]
-                const relativePosition = getRelativePosition(xOffset, yOffset, directionMap)
+                const relativePosition = getRelativePosition(xOffset, yOffset, cardinalDirectionMap)
                 const isPositionAllowed = checkIfPositionInArray(relativePosition, allowedPositions) && !isPanelLocked
 
                 return (

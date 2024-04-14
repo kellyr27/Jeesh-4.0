@@ -24,32 +24,46 @@ const PanelScene = ({
     setDirectionMap
 }) => {
     
-    const [directionSelectorSize, setDirectionSelectorSize] = useState(40);
-    const [moveSelectorSize, setMoveSelectorSize] = useState(50);
-    const [selectorOffsetSize, setSelectorOffsetSize] = useState(5);
-
+    const [selectorSizes, setSelectorSizes] = useState({
+        direction: 40,
+        move: 50,
+        offset: 5
+    });
+    
     // Update the size of the components when the panel size changes
     useEffect(() => {
-        setDirectionSelectorSize(panelSize * 0.16)
-        setMoveSelectorSize(panelSize * 0.2)
-        setSelectorOffsetSize(panelSize * 0.02)
+        setSelectorSizes({
+            direction: panelSize * 0.16,
+            move: panelSize * 0.2,
+            offset: panelSize * 0.02
+        });
     }, [panelSize]);
+
+
+    const handleMoveSelected = (selectedPosition) => {
+        console.log('Move has been selected. Lock panel', selectedPosition)
+    }
+
+    const handleMoveHovered = (hoveredPosition) => {
+        console.log('Move is hovered', hoveredPosition)
+    }
 
     return (
         <Stage width={panelSize} height={panelSize}>
             <SelectionPanel 
                 allowedPositions={allowedPositions} 
-                directionMap={directionMap}
-                setDirectionMap={setDirectionMap}
-                isPanelLocked={isPanelLocked} 
-                currentHoveredPose={currentHoveredPose}
-                setCurrentHoveredPose={setCurrentHoveredPose} 
-                currentSelectedPose={currentSelectedPose}
-                setCurrentSelectedPose={setCurrentSelectedPose}
+                isPanelLocked={isPanelLocked}
                 panelSize={panelSize}
-                directionSelectorSize={directionSelectorSize}
-                moveSelectorSize={moveSelectorSize}
-                selectorOffsetSize={selectorOffsetSize}
+                selectorSizes={selectorSizes}
+                onMoveSelected={handleMoveSelected}
+                onMoveHovered={handleMoveHovered}
+                initialCardinalDirectionMap={{
+                    face: '+z',
+                    left: '-x',
+                    right: '+x',
+                    up: '+y',
+                    down: '-y'
+                }}
             />
         </Stage>
     );

@@ -1,51 +1,60 @@
-import React from 'react';
+import React, {useState} from 'react';
 import DirectionSelectors from './DirectionSelectors/DirectionSelectors';
 import MoveSelectors from './MoveSelectors/MoveSelectors';
 import PanelTexts from './PanelTexts/PanelTexts';
+import {updateCardinalDirectionMap} from './SelectionPanel.utils';
 
 
 const SelectionPanel = ({
     allowedPositions, 
-    directionMap, 
-    setDirectionMap, 
+    initialCardinalDirectionMap,
     isPanelLocked,
-    currentHoveredPose,
-    setCurrentHoveredPose,
-    currentSelectedPose,
-    setCurrentSelectedPose,
     panelSize, 
-    directionSelectorSize, 
-    moveSelectorSize, 
-    selectorOffsetSize
+    onMoveSelected,
+    onMoveHovered,
+    selectorSizes
 }) => {
 
-    const handleDirectionSelectorsClick = (direction) => {
-        console.log(`Direction ${direction} was clicked`);
+    const [cardinalDirectionMap, setCardinalDirectionMap] = useState(initialCardinalDirectionMap)
+
+    const {
+        direction: directionSelectorSize, 
+        move: moveSelectorSize, 
+        offset: selectorOffsetSize
+    } = selectorSizes
+
+    /**
+     * Used for reseting the Direction map when a new Soldier is selected
+     * to face the direction that the Soldier is currently facing.
+     */
+    useState(() => {
+        setCardinalDirectionMap(initialCardinalDirectionMap)
+    }, [initialCardinalDirectionMap])
+
+
+    const handleDirectionSelectorsClick = (cardinalDirection) => {
+        const updatedCardinalDirectionMap = updateCardinalDirectionMap(cardinalDirection, cardinalDirectionMap)
+        setCardinalDirectionMap(updatedCardinalDirectionMap)
     }
 
-    const handleMoveSelectorsClick = (x) => {
-        console.log(`Move ${x} was clicked`);
+    const handleMoveSelectorsClick = (relativePosition) => {
+        onMoveSelected(relativePosition)
     }
 
-    const handleMoveSelectorsMouseEnter = (x) => {
-        console.log(`Move ${x} was clicked`);
+    const handleMoveSelectorsMouseEnter = (relativePosition) => {
+        onMoveHovered(relativePosition)
     }
 
-    const handleMoveSelectorsMouseLeave = (x) => {
-        console.log(`Move ${x} was clicked`);
+    const handleMoveSelectorsMouseLeave = () => {
+        onMoveHovered(null)
     }
 
     return (
         <>  
             <MoveSelectors
                 allowedPositions={allowedPositions} 
-                directionMap={directionMap}
-                setDirectionMap={setDirectionMap}
+                cardinalDirectionMap={cardinalDirectionMap}
                 isPanelLocked={isPanelLocked} 
-                currentHoveredPose={currentHoveredPose}
-                setCurrentHoveredPose={setCurrentHoveredPose} 
-                currentSelectedPose={currentSelectedPose}
-                setCurrentSelectedPose={setCurrentSelectedPose}
                 panelSize={panelSize}
                 directionSelectorSize={directionSelectorSize}
                 moveSelectorSize={moveSelectorSize}
@@ -55,33 +64,17 @@ const SelectionPanel = ({
                 onMoveSelectorsMouseLeave={handleMoveSelectorsMouseLeave}
             />
             <DirectionSelectors 
-                allowedPositions={allowedPositions} 
-                directionMap={directionMap}
-                setDirectionMap={setDirectionMap}
                 isPanelLocked={isPanelLocked} 
-                currentHoveredPose={currentHoveredPose}
-                setCurrentHoveredPose={setCurrentHoveredPose} 
-                currentSelectedPose={currentSelectedPose}
-                setCurrentSelectedPose={setCurrentSelectedPose}
                 panelSize={panelSize}
                 directionSelectorSize={directionSelectorSize}
-                moveSelectorSize={moveSelectorSize}
                 selectorOffsetSize={selectorOffsetSize}
                 onDirectionClick={handleDirectionSelectorsClick}
             />
             <PanelTexts
-                allowedPositions={allowedPositions} 
-                directionMap={directionMap}
-                setDirectionMap={setDirectionMap}
+                cardinalDirectionMap={cardinalDirectionMap}
                 isPanelLocked={isPanelLocked} 
-                currentHoveredPose={currentHoveredPose}
-                setCurrentHoveredPose={setCurrentHoveredPose} 
-                currentSelectedPose={currentSelectedPose}
-                setCurrentSelectedPose={setCurrentSelectedPose}
                 panelSize={panelSize}
                 directionSelectorSize={directionSelectorSize}
-                moveSelectorSize={moveSelectorSize}
-                selectorOffsetSize={selectorOffsetSize}
             />
         </>
     );
