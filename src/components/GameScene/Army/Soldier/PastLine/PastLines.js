@@ -9,8 +9,6 @@ const PastLines = ({
     currentLine
 }) => {
 
-    console.log('pastLines', pastLines)
-
     const offsetCurrentLinePoints = offsetLinePoints(currentLine)
     const offsetArrPastLinePoints = offsetArrLinePoints(pastLines)
 

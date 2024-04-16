@@ -29,8 +29,8 @@ const PanelScene = ({
         setSelectedSoldierId,
         selectedSoldierPose,
         setSelectedSoldierPose,
-        selectedRelativePosition,
-        setSelectedRelativePosition,
+        selectedRelativePose,
+        setSelectedRelativePose,
         lockSelectionPanel,
         setLockSelectionPanel
     } = useSelectionPanelInteractionContext()
@@ -63,8 +63,12 @@ const PanelScene = ({
     }, [panelSize]);
 
 
-    const handleMoveSelected = (selectedPosition) => {
-        setSelectedRelativePosition(selectedPosition)
+    const handleMoveSelected = (selectedPosition, selectedDirection) => {
+        console.log('selected direction', selectedDirection)
+        setSelectedRelativePose({
+            position: selectedPosition,
+            direction: selectedDirection
+        })
     }
 
     const handleMoveHovered = (hoveredPosition) => {

@@ -15,6 +15,7 @@ const SelectionPanel = ({
     selectorSizes
 }) => {
 
+    //TODO: Move to context
     const [cardinalDirectionMap, setCardinalDirectionMap] = useState(initialCardinalDirectionMap)
 
     const {
@@ -38,7 +39,7 @@ const SelectionPanel = ({
     }
 
     const handleMoveSelectorsClick = (relativePosition) => {
-        onMoveSelected(relativePosition)
+        onMoveSelected(relativePosition, cardinalDirectionMap.face)
     }
 
     const handleMoveSelectorsMouseEnter = (relativePosition) => {

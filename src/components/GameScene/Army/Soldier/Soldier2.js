@@ -98,7 +98,6 @@ const Soldier2 = forwardRef(({
             const phase1Skip = currentPoseTangent.equals(startMovePathTangent)
             const phase3Skip = endMovePathTangent.equals(targetPoseTangent)
 
-
             moveState.current = {
                 activated: true,
                 animationPhase: 1,
@@ -115,6 +114,8 @@ const Soldier2 = forwardRef(({
                     phase3Skip: phase3Skip
                 }
             }
+
+            console.log('move', move, moveState.current)
         }
     }, [move])
 
@@ -277,11 +278,10 @@ const Soldier2 = forwardRef(({
                 pastLines={pastLinePoints}
                 currentLine={currentLinePoints}
             />
-            <Cone
-                args={[0.4, 0.8]} 
-                ref={ref}
-                name={name}
-            />
+            <Cone args={[0.4, 0.8]} ref={ref} name={name} />
+            <Cone args={[0.4, 0.8]} name={name}>
+                <meshBasicMaterial attach="material" wireframe />
+            </Cone>
         </>
     )
 })

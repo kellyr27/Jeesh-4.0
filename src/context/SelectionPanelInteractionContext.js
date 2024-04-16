@@ -14,7 +14,7 @@ const SelectionPanelInteractionProvider = ({children}) => {
     const [relativeHoveredPosition, setRelativeHoveredPosition] = useState(null)
     const [selectedSoldierId, setSelectedSoldierId] = useState(null)
     const [selectedSoldierPose, setSelectedSoldierPose] = useState(null)
-    const [selectedRelativePosition, setSelectedRelativePosition] = useState(null)
+    const [selectedRelativePose, setSelectedRelativePose] = useState(null)
 
     const [lockSelectionPanel, setLockSelectionPanel] = useState(false)
 
@@ -30,8 +30,8 @@ const SelectionPanelInteractionProvider = ({children}) => {
             setSelectedSoldierId,
             selectedSoldierPose,
             setSelectedSoldierPose,
-            selectedRelativePosition,
-            setSelectedRelativePosition,
+            selectedRelativePose,
+            setSelectedRelativePose,
             lockSelectionPanel,
             setLockSelectionPanel
         }}>

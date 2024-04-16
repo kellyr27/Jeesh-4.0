@@ -53,8 +53,8 @@ const GameScene = ({
         setSelectedSoldierId,
         selectedSoldierPose,
         setSelectedSoldierPose,
-        selectedRelativePosition,
-        setSelectedRelativePosition,
+        selectedRelativePose,
+        setSelectedRelativePose,
         lockSelectionPanel,
         setLockSelectionPanel
     } = useSelectionPanelInteractionContext()
@@ -63,27 +63,31 @@ const GameScene = ({
      * When a move has been selected on the Selected Panel and move is null set moveState from null -> move
      */
     useEffect(() => {
-        if (selectedRelativePosition && !moveState) {
+
+        if (selectedRelativePose && !moveState) {
             const move = {
                 soldierId: selectedSoldierId,
                 move: {
                     currentPose: selectedSoldierPose,
                     targetPose: {
-                        gamePosition: addArrays(selectedSoldierPose.gamePosition, selectedRelativePosition),
-                        direction: initialCardinalDirectionMap.face
+                        gamePosition: addArrays(selectedSoldierPose.gamePosition, selectedRelativePose.position),
+                        //TODO Fix this
+                        direction: selectedRelativePose.direction
                     }
                 }
             }
             setMoveState(move)
         }
-    }, [selectedRelativePosition, selectedSoldierId, selectedSoldierPose, initialCardinalDirectionMap, moveState])
+    }, [selectedRelativePose, selectedSoldierId, selectedSoldierPose, initialCardinalDirectionMap, moveState])
 
 
     const setNewSoldierPoses = useCallback((soldierId, targetPose) => {
-        const newSoldierPoses = [...soldierPoses]
-        newSoldierPoses[soldierId] = targetPose
-        setSoldierPoses(newSoldierPoses)
-    }, [soldierPoses]);
+        setSoldierPoses(prevSoldierPoses => {
+            const newSoldierPoses = [...prevSoldierPoses];
+            newSoldierPoses[soldierId] = targetPose;
+            return newSoldierPoses;
+        });
+    }, []);
 
     /**
      * - When the move has changed states from null -> move, lock the Selection Panel 
@@ -102,7 +106,7 @@ const GameScene = ({
             setAllowedRelativeMovePositions(null)
             setSelectedSoldierId(null)
             setSelectedSoldierPose(null)
-            setSelectedRelativePosition(null)
+            setSelectedRelativePose(null)
             setRelativeHoveredPosition(null)
 
         } else {
@@ -115,8 +119,9 @@ const GameScene = ({
         setAllowedRelativeMovePositions, 
         setSelectedSoldierId, 
         setSelectedSoldierPose,
-        setSelectedRelativePosition,
+        setSelectedRelativePose,
         setRelativeHoveredPosition,
+        setNewSoldierPoses
     ])
 
 
@@ -194,7 +199,7 @@ const GameScene = ({
             onContextMenu={onContextMenuHandler}
         >
             <color attach="background" args={["#191920"]} />
-            <Stars
+            {/* <Stars
                 radius={50}
                 depth={50}
                 count={50000}
@@ -202,7 +207,7 @@ const GameScene = ({
                 saturation={0}
                 fade
                 speed={1}
-            />
+            /> */}
             <CameraController 
                 selectedSoldier={selectedSoldier}
             />
