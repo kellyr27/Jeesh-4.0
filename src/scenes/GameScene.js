@@ -1,31 +1,51 @@
-import React from 'react';
+import React, {useRef, useState, useContext, useEffect} from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars} from "@react-three/drei";
-import Army from '../components/GameScene/Army/Army';
+import Army from '../components/GameScene/Army/Army2';
 import { useControls, folder } from 'leva';
 import StarField from '../components/GameScene/StarField/StarField';
 import Arena from '../components/GameScene/Arena/Arena';
 import CameraController from '../components/GameScene/CameraController/CameraController';
 import AxesHelperController from '../components/GameScene/AxesHelperController/AxesHelperController';
+import {getCardinalDirectionMap, getPossibleMovePositions} from './GameScene.utils'
+import { useSelectionPanelInteractionContext } from '../context/SelectionPanelInteractionContext';
+import { addArrays } from '../utils/arrayHelpers';
 
 const GameScene = ({
-    hoveredSoldier, 
-    setHoveredSoldier, 
     selectedSoldier, 
     setSelectedSoldier,
-    currentSelectedPose, 
-    setCurrentSelectedPose, 
     soldiers, 
-    setSoldiers,
-    movingModeActivate,
-    setMovingModeActivate,
-    movingModeDeactivate,
-    setMovingModeDeactivate,
-    starPositions,
-    currentHoveredPose,
-    currentHoveredPosition
+    onSelectedSoldierChange
 }) => {
 
+    const [starPositions, setStarPositions] = useState([])
+    const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
+    const [unselectSoldier, setUnselectSoldier] = useState(false)
+
+    const {
+        allowedRelativeMovePositions,
+        setAllowedRelativeMovePositions,
+        initialCardinalDirectionMap,
+        setInitialCardinalDirectionMap,
+        relativeHoveredPosition,
+        setRelativeHoveredPosition,
+        selectedSoldierId,
+        setSelectedSoldierId,
+        selectedSoldierPose,
+        setSelectedSoldierPose
+    } = useSelectionPanelInteractionContext()
+
+    useEffect(() => {
+        if (relativeHoveredPosition && selectedSoldierPose) {
+            const hoveredPosition = addArrays(relativeHoveredPosition, selectedSoldierPose.gamePosition)
+            setCurrentHoveredPosition(hoveredPosition)
+        } else {
+            setCurrentHoveredPosition(null)
+        }
+    }, [relativeHoveredPosition, selectedSoldierPose])
+
+
+    const armyRef = useRef(null)
 
     const soldierColors = useControls('Soldiers', {
         'Colors': folder({
@@ -45,11 +65,39 @@ const GameScene = ({
     })
 
     const onContextMenuHandler = (e) => {
-        setSelectedSoldier(null)
+        setUnselectSoldier(true)
+
+        // Set Context Variables
+        setAllowedRelativeMovePositions(null)
+        // setInitialCardinalDirectionMap(null)
+        setSelectedSoldierId(null)
+        setSelectedSoldierPose(null)
+
         e.stopPropagation()
     }
 
-    
+    //TODO: What if NULL
+    const handleSelectedSoldierChange = (soldierId) => {
+        setUnselectSoldier(false)
+
+        const soldierPoses = armyRef.current.getSoldierPoses()
+        const soldierPositions = soldierPoses.map(soldierPose => soldierPose.gamePosition)
+        const currentSoldierPosition = soldierPositions[soldierId]
+        const allowedRelativeMovePositions = getPossibleMovePositions(
+            currentSoldierPosition, 
+            starPositions, 
+            soldierPositions
+        )
+        const cardinalDirectionMap = getCardinalDirectionMap(soldierPoses[soldierId].direction)
+        
+        // Set Context Variables
+        setAllowedRelativeMovePositions(allowedRelativeMovePositions)
+        setInitialCardinalDirectionMap(cardinalDirectionMap)
+        setSelectedSoldierId(soldierId)
+        setSelectedSoldierPose(soldierPoses[soldierId])
+    }
+
+
 
     return (
         <Canvas 
@@ -74,20 +122,12 @@ const GameScene = ({
                 currentHoveredPosition={currentHoveredPosition}
             />
             <Army 
-                armyNum={1}
-                hoveredSoldier={hoveredSoldier}
-                setHoveredSoldier={setHoveredSoldier}
-                selectedSoldier={selectedSoldier}
-                setSelectedSoldier={setSelectedSoldier}
-                currentSelectedPose={currentSelectedPose}
-                setCurrentSelectedPose={setCurrentSelectedPose}
-                soldiers={soldiers}
+                ref={armyRef}
                 soldierColors={soldierColors}
-                phaseTimes={phaseTimes}
-                movingModeActivate={movingModeActivate}
-                setMovingModeActivate={setMovingModeActivate}
-                movingModeDeactivate={movingModeDeactivate}
-                setMovingModeDeactivate={setMovingModeDeactivate}
+                onMoveCompletion={()=> console.log('Move Completed')}
+                onSelectedSoldierChange={handleSelectedSoldierChange}
+                isLocked={false}
+                unselectSoldier={unselectSoldier}
             />
             <StarField starPositions={starPositions} />
             <AxesHelperController />

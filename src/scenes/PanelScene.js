@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Stage } from 'react-konva';
 import SelectionPanel from '../components/PanelScene/SelectionPanel/SelectionPanel';
+import { useSelectionPanelInteractionContext } from '../context/SelectionPanelInteractionContext';
+
 
 /**
  * Terminology:
@@ -12,9 +14,35 @@ import SelectionPanel from '../components/PanelScene/SelectionPanel/SelectionPan
 
 const PanelScene = ({
     panelSize,
-    allowedPositions,
-    isPanelLocked,
 }) => {
+
+    const [isPanelLocked, setIsPanelLocked] = useState(false)
+
+    const {
+        allowedRelativeMovePositions,
+        setAllowedRelativeMovePositions,
+        initialCardinalDirectionMap,
+        setInitialCardinalDirectionMap,
+        relativeHoveredPosition,
+        setRelativeHoveredPosition,
+        selectedSoldierId,
+        setSelectedSoldierId,
+        selectedSoldierPose,
+        setSelectedSoldierPose,
+        selectedRelativePosition,
+        setSelectedRelativePosition
+    } = useSelectionPanelInteractionContext()
+
+    /**
+     * When the Selected Soldier Id is NULL, no Soldier is currently selected.
+     */
+    useEffect(() => {
+        if (!selectedSoldierId) {
+            setIsPanelLocked(true)
+        } else {
+            setIsPanelLocked(false)
+        }
+    }, [selectedSoldierId])
     
     const [selectorSizes, setSelectorSizes] = useState({
         direction: 40,
@@ -33,29 +61,23 @@ const PanelScene = ({
 
 
     const handleMoveSelected = (selectedPosition) => {
-        console.log('Move has been selected. Lock panel', selectedPosition)
+        setSelectedRelativePosition(selectedPosition)
     }
 
     const handleMoveHovered = (hoveredPosition) => {
-        console.log('Move is hovered', hoveredPosition)
+        setRelativeHoveredPosition(hoveredPosition)
     }
 
     return (
         <Stage width={panelSize} height={panelSize}>
             <SelectionPanel 
-                allowedPositions={allowedPositions} 
+                allowedPositions={allowedRelativeMovePositions} 
                 isPanelLocked={isPanelLocked}
                 panelSize={panelSize}
                 selectorSizes={selectorSizes}
                 onMoveSelected={handleMoveSelected}
                 onMoveHovered={handleMoveHovered}
-                initialCardinalDirectionMap={{
-                    face: '+z',
-                    left: '-x',
-                    right: '+x',
-                    up: '+y',
-                    down: '-y'
-                }}
+                initialCardinalDirectionMap={initialCardinalDirectionMap}
             />
         </Stage>
     );

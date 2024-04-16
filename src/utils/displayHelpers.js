@@ -1,7 +1,7 @@
 import { ARENA_LENGTH } from "../globals"
 import {equalDirections, getRelativeDirectionArray} from "./directionHelpers"
 import {LineCurve3, QuadraticBezierCurve3, Vector3, Object3D, Quaternion, Euler} from "three"
-import { subtractArrays, equalArrays } from './arrayHelpers';
+import { subtractArrays, equalArrays, addArrays } from './arrayHelpers';
 import {checkIfPositionInArray} from './poseHelpers'
 
 /**
@@ -419,6 +419,7 @@ function getCubeEdgeConnections2(nodes) {
 
 
 
+
 export {
     offsetCoord,
     offsetCoords,
@@ -435,5 +436,5 @@ export {
     getQuaternionFromLookAt,
     getEdgeEndPoints,
     getCubeEdgeConnections,
-    getCubeEdgeConnections2
+    getCubeEdgeConnections2,
 }

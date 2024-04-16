@@ -1,29 +1,54 @@
-import React, {useEffect, createRef } from 'react';
+import React, {useEffect, useState, createRef, useRef, forwardRef, useImperativeHandle } from 'react';
 import Soldier2 from './Soldier/Soldier2';
-import {getRelativeDirectionArray, getQuaternionFromLookAt} from '../../../utils/displayHelpers'
+import {getQuaternionFromLookAt} from '../../../utils/displayHelpers'
 import { Vector3 } from 'three';
-
+import {getRelativeDirectionArray} from '../../../utils/directionHelpers';
 
 const equalMeshes = (mesh1, mesh2) => {
     return mesh1.uuid === mesh2.uuid
 }
 
-const Army = ({
-    hoveredSoldier, 
-    setHoveredSoldier, 
-    selectedSoldier, 
-    setSelectedSoldier, 
-    soldiers,
+const getSoldierId = (soldier) => {
+    return soldier.name.split('-')[1]
+}
+
+const INITIAL_SOLDIERS = [
+    {
+        gamePosition: [5, 5, 4],
+        direction: '+z',
+    },
+    {
+        gamePosition: [4, 4, 9],
+        direction: '-z',
+    },
+    {
+        gamePosition: [2, 2, 2],
+        direction: '+x',
+    }
+]
+
+const Army = forwardRef(({
     soldierColors,
     onMoveCompletion,
     onSelectedSoldierChange,
-    isLocked
-}) => {
+    isLocked,
+    unselectSoldier
+}, ref) => {
 
-    const soldierRefs = soldiers.map(() => createRef());
+    // Used to keep the theoretical positions and directions of all
+    const soldierPoses = useRef(INITIAL_SOLDIERS)
+
+    const soldierRefs = soldierPoses.current.map(() => createRef());
 
     const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
+
+    useEffect(() => {
+        if (unselectSoldier) {
+            setSelectedSoldier(null)
+        }
+    
+    }, [unselectSoldier])
 
     const { 
         soldierDefaultColor, 
@@ -32,12 +57,20 @@ const Army = ({
         soldierBlockedColor 
     } = soldierColors
 
+
+    // Expose the getCurrentSoldierPositions method to the parent component
+    useImperativeHandle(ref, () => ({
+        getSoldierPoses: () => {
+            return soldierPoses.current
+        },
+    }))
+
     /**
      * Update the Soldier Colors // TODO
      */
-    const updateSoldierColors = () => {
+    // const updateSoldierColors = () => {
         
-    }
+    // }
 
     /**
      * Set the color of the soldiers based on the state of the selected and hovered soldiers
@@ -77,8 +110,11 @@ const Army = ({
 
     const onClickHandler = (e) => {
         const soldier = e.intersections[0].object;
-
         setSelectedSoldier(soldier)
+
+        // Propagate up when selected soldier changes to update the Selection Panel
+        const soldierId = getSoldierId(soldier)
+        onSelectedSoldierChange(soldierId)
         e.stopPropagation();
     };
 
@@ -87,24 +123,17 @@ const Army = ({
         onMoveCompletion()
     }
 
-    /**
-     * When the component is mounted, set the color of the soldiers to the default color
-     */
-    useEffect(() => {
-        soldierRefs.forEach(ref => {
-            ref.current.material.color.set(soldierDefaultColor);
-        })
-    }, [])
-
+    const eventHandlers = isLocked ? {} : {
+      onPointerOver: onPointerOverHandler,
+      onPointerOut: onPointerOutHandler,
+      onClick: onClickHandler,
+    };
 
     return (
         <group
-            // TODO: Set these off when isLocked
-            onPointerOver={onPointerOverHandler}
-            onPointerOut={onPointerOutHandler}
-            onClick={onClickHandler}
+            {...eventHandlers}
         >
-            {soldiers.map((soldier, index) => {
+            {soldierPoses.current.map((soldier, index) => {
                 
                 const {direction} = soldier
                 const relativeDirectionArray = getRelativeDirectionArray(direction)
@@ -113,7 +142,9 @@ const Army = ({
 
                 return (
                     <Soldier2 
+                        name={`soldier-${index}`}
                         key={index}
+                        ref={soldierRefs[index]} 
                         initialPosition={soldier.gamePosition}
                         initialQuaternionRotation={quaternionRotation}
                         move={null}
@@ -124,6 +155,6 @@ const Army = ({
             })}
         </group>
     );
-};
+})
 
 export default Army;

@@ -76,4 +76,5 @@ export {
     getRelativeDirectionArray, 
     equalDirections, 
     getRotationFromDirection, 
+    isValidDirection
 }

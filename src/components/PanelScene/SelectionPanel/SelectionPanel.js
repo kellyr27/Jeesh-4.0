@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import DirectionSelectors from './DirectionSelectors/DirectionSelectors';
 import MoveSelectors from './MoveSelectors/MoveSelectors';
 import PanelTexts from './PanelTexts/PanelTexts';
@@ -27,7 +27,7 @@ const SelectionPanel = ({
      * Used for reseting the Direction map when a new Soldier is selected
      * to face the direction that the Soldier is currently facing.
      */
-    useState(() => {
+    useEffect(() => {
         setCardinalDirectionMap(initialCardinalDirectionMap)
     }, [initialCardinalDirectionMap])
 

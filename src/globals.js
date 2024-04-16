@@ -1,5 +1,6 @@
 const ARENA_LENGTH = 20
 
+// TODO: Remove id
 const INITIAL_SOLDIERS = [
     {
         id: 1,
@@ -18,8 +19,11 @@ const INITIAL_SOLDIERS = [
     }
 ]
 
+const ARENA_OFFSET = 1 / 2 - ARENA_LENGTH / 2
+
 
 export {
     ARENA_LENGTH,
-    INITIAL_SOLDIERS
+    INITIAL_SOLDIERS,
+    ARENA_OFFSET
 }

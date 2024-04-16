@@ -1,9 +1,11 @@
 import { Cone } from "@react-three/drei"
 import React, { useState, useEffect, forwardRef, useRef } from "react"
-import { centerCoord, getMovePath, getRelativeDirectionArray, getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
+import { centerCoord, getMovePath, getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
 import { useFrame } from "react-three-fiber"
 import { Vector3 } from "three"
 import {useControls, folder} from "leva"
+import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
+import {ARENA_OFFSET} from '../../../../globals'
 
 /**
  * move in an object with the following structure:
@@ -24,7 +26,8 @@ const Soldier2 = forwardRef(({
     initialPosition,
     initialQuaternionRotation,
     move,
-    onMoveCompletion
+    onMoveCompletion,
+    name
 }, ref) => {
 
     /**
@@ -36,7 +39,12 @@ const Soldier2 = forwardRef(({
                 ref.current.quaternion.copy(initialQuaternionRotation)
             }
             if (initialPosition) {
-                ref.current.position.set(...initialPosition)
+                const [x, y, z] = initialPosition
+                ref.current.position.set(
+                    x + ARENA_OFFSET,
+                    y + ARENA_OFFSET,
+                    z + ARENA_OFFSET
+                )
             }
         }
     }, [initialPosition, initialQuaternionRotation, ref])
@@ -154,7 +162,11 @@ const Soldier2 = forwardRef(({
 
                 if (t < 1) {
                     const currentPoint = moveState.current.movePath.getPointAt(t)
-                    ref.current.position.set(currentPoint.x, currentPoint.y, currentPoint.z);
+                    ref.current.position.set(
+                        currentPoint.x + ARENA_OFFSET, 
+                        currentPoint.y + ARENA_OFFSET, 
+                        currentPoint.z + ARENA_OFFSET
+                    );
 
                     const currentTangent = moveState.current.movePath.getTangentAt(t)
                     const currentRotation = getQuaternionFromLookAt(currentTangent)
@@ -211,7 +223,11 @@ const Soldier2 = forwardRef(({
                 ref.current.quaternion.copy(targetPose)
 
                 const targetPoint = moveState.current.movePath.getPointAt(1)
-                ref.current.position.set(targetPoint.x, targetPoint.y, targetPoint.z)
+                ref.current.position.set(
+                    targetPoint.x + ARENA_OFFSET, 
+                    targetPoint.y + ARENA_OFFSET, 
+                    targetPoint.z + ARENA_OFFSET
+                )
 
                 moveState.current = {
                     ...moveState.current,
@@ -237,6 +253,8 @@ const Soldier2 = forwardRef(({
     return (
         <Cone
             args={[0.4, 0.8]} 
+            ref={ref}
+            name={name}
         />
     )
 })

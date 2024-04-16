@@ -6,7 +6,7 @@ import { useControls, folder } from 'leva';
 import { INITIAL_SOLDIERS } from './globals';
 import {generateStarPositions} from './utils/displayHelpers'
 import {addArrays, subtractArrays, equalArrays} from './utils/arrayHelpers'
-
+import {SelectionPanelInteractionProvider} from './context/SelectionPanelInteractionContext'
 
 // Temporary function to be replaced
 const getAllowedPositions = (selectedSoldierPosition, starPositions, soldierPositions) => {
@@ -277,38 +277,40 @@ function App() {
 	}, [soldiers, currentHoveredPose, selectedSoldier])
 
 	return (
-		<div className="app">
-			<div className="game-scene">
-				<GameScene
-					hoveredSoldier={hoveredSoldier}
-					setHoveredSoldier={setHoveredSoldier}
-					selectedSoldier={selectedSoldier}
-					setSelectedSoldier={setSelectedSoldier}
-					currentSelectedPose={currentSelectedPose}
-					setCurrentSelectedPose={setCurrentSelectedPose}
-					soldiers={soldiers}
-					setSoldiers={setSoldiers}
-					movingModeActivate={movingModeActivate}
-					setMovingModeActivate={setMovingModeActivate}
-					movingModeDeactivate={movingModeDeactivate}
-					setMovingModeDeactivate={setMovingModeDeactivate}
-					starPositions={starPositions}
-					currentHoveredPosition={currentHoveredPosition}
-				/>
+		<SelectionPanelInteractionProvider>
+			<div className="app">
+				<div className="game-scene">
+					<GameScene
+						hoveredSoldier={hoveredSoldier}
+						setHoveredSoldier={setHoveredSoldier}
+						selectedSoldier={selectedSoldier}
+						setSelectedSoldier={setSelectedSoldier}
+						currentSelectedPose={currentSelectedPose}
+						setCurrentSelectedPose={setCurrentSelectedPose}
+						soldiers={soldiers}
+						setSoldiers={setSoldiers}
+						movingModeActivate={movingModeActivate}
+						setMovingModeActivate={setMovingModeActivate}
+						movingModeDeactivate={movingModeDeactivate}
+						setMovingModeDeactivate={setMovingModeDeactivate}
+						starPositions={starPositions}
+						currentHoveredPosition={currentHoveredPosition}
+					/>
+				</div>
+				<div className="panel-scene" style={{ 
+					width: `${panelSize}px`, 
+					height: `${panelSize}px`,
+					top: `calc(100vh - ${panelSize}px - 15px)`,
+					left: `15px`,
+				}}>
+					<PanelScene 
+						panelSize={panelSize}
+						allowedPositions={allowedPositions}
+						isPanelLocked={isPanelLocked}
+					/>
+				</div>
 			</div>
-			<div className="panel-scene" style={{ 
-				width: `${panelSize}px`, 
-				height: `${panelSize}px`,
-				top: `calc(100vh - ${panelSize}px - 15px)`,
-    			left: `15px`,
-			}}>
-				<PanelScene 
-					panelSize={panelSize}
-					allowedPositions={allowedPositions}
-					isPanelLocked={isPanelLocked}
-				/>
-			</div>
-		</div>
+		</SelectionPanelInteractionProvider>
   	)
 }
 

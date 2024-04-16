@@ -52,7 +52,7 @@ const MoveSelectors = ({
                 
                 const [xOffset, yOffset] = [i - 1, j - 1]
                 const relativePosition = getRelativePosition(xOffset, yOffset, cardinalDirectionMap)
-                const isPositionAllowed = checkIfPositionInArray(relativePosition, allowedPositions) && !isPanelLocked
+                const isPositionAllowed = allowedPositions && checkIfPositionInArray(relativePosition, allowedPositions) && !isPanelLocked
 
                 return (
                     <MoveSelector
