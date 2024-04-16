@@ -1,5 +1,7 @@
 import {isValidDirection} from '../utils/directionHelpers'
 import {addArrays, subtractArrays, equalArrays} from '../utils/arrayHelpers'
+import {ARENA_LENGTH} from '../globals'
+import {checkIfPositionInArray} from '../utils/poseHelpers'
 
 /**
  * Returns a mapping of cardinal directions to their corresponding directions in a 3D space.
@@ -106,5 +108,29 @@ const getPossibleMovePositions = (selectedSoldierPosition, starPositions, soldie
     return relativeSurroundingPositions
 }
 
+function generateStarPositions(soldierPositions) {
 
-export { getCardinalDirectionMap, getPossibleMovePositions }
+    const positions = []
+
+    // Generate a random number of stars up to the ARENA_LENGTH squared
+    const numStars = Math.floor(Math.random() * ARENA_LENGTH ** 2 / 2)
+
+    while (positions.length < numStars) {
+        const x = Math.floor(Math.random() * ARENA_LENGTH)
+        const y = Math.floor(Math.random() * ARENA_LENGTH)
+        const z = Math.floor(Math.random() * ARENA_LENGTH)
+
+        if (!checkIfPositionInArray([x, y, z], positions) && !checkIfPositionInArray([x, y, z], soldierPositions)) {
+            positions.push([x, y, z])
+        }
+    }
+
+    return positions
+    
+}
+
+export { 
+	getCardinalDirectionMap, 
+	getPossibleMovePositions, 
+	generateStarPositions
+}

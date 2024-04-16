@@ -156,8 +156,8 @@ const getAllAttackedPositionsKeys = (soldiers) => {
 
 const getMovePath = (pose1, pose2) => {
 
-    const { position: position1} = pose1
-    const { position: position2, direction: direction2 } = pose2
+    const { gamePosition: position1} = pose1
+    const { gamePosition: position2, direction: direction2 } = pose2
 
     // Find the control point for the curve
     const controlPoint = subtractArrays(position2, getRelativeDirectionArray(direction2))

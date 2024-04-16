@@ -9,46 +9,62 @@ const equalMeshes = (mesh1, mesh2) => {
 }
 
 const getSoldierId = (soldier) => {
-    return soldier.name.split('-')[1]
+    return parseInt(soldier.name.split('-')[1])
 }
-
-const INITIAL_SOLDIERS = [
-    {
-        gamePosition: [5, 5, 4],
-        direction: '+z',
-    },
-    {
-        gamePosition: [4, 4, 9],
-        direction: '-z',
-    },
-    {
-        gamePosition: [2, 2, 2],
-        direction: '+x',
-    }
-]
 
 const Army = forwardRef(({
     soldierColors,
     onMoveCompletion,
     onSelectedSoldierChange,
-    isLocked,
-    unselectSoldier
+    unselectSoldier,
+    move,
+    soldierPoses
 }, ref) => {
 
-    // Used to keep the theoretical positions and directions of all
-    const soldierPoses = useRef(INITIAL_SOLDIERS)
+    /**
+     * move in an object with the following structure:
+     * {
+     *      soldierId: 2,
+     *      move: {
+     *          currentPose: {
+*                   position: [x, y, z],
+*                   direction: '+z'
+     *          },
+     *          targetPose: {
+     *              position: [x, y, z],
+     *              direction: '+z'
+     *          }}
+     * }
+     */
+    const [moveState, setMoveState] = useState(null)
 
-    const soldierRefs = soldierPoses.current.map(() => createRef());
+
+    const soldierRefs = soldierPoses.map(() => createRef());
 
     const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
 
+
+    /**
+     * When move updates from null -> move, update the soldierPoses and Soldier colors
+     */
     useEffect(() => {
-        if (unselectSoldier) {
+        setMoveState(move)
+
+        if (!move) {
+            // At the end of a move, remove the selected and hovered soldiers
+            setHoveredSoldier(null)
+            setSelectedSoldier(null)
+        }
+    }, [move])
+
+    useEffect(() => {
+        // When right clicked (and the Soldier is not currently moving), reset the selected Soldier
+        if (unselectSoldier && !moveState) {
             setSelectedSoldier(null)
         }
     
-    }, [unselectSoldier])
+    }, [unselectSoldier, moveState])
 
     const { 
         soldierDefaultColor, 
@@ -56,14 +72,6 @@ const Army = forwardRef(({
         soldierSelectedColor, 
         soldierBlockedColor 
     } = soldierColors
-
-
-    // Expose the getCurrentSoldierPositions method to the parent component
-    useImperativeHandle(ref, () => ({
-        getSoldierPoses: () => {
-            return soldierPoses.current
-        },
-    }))
 
     /**
      * Update the Soldier Colors // TODO
@@ -82,6 +90,10 @@ const Army = forwardRef(({
             if (selectedSoldier && equalMeshes(ref.current, selectedSoldier)) {
                 ref.current.material.color.set(soldierSelectedColor);
             }
+            // Check if (another) Soldier is moving.
+            else if (moveState) {
+                ref.current.material.color.set(soldierBlockedColor)
+            }
             // Check if the Soldier is hovered (and is not selected)
             else if (hoveredSoldier && equalMeshes(ref.current, hoveredSoldier)) {
                 ref.current.material.color.set(soldierHoveredColor);
@@ -90,7 +102,7 @@ const Army = forwardRef(({
                 ref.current.material.color.set(soldierDefaultColor);
             }
         });
-    }, [soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, selectedSoldier, hoveredSoldier, soldierRefs])
+    }, [soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, selectedSoldier, hoveredSoldier, soldierRefs, moveState, soldierBlockedColor])
 
 
     const onPointerOverHandler = (e) => {
@@ -123,22 +135,22 @@ const Army = forwardRef(({
         onMoveCompletion()
     }
 
-    const eventHandlers = isLocked ? {} : {
-      onPointerOver: onPointerOverHandler,
-      onPointerOut: onPointerOutHandler,
-      onClick: onClickHandler,
+    const eventHandlers = moveState ? {} : {
+        onPointerOver: onPointerOverHandler,
+        onPointerOut: onPointerOutHandler,
+        onClick: onClickHandler,
     };
 
     return (
         <group
             {...eventHandlers}
         >
-            {soldierPoses.current.map((soldier, index) => {
+            {soldierPoses.map((soldier, index) => {
                 
                 const {direction} = soldier
                 const relativeDirectionArray = getRelativeDirectionArray(direction)
                 const quaternionRotation = getQuaternionFromLookAt(new Vector3(...relativeDirectionArray))
-
+                const isMoving = moveState && moveState.soldierId === index
 
                 return (
                     <Soldier2 
@@ -147,7 +159,7 @@ const Army = forwardRef(({
                         ref={soldierRefs[index]} 
                         initialPosition={soldier.gamePosition}
                         initialQuaternionRotation={quaternionRotation}
-                        move={null}
+                        move={isMoving ? moveState.move : null}
                         onMoveCompletion={handleMoveCompletion}
                     />
                 )

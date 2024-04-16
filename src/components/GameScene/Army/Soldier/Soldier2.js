@@ -33,21 +33,25 @@ const Soldier2 = forwardRef(({
     /**
      * Set the rotation and position of the soldier when the component is mounted
      */
+    const [firstMounted, setFirstMounted] = useState(true)
     useEffect(() => {
-        if (ref.current) {
-            if (initialQuaternionRotation) {
-                ref.current.quaternion.copy(initialQuaternionRotation)
-            }
-            if (initialPosition) {
-                const [x, y, z] = initialPosition
-                ref.current.position.set(
-                    x + ARENA_OFFSET,
-                    y + ARENA_OFFSET,
-                    z + ARENA_OFFSET
-                )
-            }
+        if (firstMounted && ref.current && initialQuaternionRotation && initialPosition) {
+
+            // Set the rotation
+            ref.current.quaternion.copy(initialQuaternionRotation)
+
+            // Set the position
+            const [x, y, z] = initialPosition
+            ref.current.position.set(
+                x + ARENA_OFFSET,
+                y + ARENA_OFFSET,
+                z + ARENA_OFFSET
+            )
+
+            setFirstMounted(false)
+            
         }
-    }, [initialPosition, initialQuaternionRotation, ref])
+    }, [initialPosition, initialQuaternionRotation, ref, firstMounted])
 
 
     let moveState = useRef({
@@ -110,9 +114,9 @@ const Soldier2 = forwardRef(({
     }, [move])
 
     const { phase1Time, phase2Time, phase3Time } = useControls({
-        phase1Time: { value: 1, min: 0, max: 10, step: 0.1 },
-        phase2Time: { value: 2, min: 0, max: 10, step: 0.1 },
-        phase3Time: { value: 1, min: 0, max: 10, step: 0.1 },
+        phase1Time: { value: 2, min: 0, max: 10, step: 0.1 },
+        phase2Time: { value: 3, min: 0, max: 10, step: 0.1 },
+        phase3Time: { value: 2, min: 0, max: 10, step: 0.1 },
     })
 
     useFrame((state, delta) => {
@@ -135,9 +139,11 @@ const Soldier2 = forwardRef(({
                 const phase1Duration = phase1Time * 1000;
                 const t = elapsedTime / phase1Duration;
 
-                if (t > 1) {
+                if (t < 1) {
                     const startRotation = moveState.current.quaternionStates.currentPose;
                     const endRotation = moveState.current.quaternionStates.startMovePath;
+
+                    
                     const newRotation = startRotation.clone().slerp(endRotation, t);
 
                     // Update the soldier's rotation
@@ -198,7 +204,7 @@ const Soldier2 = forwardRef(({
                 const phase3Duration = phase3Time * 1000;
                 const t = elapsedTime / phase3Duration;
 
-                if (t > 1) {
+                if (t < 1) {
                     const startRotation = moveState.current.quaternionStates.endMovePath;
                     const endRotation = moveState.current.quaternionStates.targetPose;
                     const newRotation = startRotation.clone().slerp(endRotation, t);

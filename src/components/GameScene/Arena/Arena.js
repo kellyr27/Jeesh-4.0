@@ -7,7 +7,7 @@ import { arrayToKey, keyToArray, getEdgesFromPositionKeys } from "./Arena.utils"
 import { ARENA_LENGTH } from "../../../globals";
 
 const Arena = ({
-    soldiers,
+    soldierPoses,
     currentHoveredPosition
 }) => {
 
@@ -26,6 +26,10 @@ const Arena = ({
     const [attackZoneEdges, setAttackZoneEdges] = useState([])
     const [hoveredPositionEdges, setHoveredPositionEdges] = useState([])
     const [arenaEdgePoints, setArenaEdgePoints] = useState([])
+
+    /**
+     * 
+     */
 
     /**
      * Set the arena Edges
@@ -106,15 +110,15 @@ const Arena = ({
 
 
     /**
-     * When the soldiers change (i.e. their position and direction), update the attacked nodes
+     * When the soldierPoses change (i.e. their position and direction), update the attacked nodes
      */
     useEffect(() => {
-        const [positionsAttackedOnceKeys, positionsAttackedMultipleKeys] = getAllAttackedPositionsKeys(soldiers)
+        const [positionsAttackedOnceKeys, positionsAttackedMultipleKeys] = getAllAttackedPositionsKeys(soldierPoses)
 
         setAttackedOnceNodes(positionsAttackedOnceKeys)
         setAttackedTwiceNodes(positionsAttackedMultipleKeys)
 
-    }, [soldiers])
+    }, [soldierPoses])
 
 
     /**

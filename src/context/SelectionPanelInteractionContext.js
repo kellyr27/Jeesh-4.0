@@ -16,6 +16,8 @@ const SelectionPanelInteractionProvider = ({children}) => {
     const [selectedSoldierPose, setSelectedSoldierPose] = useState(null)
     const [selectedRelativePosition, setSelectedRelativePosition] = useState(null)
 
+    const [lockSelectionPanel, setLockSelectionPanel] = useState(false)
+
     return (
         <SelectionPanelInteractionContext.Provider value={{
             allowedRelativeMovePositions,
@@ -29,7 +31,9 @@ const SelectionPanelInteractionProvider = ({children}) => {
             selectedSoldierPose,
             setSelectedSoldierPose,
             selectedRelativePosition,
-            setSelectedRelativePosition
+            setSelectedRelativePosition,
+            lockSelectionPanel,
+            setLockSelectionPanel
         }}>
             {children}
         </SelectionPanelInteractionContext.Provider>

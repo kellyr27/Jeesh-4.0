@@ -30,19 +30,22 @@ const PanelScene = ({
         selectedSoldierPose,
         setSelectedSoldierPose,
         selectedRelativePosition,
-        setSelectedRelativePosition
+        setSelectedRelativePosition,
+        lockSelectionPanel,
+        setLockSelectionPanel
     } = useSelectionPanelInteractionContext()
 
     /**
-     * When the Selected Soldier Id is NULL, no Soldier is currently selected.
+     * When the Selected Soldier Id is NULL or the Panel has been locked, no Soldier is currently selected.
      */
     useEffect(() => {
-        if (!selectedSoldierId) {
+        
+        if (selectedSoldierId === null || lockSelectionPanel) {
             setIsPanelLocked(true)
         } else {
             setIsPanelLocked(false)
         }
-    }, [selectedSoldierId])
+    }, [selectedSoldierId, lockSelectionPanel])
     
     const [selectorSizes, setSelectorSizes] = useState({
         direction: 40,
