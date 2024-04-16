@@ -33,7 +33,8 @@ const GameScene = ({
     onSelectedSoldierChange
 }) => {
 
-    const [starPositions, setStarPositions] = useState(generateStarPositions(INITIAL_SOLDIERS))
+    //TODO: Make function to extract position
+    const [starPositions, setStarPositions] = useState(generateStarPositions(INITIAL_SOLDIERS.map(soldier => soldier.gamePosition)))
     const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
     const [unselectSoldier, setUnselectSoldier] = useState(false)
     const [moveState, setMoveState] = useState(null)

@@ -6,6 +6,8 @@ import { Vector3 } from "three"
 import {useControls, folder} from "leva"
 import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
 import {ARENA_OFFSET} from '../../../../globals'
+import PastLines from "./PastLine/PastLines"
+import {getPointsUpToT} from './Soldier.utils'
 
 /**
  * move in an object with the following structure:
@@ -29,6 +31,9 @@ const Soldier2 = forwardRef(({
     onMoveCompletion,
     name
 }, ref) => {
+
+    const [pastLinePoints, setPastLinePoints] = useState([])
+    const [currentLinePoints, setCurrentLinePoints] = useState(null)
 
     /**
      * Set the rotation and position of the soldier when the component is mounted
@@ -119,6 +124,11 @@ const Soldier2 = forwardRef(({
         phase3Time: { value: 2, min: 0, max: 10, step: 0.1 },
     })
 
+    const updateLinePoints = () => {
+        setPastLinePoints(pastLinePoints => [...pastLinePoints, currentLinePoints]);
+        setCurrentLinePoints(null);
+    }
+
     useFrame((state, delta) => {
         
         switch (moveState.current.animationPhase) {
@@ -177,6 +187,10 @@ const Soldier2 = forwardRef(({
                     const currentTangent = moveState.current.movePath.getTangentAt(t)
                     const currentRotation = getQuaternionFromLookAt(currentTangent)
                     ref.current.quaternion.copy(currentRotation)
+
+                    // Update the current line
+                    const currentPoints = getPointsUpToT(moveState.current.movePath, t)
+                    setCurrentLinePoints(currentPoints)
                 } else {
                     moveState.current = {
                         ...moveState.current,
@@ -247,6 +261,7 @@ const Soldier2 = forwardRef(({
                         targetPose: null
                     }
                 }
+                updateLinePoints()
                 onMoveCompletion()
                 break;
             }
@@ -257,11 +272,17 @@ const Soldier2 = forwardRef(({
     })
 
     return (
-        <Cone
-            args={[0.4, 0.8]} 
-            ref={ref}
-            name={name}
-        />
+        <>
+            <PastLines
+                pastLines={pastLinePoints}
+                currentLine={currentLinePoints}
+            />
+            <Cone
+                args={[0.4, 0.8]} 
+                ref={ref}
+                name={name}
+            />
+        </>
     )
 })
 
