@@ -2,15 +2,14 @@ import React from 'react'
 import GameScene from './scenes/GameScene'
 import PanelScene from './scenes/PanelScene'
 import './App.css';
-import {SelectionPanelInteractionProvider} from './context/SelectionPanelInteractionContext'
 import usePanelSizeControls from './controls/usePanelSizeControls'
-
+import CombinedProvider from './CombinedProvider';
 function App() {
   
 	const panelSize = usePanelSizeControls()
 
 	return (
-		<SelectionPanelInteractionProvider>
+		<CombinedProvider>
 			<div className="app">
 				<div className="game-scene">
 					<GameScene />
@@ -26,7 +25,7 @@ function App() {
 					/>
 				</div>
 			</div>
-		</SelectionPanelInteractionProvider>
+		</CombinedProvider>
   	)
 }
 

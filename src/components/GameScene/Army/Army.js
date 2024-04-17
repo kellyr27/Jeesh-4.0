@@ -3,6 +3,7 @@ import Soldier from './Soldier/Soldier';
 import {getQuaternionFromLookAt} from '../../../utils/displayHelpers'
 import { Vector3 } from 'three';
 import {getRelativeDirectionArray} from '../../../utils/directionHelpers';
+import {useCameraInteractionContext} from '../../../context/CameraInteractionContext'
 
 const equalMeshes = (mesh1, mesh2) => {
     return mesh1.uuid === mesh2.uuid
@@ -44,6 +45,12 @@ const Army = forwardRef(({
     const [hoveredSoldier, setHoveredSoldier] = useState(null)
     const [selectedSoldier, setSelectedSoldier] = useState(null)
 
+
+    const {setSelectedSoldierObject} = useCameraInteractionContext()
+
+    useEffect(() => {
+        setSelectedSoldierObject(selectedSoldier)
+    }, [selectedSoldier, setSelectedSoldierObject])
 
     /**
      * When move updates from null -> move, update the soldierPoses and Soldier colors

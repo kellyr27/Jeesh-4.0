@@ -16,15 +16,15 @@ const SelectionPanelInteractionProvider = ({children}) => {
         down: '-y'
     })
     const [selectedSoldierId, setSelectedSoldierId] = useState(null)
-    const [selectedSoldierPose, setSelectedSoldierPose] = useState(null)
     const [lockSelectionPanel, setLockSelectionPanel] = useState(false)
-
+    
     /**
      * Passing both ways
-     */
-    const [relativeHoveredPosition, setRelativeHoveredPosition] = useState(null)
-    const [selectedRelativePose, setSelectedRelativePose] = useState(null)
-
+    */
+   const [relativeHoveredPosition, setRelativeHoveredPosition] = useState(null)
+   const [selectedRelativePose, setSelectedRelativePose] = useState(null)
+   const [selectedSoldierPose, setSelectedSoldierPose] = useState(null)
+   
 
     return (
         <SelectionPanelInteractionContext.Provider value={{

@@ -1,42 +1,82 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { TrackballControls } from "@react-three/drei";
+import { ARENA_LENGTH, ARENA_OFFSET } from '../../../globals'
+import { Vector3 } from 'three';
+import { useCameraInteractionContext } from '../../../context/CameraInteractionContext';
+import {getLookAtRotation} from '../../../utils/displayHelpers'
 
-const CameraController = ({ selectedSoldier }) => {
+const getAddVector = (direction, distance) => {
+    return direction.clone().multiplyScalar(- distance);
+}
+
+const CameraController = () => {
+
     const controlsRef = useRef();
-    const { camera } = useThree();
-    const zoomLevel = useRef(camera.zoom)
-    const timeoutId = useRef()
 
-    const ZOOM_AFTER_MOVE_TIME = 0
+    let activateCameraChange = useRef({
+        state: false,
+        position: null
+    })
 
+    const {selectedSoldierObject} = useCameraInteractionContext()
+
+
+    //TODO: To replace selectedSoldierPose
     useEffect(() => {
-        if (controlsRef.current) {
-            if (selectedSoldier) {
-                clearTimeout(timeoutId.current)
-                zoomLevel.current = 40;
-            } else {
-                timeoutId.current = setTimeout(() => {
-                    zoomLevel.current = 20;
-                    controlsRef.current.target.set(0, 0, 0);
-                }, ZOOM_AFTER_MOVE_TIME)
+        if (selectedSoldierObject) {
+            const position = selectedSoldierObject.position
+            
+
+            //TODO Rename direction, clean up code
+            const direction = new Vector3()
+            const dummyObject = selectedSoldierObject.clone();
+            dummyObject.rotateOnAxis(new Vector3(1, 0, 0), Math.PI / 2)
+            dummyObject.updateMatrixWorld()
+            dummyObject.getWorldDirection(direction)
+
+
+            const zoomLevel = 5
+            activateCameraChange.current = {
+                state: true,
+                position: position,
+                addVector: getAddVector(direction, zoomLevel),
+            }
+
+        } else {
+            const zoomLevel = ARENA_LENGTH
+            activateCameraChange.current = {
+                state: true,
+                position: new Vector3(0,0,0),
+                addVector: getAddVector(new Vector3(0,0,- 1), zoomLevel),
             }
         }
-    }, [selectedSoldier, controlsRef, camera]);
+    }, [selectedSoldierObject])
 
     useFrame(() => {
-        if (selectedSoldier) {
-            const position = selectedSoldier.position;
-            controlsRef.current.target.set(position.x, position.y, position.z);
+        if (activateCameraChange.current.state) {
+
+            controlsRef.current.target.set(
+                activateCameraChange.current.position.x,
+                activateCameraChange.current.position.y,
+                activateCameraChange.current.position.z
+            );
+            // controlsRef.current.object.position.set(20,20,20);
+
+            // Set the initial distance
+            controlsRef.current.object.position.copy(controlsRef.current.target).add(activateCameraChange.current.addVector);
+
+            // Allow zooming
+            controlsRef.current.maxDistance = 500;
+            controlsRef.current.minDistance = 1;
+
+            activateCameraChange.current.state = false;
+            controlsRef.current.update();
         } 
         
-        // Set the camera zoom and update the projection matrix
-        camera.zoom = zoomLevel.current;
-        camera.updateProjectionMatrix();
 
-        // Update the controls
-        controlsRef.current.update();
     });
+    
 
     return (
         <TrackballControls 

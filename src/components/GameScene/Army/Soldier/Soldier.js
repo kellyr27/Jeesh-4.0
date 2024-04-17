@@ -291,14 +291,14 @@ const Soldier = forwardRef(({
 
     return (
         <>
-            <PastLines
-                pastLines={pastLinePoints}
-                currentLine={currentLinePoints}
-            />
             <Cone args={[0.4, 0.8]} ref={ref} name={name} />
             <Cone args={[0.4, 0.8]} ref={wireframeMesh} name={name}>
                 <meshBasicMaterial attach="material" wireframe />
             </Cone>
+            <PastLines
+                pastLines={pastLinePoints}
+                currentLine={currentLinePoints}
+            />
         </>
     )
 })

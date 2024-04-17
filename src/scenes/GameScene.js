@@ -10,21 +10,10 @@ import AxesHelperController from '../components/GameScene/AxesHelperController/A
 import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions} from './GameScene.utils'
 import { useSelectionPanelInteractionContext } from '../context/SelectionPanelInteractionContext';
 import { addArrays } from '../utils/arrayHelpers';
+import { generateInitialSoldier } from '../globals';
 
-const INITIAL_SOLDIERS = [
-    {
-        gamePosition: [5, 5, 4],
-        direction: '+z',
-    },
-    {
-        gamePosition: [4, 4, 9],
-        direction: '-z',
-    },
-    {
-        gamePosition: [2, 2, 2],
-        direction: '+x',
-    }
-]
+//TODO: Move to utils
+const INITIAL_SOLDIERS = generateInitialSoldier()
 
 const GameScene = () => {
 
@@ -195,6 +184,7 @@ const GameScene = () => {
             />
             <CameraController 
                 selectedSoldier={null}
+                selectedSoldierPose={selectedSoldierPose}
             />
             <Arena
                 soldierPoses={soldierPoses}
