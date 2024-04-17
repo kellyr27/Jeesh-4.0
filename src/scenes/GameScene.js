@@ -38,7 +38,6 @@ const GameScene = () => {
     const [soldierPoses, setSoldierPoses] = useState(INITIAL_SOLDIERS)
 
     const {
-        allowedRelativeMovePositions,
         setAllowedRelativeMovePositions,
         initialCardinalDirectionMap,
         setInitialCardinalDirectionMap,
@@ -50,7 +49,6 @@ const GameScene = () => {
         setSelectedSoldierPose,
         selectedRelativePose,
         setSelectedRelativePose,
-        lockSelectionPanel,
         setLockSelectionPanel
     } = useSelectionPanelInteractionContext()
 
@@ -144,14 +142,6 @@ const GameScene = () => {
         })
     })
 
-    const phaseTimes = useControls('Soldiers', {
-        'Movement Times': folder({
-            phase2Duration: 1,
-            phase3Duration: 2,
-            phase4Duration: 1
-        })
-    })
-
     const onContextMenuHandler = (e) => {
         setUnselectSoldier(true)
 
@@ -194,7 +184,7 @@ const GameScene = () => {
             onContextMenu={onContextMenuHandler}
         >
             <color attach="background" args={["#191920"]} />
-            {/* <Stars
+            <Stars
                 radius={50}
                 depth={50}
                 count={50000}
@@ -202,7 +192,7 @@ const GameScene = () => {
                 saturation={0}
                 fade
                 speed={1}
-            /> */}
+            />
             <CameraController 
                 selectedSoldier={null}
             />

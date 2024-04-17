@@ -1,17 +1,14 @@
 import React from 'react';
-import { useControls } from 'leva';
+import useDisplayAxesControls from '../../../controls/useDisplayAxesControls';
+import { ARENA_LENGTH } from '../../../globals';
 
 const AxesHelperController = () => {
 
-    const {
-        'AxesHelper': showAxesHelper
-    } = useControls({
-        'AxesHelper': true,
-    })
+    const showAxesHelper = useDisplayAxesControls();
 
     return (
         <>
-            {showAxesHelper && <axesHelper args={[5]} />}
+            {showAxesHelper && <axesHelper args={[ARENA_LENGTH / 2 + 1]} />}
         </>
     );
 };

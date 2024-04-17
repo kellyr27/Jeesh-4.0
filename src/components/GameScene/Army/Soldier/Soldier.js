@@ -3,11 +3,11 @@ import React, { useState, useEffect, forwardRef, useRef, createRef } from "react
 import { centerCoord, getMovePath, getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
 import { useFrame } from "react-three-fiber"
 import { Vector3 } from "three"
-import {useControls, folder} from "leva"
 import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
 import {ARENA_OFFSET} from '../../../../globals'
 import PastLines from "./PastLine/PastLines"
 import {getPointsUpToT} from './Soldier.utils'
+import usePhaseTimeControls from '../../../../controls/usePhaseTimeContols'
 
 /**
  * move in an object with the following structure:
@@ -124,11 +124,8 @@ const Soldier = forwardRef(({
         }
     }, [move])
 
-    const { phase1Time, phase2Time, phase3Time } = useControls({
-        phase1Time: { value: 2, min: 0, max: 10, step: 0.1 },
-        phase2Time: { value: 3, min: 0, max: 10, step: 0.1 },
-        phase3Time: { value: 2, min: 0, max: 10, step: 0.1 },
-    })
+
+    const { phase1Time, phase2Time, phase3Time } = usePhaseTimeControls()
 
     const updateLinePoints = () => {
         setPastLinePoints(pastLinePoints => [...pastLinePoints, currentLinePoints]);
@@ -136,7 +133,6 @@ const Soldier = forwardRef(({
     }
 
     useFrame((state, delta) => {
-        
         switch (moveState.current.animationPhase) {
             case 1: {
                 /**
@@ -222,7 +218,7 @@ const Soldier = forwardRef(({
                  */
                 if (moveState.current.phaseSkips.phase3Skip) {
                     moveState.current = {
-                        ...moveState,
+                        ...moveState.current,
                         animationPhaseStartTime: performance.now(),
                         animationPhase: 4
                     }

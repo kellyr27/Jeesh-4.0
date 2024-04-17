@@ -3,20 +3,28 @@ import React, {createContext, useState, useContext} from 'react'
 const SelectionPanelInteractionContext = createContext()
 
 const SelectionPanelInteractionProvider = ({children}) => {
-    const [allowedRelativeMovePositions, setAllowedRelativeMovePositions] = useState(null)
-    const [initialCardinalDirectionMap, setInitialCardinalDirectionMap] = useState({
+   
+    /**
+     * Passing from the Game Scene to the Selection Panel
+    */
+   const [allowedRelativeMovePositions, setAllowedRelativeMovePositions] = useState(null)
+   const [initialCardinalDirectionMap, setInitialCardinalDirectionMap] = useState({
         face: '+z',
         left: '-x',
         right: '+x',
         up: '+y',
         down: '-y'
     })
-    const [relativeHoveredPosition, setRelativeHoveredPosition] = useState(null)
     const [selectedSoldierId, setSelectedSoldierId] = useState(null)
     const [selectedSoldierPose, setSelectedSoldierPose] = useState(null)
+    const [lockSelectionPanel, setLockSelectionPanel] = useState(false)
+
+    /**
+     * Passing both ways
+     */
+    const [relativeHoveredPosition, setRelativeHoveredPosition] = useState(null)
     const [selectedRelativePose, setSelectedRelativePose] = useState(null)
 
-    const [lockSelectionPanel, setLockSelectionPanel] = useState(false)
 
     return (
         <SelectionPanelInteractionContext.Provider value={{

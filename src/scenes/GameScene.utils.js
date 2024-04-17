@@ -2,6 +2,7 @@ import {isValidDirection} from '../utils/directionHelpers'
 import {addArrays, subtractArrays, equalArrays} from '../utils/arrayHelpers'
 import {ARENA_LENGTH} from '../globals'
 import {checkIfPositionInArray} from '../utils/poseHelpers'
+import { checkIfInArena } from '../utils/displayHelpers'
 
 /**
  * Returns a mapping of cardinal directions to their corresponding directions in a 3D space.
@@ -90,15 +91,16 @@ const getPossibleMovePositions = (selectedSoldierPosition, starPositions, soldie
     }
 
     const allSurroundingPositions = allRelativeSurroundingPositions.map((position) => {
-        return addArrays(selectedSoldierPosition, position)
+		return addArrays(selectedSoldierPosition, position)
     })
 
 
     const surroundingPositions = allSurroundingPositions.filter((position) => {
         const isSoldierPosition = soldierPositions.some(soldierPosition => equalArrays(soldierPosition, position))
         const isStarPosition = starPositions.some(starPosition => equalArrays(starPosition, position))
+		const isInArena = checkIfInArena(position)
 
-        return (!isSoldierPosition && !isStarPosition)
+        return (!isSoldierPosition && !isStarPosition && isInArena)
     })
 
     const relativeSurroundingPositions = surroundingPositions.map((position) => {

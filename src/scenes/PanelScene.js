@@ -20,19 +20,11 @@ const PanelScene = ({
 
     const {
         allowedRelativeMovePositions,
-        setAllowedRelativeMovePositions,
         initialCardinalDirectionMap,
-        setInitialCardinalDirectionMap,
-        relativeHoveredPosition,
         setRelativeHoveredPosition,
         selectedSoldierId,
-        setSelectedSoldierId,
-        selectedSoldierPose,
-        setSelectedSoldierPose,
-        selectedRelativePose,
         setSelectedRelativePose,
         lockSelectionPanel,
-        setLockSelectionPanel
     } = useSelectionPanelInteractionContext()
 
     /**
