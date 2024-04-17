@@ -64,7 +64,6 @@ const PanelScene = ({
 
 
     const handleMoveSelected = (selectedPosition, selectedDirection) => {
-        console.log('selected direction', selectedDirection)
         setSelectedRelativePose({
             position: selectedPosition,
             direction: selectedDirection

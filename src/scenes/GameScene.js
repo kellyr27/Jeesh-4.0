@@ -1,7 +1,7 @@
 import React, {useRef, useState, useContext, useEffect, useCallback} from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars} from "@react-three/drei";
-import Army from '../components/GameScene/Army/Army2';
+import Army from '../components/GameScene/Army/Army';
 import { useControls, folder } from 'leva';
 import StarField from '../components/GameScene/StarField/StarField';
 import Arena from '../components/GameScene/Arena/Arena';
@@ -26,12 +26,7 @@ const INITIAL_SOLDIERS = [
     }
 ]
 
-const GameScene = ({
-    selectedSoldier, 
-    setSelectedSoldier,
-    soldiers, 
-    onSelectedSoldierChange
-}) => {
+const GameScene = () => {
 
     //TODO: Make function to extract position
     const [starPositions, setStarPositions] = useState(generateStarPositions(INITIAL_SOLDIERS.map(soldier => soldier.gamePosition)))
@@ -209,7 +204,7 @@ const GameScene = ({
                 speed={1}
             /> */}
             <CameraController 
-                selectedSoldier={selectedSoldier}
+                selectedSoldier={null}
             />
             <Arena
                 soldierPoses={soldierPoses}
