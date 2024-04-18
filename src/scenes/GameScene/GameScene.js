@@ -1,16 +1,17 @@
-import React, {useRef, useState, useContext, useEffect, useCallback} from 'react';
+import React, {useRef, useState, useContext, useEffect, useCallback, Suspense} from 'react';
 import { Canvas } from "@react-three/fiber";
 import { Stars} from "@react-three/drei";
-import Army from '../components/GameScene/Army/Army';
+import Army from '../../components/GameScene/Army/Army';
 import { useControls, folder } from 'leva';
-import StarField from '../components/GameScene/StarField/StarField';
-import Arena from '../components/GameScene/Arena/Arena';
-import CameraController from '../components/GameScene/CameraController/CameraController';
-import AxesHelperController from '../components/GameScene/AxesHelperController/AxesHelperController';
+import StarField from '../../components/GameScene/StarField/StarField';
+import Arena from '../../components/GameScene/Arena/Arena';
+import CameraController from '../../components/GameScene/CameraController/CameraController';
+import AxesHelperController from '../../components/GameScene/AxesHelperController/AxesHelperController';
 import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions} from './GameScene.utils'
-import { useSelectionPanelInteractionContext } from '../context/SelectionPanelInteractionContext';
-import { addArrays } from '../utils/arrayHelpers';
-import { generateInitialSoldier } from '../globals';
+import { useSelectionPanelInteractionContext } from '../../context/SelectionPanelInteractionContext';
+import { addArrays } from '../../utils/arrayHelpers';
+import { generateInitialSoldier } from '../../globals';
+import GalaxyApp from '../../components/GameScene/BackgroundField/Galaxy'
 
 //TODO: Move to utils
 const INITIAL_SOLDIERS = generateInitialSoldier()
@@ -173,24 +174,24 @@ const GameScene = () => {
             onContextMenu={onContextMenuHandler}
         >
             <color attach="background" args={["#191920"]} />
-            <Stars
+            {/* <Stars
                 radius={50}
                 depth={50}
-                count={50000}
+                count={5000}
                 factor={4}
                 saturation={0}
                 fade
                 speed={1}
-            />
+            /> */}
             <CameraController 
                 selectedSoldier={null}
                 selectedSoldierPose={selectedSoldierPose}
             />
-            <Arena
+            {/* <Arena
                 soldierPoses={soldierPoses}
                 currentHoveredPosition={currentHoveredPosition}
-            />
-            <Army 
+            /> */}
+            {/* <Army 
                 ref={armyRef}
                 soldierColors={soldierColors}
                 onMoveCompletion={handleMoveCompletion}
@@ -199,9 +200,12 @@ const GameScene = () => {
                 unselectSoldier={unselectSoldier}
                 move={moveState}
                 soldierPoses={soldierPoses}
-            />
-            <StarField starPositions={starPositions} />
+            /> */}
+            <Suspense fallback={null}>
+                <StarField starPositions={starPositions} />
+            </Suspense>
             <AxesHelperController />
+            <GalaxyApp />
         </Canvas>
     )
 }

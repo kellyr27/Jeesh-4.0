@@ -1,15 +1,19 @@
 import React from 'react'
-import GameScene from './scenes/GameScene'
-import PanelScene from './scenes/PanelScene'
+import GameScene from './scenes/GameScene/GameScene'
+import PanelScene from './scenes/PanelScene/PanelScene'
 import './App.css';
 import usePanelSizeControls from './controls/usePanelSizeControls'
 import CombinedProvider from './CombinedProvider';
+import FPSStats from 'react-fps-stats'
+
+
 function App() {
   
 	const panelSize = usePanelSizeControls()
 
 	return (
 		<CombinedProvider>
+			<FPSStats />
 			<div className="app">
 				<div className="game-scene">
 					<GameScene />

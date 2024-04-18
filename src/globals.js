@@ -23,7 +23,7 @@ const INITIAL_SOLDIERS = [
 
 const generateInitialSoldier = () => {
     // Randomly generate a number between 1 and 15
-    const numSoldiers = Math.floor(Math.random() * 25) + 5
+    const numSoldiers = Math.floor(Math.random() * 15) + 10
 
     const soldierPositions = []
     while (soldierPositions.length < numSoldiers) {

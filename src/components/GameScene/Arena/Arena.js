@@ -208,7 +208,7 @@ const Arena = ({
                         points={edgePoints}
                         color='white'
                         linewidth={10}
-                        opacity={1}
+                        opacity={0.3}
                         isDisplay={true}
                     />
                 )

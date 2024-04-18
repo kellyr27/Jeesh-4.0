@@ -1,3 +1,1 @@
-- Put a frames/second thing on my project - react-fps-stats
-- Figure out moveDeactivate logic - not updating the ArenaNodes when moving
-- Give it a Favicon
+- Give it a Favicon for Chrome only

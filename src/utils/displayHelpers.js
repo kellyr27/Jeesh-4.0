@@ -76,9 +76,7 @@ const getAttackedPositions = (position, direction) => {
     for (let i = position[0] - 1; i <= position[0] + 1; i++) {
         for (let j = position[1] - 1; j <= position[1] + 1; j++) {
             for (let k = position[2] - 1; k <= position[2] + 1; k++) {
-                if (checkIfInArena([i,j,k])) {
-                    attackedPositions.push([i,j,k])
-                }
+                attackedPositions.push([i,j,k])
             }
         }
     }
@@ -110,6 +108,10 @@ const getAttackedPositions = (position, direction) => {
         })
     }
 
+    attackedPositions = attackedPositions.filter((position) => {
+        return checkIfInArena(position)
+    })
+
     return attackedPositions
 }
 
@@ -119,7 +121,7 @@ const getAllAttackedPositionsKeys = (soldiers) => {
 
     for (const soldier of soldiers) {
         const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
-        
+
         attackedPositions.forEach((position) => {
 
             if (!checkIfInArena(position)) {

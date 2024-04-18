@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Stage } from 'react-konva';
-import SelectionPanel from '../components/PanelScene/SelectionPanel/SelectionPanel';
-import { useSelectionPanelInteractionContext } from '../context/SelectionPanelInteractionContext';
+import SelectionPanel from '../../components/PanelScene/SelectionPanel/SelectionPanel';
+import { useSelectionPanelInteractionContext } from '../../context/SelectionPanelInteractionContext';
 
 
 /**

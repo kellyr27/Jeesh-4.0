@@ -1,8 +1,8 @@
-import {isValidDirection} from '../utils/directionHelpers'
-import {addArrays, subtractArrays, equalArrays} from '../utils/arrayHelpers'
-import {ARENA_LENGTH} from '../globals'
-import {checkIfPositionInArray} from '../utils/poseHelpers'
-import { checkIfInArena } from '../utils/displayHelpers'
+import {isValidDirection} from '../../utils/directionHelpers'
+import {addArrays, subtractArrays, equalArrays} from '../../utils/arrayHelpers'
+import {ARENA_LENGTH} from '../../globals'
+import {checkIfPositionInArray} from '../../utils/poseHelpers'
+import { checkIfInArena } from '../../utils/displayHelpers'
 
 /**
  * Returns a mapping of cardinal directions to their corresponding directions in a 3D space.
