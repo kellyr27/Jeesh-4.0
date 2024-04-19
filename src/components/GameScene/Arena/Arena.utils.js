@@ -169,11 +169,43 @@ const getAllAttackedPositionsKeys = (soldiers) => {
     return [attackedOnce, attackedMultiple]
 }
 
+/**
+ * Get the Edge end points from two nodes
+ */
+const getEdgeEndPoints = (node1Position, node2Position) => {
+
+    const [node1PositionX, node1PositionY, node1PositionZ] = node1Position
+    const [node2PositionX, node2PositionY, node2PositionZ] = node2Position
+
+    const avgX = (node1PositionX + node2PositionX) / 2
+    const avgY = (node1PositionY + node2PositionY) / 2
+    const avgZ = (node1PositionZ + node2PositionZ) / 2
+
+    if (node1PositionX === node2PositionX) {
+        return [
+            [node1PositionX - 1 / 2,avgY,avgZ], 
+            [node1PositionX + 1 / 2,avgY,avgZ]
+        ]
+    } else if (node1PositionY === node2PositionY) {
+        return [
+            [avgX,node1PositionY - 1 / 2,avgZ],
+            [avgX,node1PositionY + 1 / 2,avgZ]
+        ]
+    } else if (node1PositionZ === node2PositionZ) {
+        return [
+            [avgX,avgY,node1PositionZ - 1 / 2],
+            [avgX,avgY,node1PositionZ + 1 / 2]
+        ]
+    }
+}
+
+
 
 
 export {
     arrayToKey,
     keyToArray,
     getEdgesFromPositionKeys,
-    getAllAttackedPositionsKeys
+    getAllAttackedPositionsKeys,
+    getEdgeEndPoints
 }

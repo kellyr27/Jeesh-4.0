@@ -1,14 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useThree, useFrame } from '@react-three/fiber';
+import React, { useEffect, useRef } from 'react';
+import {  useFrame } from '@react-three/fiber';
 import { TrackballControls } from "@react-three/drei";
-import { ARENA_LENGTH, ARENA_OFFSET } from '../../../globals'
+import { ARENA_LENGTH } from '../../../globals'
 import { Vector3 } from 'three';
 import { useCameraInteractionContext } from '../../../context/CameraInteractionContext';
-import {getLookAtRotation} from '../../../utils/displayHelpers'
-
-const getAddVector = (direction, distance) => {
-    return direction.clone().multiplyScalar(- distance);
-}
+import { getAddVector, getRotatedSoldierDirection } from './CameraController.utils';
 
 const CameraController = () => {
 
@@ -16,27 +12,23 @@ const CameraController = () => {
 
     let activateCameraChange = useRef({
         state: false,
-        position: null
+        position: null,
+        addVector: null
     })
 
     const {selectedSoldierObject} = useCameraInteractionContext()
 
-
-    //TODO: To replace selectedSoldierPose
+    /**
+     * This useEffect hook updates the camera position and direction when the selected soldier object changes.
+     * If a soldier object is selected, it calculates the position and direction based on the soldier object.
+     * If no soldier object is selected, it sets the position to the center of the arena and the direction to zoom out.
+     */
     useEffect(() => {
         if (selectedSoldierObject) {
             const position = selectedSoldierObject.position
-            
-
-            //TODO Rename direction, clean up code
-            const direction = new Vector3()
-            const dummyObject = selectedSoldierObject.clone();
-            dummyObject.rotateOnAxis(new Vector3(1, 0, 0), Math.PI / 2)
-            dummyObject.updateMatrixWorld()
-            dummyObject.getWorldDirection(direction)
-
-
+            const direction = getRotatedSoldierDirection(selectedSoldierObject)
             const zoomLevel = 5
+
             activateCameraChange.current = {
                 state: true,
                 position: position,
@@ -48,36 +40,37 @@ const CameraController = () => {
             activateCameraChange.current = {
                 state: true,
                 position: new Vector3(0,0,0),
-                addVector: getAddVector(new Vector3(0,0,- 1), zoomLevel),
+                addVector: getAddVector(new Vector3(0,0,-1), zoomLevel),
             }
         }
     }, [selectedSoldierObject])
 
     useFrame(() => {
+        // Check if a camera change has been activated
         if (activateCameraChange.current.state) {
 
+            // Update the camera target to the new position
             controlsRef.current.target.set(
                 activateCameraChange.current.position.x,
                 activateCameraChange.current.position.y,
                 activateCameraChange.current.position.z
             );
-            // controlsRef.current.object.position.set(20,20,20);
 
-            // Set the initial distance
+            // Update the camera's position based on the new target and the additional vector
             controlsRef.current.object.position.copy(controlsRef.current.target).add(activateCameraChange.current.addVector);
 
-            // Allow zooming
+            // Set the zoom limits for the camera
             controlsRef.current.maxDistance = 500;
             controlsRef.current.minDistance = 1;
 
+            // Reset the camera change activation state
             activateCameraChange.current.state = false;
-            controlsRef.current.update();
-        } 
-        
 
+            // Update the camera controls to apply the changes
+            controlsRef.current.update();
+        }
     });
     
-
     return (
         <TrackballControls 
             ref={controlsRef} 
