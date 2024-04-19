@@ -12,6 +12,8 @@ import { useSelectionPanelInteractionContext } from '../../context/SelectionPane
 import { addArrays } from '../../utils/arrayHelpers';
 import { generateInitialSoldier } from '../../globals';
 import GalaxyApp from '../../components/GameScene/BackgroundField/Galaxy'
+import StaryBackground from '../../components/GameScene/BackgroundField/StaryBackground';
+
 
 //TODO: Move to utils
 const INITIAL_SOLDIERS = generateInitialSoldier()
@@ -179,10 +181,14 @@ const GameScene = () => {
                 depth={50}
                 count={5000}
                 factor={4}
-                saturation={0}
+                saturation={1}
                 fade
                 speed={1}
             /> */}
+            <StaryBackground
+                numStars={100}
+            />
+            {/* <Stary /> */}
             <CameraController 
                 selectedSoldier={null}
                 selectedSoldierPose={selectedSoldierPose}
@@ -201,11 +207,11 @@ const GameScene = () => {
                 move={moveState}
                 soldierPoses={soldierPoses}
             /> */}
-            <Suspense fallback={null}>
+            {/* <Suspense fallback={null}>
                 <StarField starPositions={starPositions} />
-            </Suspense>
+            </Suspense> */}
             <AxesHelperController />
-            <GalaxyApp />
+            {/* <GalaxyApp /> */}
         </Canvas>
     )
 }
