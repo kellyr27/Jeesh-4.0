@@ -1,4 +1,6 @@
 import { addArrays } from "../../../utils/arrayHelpers"
+import { checkIfInArena } from "../../../utils/displayHelpers"
+import { equalDirections } from "../../../utils/directionHelpers"
 
 const arrayToKey = (array) => {
     return array.join('_')
@@ -87,8 +89,91 @@ const getEdgesFromPositionKeys = (positionKeys) => {
 }
 
 
+const getAttackedPositions = (position, direction) => {
+
+    let attackedPositions = []
+
+    // Get all positions around the soldier
+    for (let i = position[0] - 1; i <= position[0] + 1; i++) {
+        for (let j = position[1] - 1; j <= position[1] + 1; j++) {
+            for (let k = position[2] - 1; k <= position[2] + 1; k++) {
+                attackedPositions.push([i,j,k])
+            }
+        }
+    }
+
+    // Offset Attacked Coords to match direction
+    if (equalDirections(direction, '+x')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0] + 2, position[1], position[2]]
+        })
+    } else if (equalDirections(direction, '-x')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0] - 2, position[1], position[2]]
+        })
+    } else if (equalDirections(direction, '+y')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1] + 2, position[2]]
+        })
+    } else if (equalDirections(direction, '-y')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1] - 2, position[2]]
+        })
+    } else if (equalDirections(direction, '+z')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1], position[2] + 2]
+        })
+    } else if (equalDirections(direction, '-z')) {
+        attackedPositions = attackedPositions.map((position) => {
+            return [position[0], position[1], position[2] - 2]
+        })
+    }
+
+    // Filter out positions that are not in the arena
+    attackedPositions = attackedPositions.filter((position) => {
+        return checkIfInArena(position)
+    })
+
+    return attackedPositions
+}
+
+const getAllAttackedPositionsKeys = (soldiers) => {
+    // Count of how many times a position is attacked
+    let attackedPositionsCount = new Map()
+    for (const soldier of soldiers) {
+        const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
+
+        attackedPositions.forEach((position) => {
+
+            const positionKey = arrayToKey(position);
+            const count = attackedPositionsCount.get(positionKey);
+
+            if (count !== undefined) {
+                attackedPositionsCount.set(positionKey, count + 1);
+            } else {
+                attackedPositionsCount.set(positionKey, 1);
+            }
+        })
+    }
+
+    // Return two lists, the first one with positions only attacked once, another with positions attacked more than once
+    const attackedOnce = []
+    const attackedMultiple = []
+    for (const [stringPosition, count] of attackedPositionsCount) {
+        if (count === 1) {
+            attackedOnce.push(stringPosition)
+        } else {
+            attackedMultiple.push(stringPosition)
+        }
+    }
+    return [attackedOnce, attackedMultiple]
+}
+
+
+
 export {
     arrayToKey,
     keyToArray,
-    getEdgesFromPositionKeys
+    getEdgesFromPositionKeys,
+    getAllAttackedPositionsKeys
 }

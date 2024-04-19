@@ -7,10 +7,9 @@ import StarField from '../../components/GameScene/StarField/StarField';
 import Arena from '../../components/GameScene/Arena/Arena';
 import CameraController from '../../components/GameScene/CameraController/CameraController';
 import AxesHelperController from '../../components/GameScene/AxesHelperController/AxesHelperController';
-import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions} from './GameScene.utils'
+import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions, generateInitialSoldier} from './GameScene.utils'
 import { useSelectionPanelInteractionContext } from '../../context/SelectionPanelInteractionContext';
 import { addArrays } from '../../utils/arrayHelpers';
-import { generateInitialSoldier } from '../../globals';
 import GalaxyApp from '../../components/GameScene/BackgroundField/Galaxy'
 import StaryBackground from '../../components/GameScene/BackgroundField/StaryBackground';
 
@@ -193,11 +192,11 @@ const GameScene = () => {
                 selectedSoldier={null}
                 selectedSoldierPose={selectedSoldierPose}
             />
-            {/* <Arena
+            <Arena
                 soldierPoses={soldierPoses}
                 currentHoveredPosition={currentHoveredPosition}
-            /> */}
-            {/* <Army 
+            />
+            <Army 
                 ref={armyRef}
                 soldierColors={soldierColors}
                 onMoveCompletion={handleMoveCompletion}
@@ -206,12 +205,12 @@ const GameScene = () => {
                 unselectSoldier={unselectSoldier}
                 move={moveState}
                 soldierPoses={soldierPoses}
-            /> */}
-            {/* <Suspense fallback={null}>
+            />
+            <Suspense fallback={null}>
                 <StarField starPositions={starPositions} />
-            </Suspense> */}
+            </Suspense>
             <AxesHelperController />
-            {/* <GalaxyApp /> */}
+            <GalaxyApp />
         </Canvas>
     )
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layer } from 'react-konva';
 import MoveSelector from './MoveSelector';
-import { checkIfPositionInArray } from '../../../../utils/poseHelpers';
+import {isPositionInArray} from '../../../../utils/positionHelpers'
 import useMoveSelectorsControls from './MoveSelectors.controls';
 import { getRelativePosition } from '../SelectionPanel.utils';
 
@@ -52,7 +52,7 @@ const MoveSelectors = ({
                 
                 const [xOffset, yOffset] = [i - 1, j - 1]
                 const relativePosition = getRelativePosition(xOffset, yOffset, cardinalDirectionMap)
-                const isPositionAllowed = allowedPositions && checkIfPositionInArray(relativePosition, allowedPositions) && !isPanelLocked
+                const isPositionAllowed = allowedPositions && isPositionInArray(relativePosition, allowedPositions) && !isPanelLocked
 
                 return (
                     <MoveSelector

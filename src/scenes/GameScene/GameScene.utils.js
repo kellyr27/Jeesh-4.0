@@ -1,7 +1,7 @@
 import {isValidDirection} from '../../utils/directionHelpers'
 import {addArrays, subtractArrays, equalArrays} from '../../utils/arrayHelpers'
 import {ARENA_LENGTH} from '../../globals'
-import {checkIfPositionInArray} from '../../utils/poseHelpers'
+import {isPositionInArray} from '../../utils/positionHelpers'
 import { checkIfInArena } from '../../utils/displayHelpers'
 
 /**
@@ -122,7 +122,7 @@ function generateStarPositions(soldierPositions) {
         const y = Math.floor(Math.random() * ARENA_LENGTH)
         const z = Math.floor(Math.random() * ARENA_LENGTH)
 
-        if (!checkIfPositionInArray([x, y, z], positions) && !checkIfPositionInArray([x, y, z], soldierPositions)) {
+        if (!isPositionInArray([x, y, z], positions) && !isPositionInArray([x, y, z], soldierPositions)) {
             positions.push([x, y, z])
         }
     }
@@ -131,8 +131,40 @@ function generateStarPositions(soldierPositions) {
     
 }
 
+function generateInitialSoldier() {
+    // Randomly generate a number of Sodliers between 10 and 25
+    const numSoldiers = Math.floor(Math.random() * 15) + 10
+
+	// Generate random positions for the soldiers
+    const soldierPositions = []
+    while (soldierPositions.length < numSoldiers) {
+        const x = Math.floor(Math.random() * ARENA_LENGTH)
+        const z = Math.floor(Math.random() * ARENA_LENGTH)
+        const y = Math.floor(Math.random() * ARENA_LENGTH)
+
+        const position = [x, y, z]
+
+        if (!isPositionInArray(position, soldierPositions)) {
+            soldierPositions.push(position)
+        }
+    }
+
+	// Generate random directions for the soldiers
+    const directions = ['+x', '-x', '+y', '-y', '+z', '-z']
+    const soldierPoses = soldierPositions.map((position) => {
+        const randomDirection = directions[Math.floor(Math.random() * directions.length)]
+        return {
+            gamePosition: position,
+            direction: randomDirection
+        }
+    })
+
+    return soldierPoses
+}
+
 export { 
 	getCardinalDirectionMap, 
 	getPossibleMovePositions, 
-	generateStarPositions
+	generateStarPositions,
+	generateInitialSoldier
 }

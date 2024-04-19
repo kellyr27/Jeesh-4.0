@@ -2,7 +2,6 @@ import { ARENA_LENGTH } from "../globals"
 import {equalDirections, getRelativeDirectionArray} from "./directionHelpers"
 import {LineCurve3, QuadraticBezierCurve3, Vector3, Object3D, Quaternion, Euler} from "three"
 import { subtractArrays, equalArrays, addArrays } from './arrayHelpers';
-import {checkIfPositionInArray} from './poseHelpers'
 
 /**
  * Takes a coordinate and positions it to the centre of the Cube
@@ -66,95 +65,6 @@ const checkIfInArena = (coord) => {
     return true
 }
 
-/**
- * Get all Attacked Cubes
- */
-const getAttackedPositions = (position, direction) => {
-
-    let attackedPositions = []
-
-    for (let i = position[0] - 1; i <= position[0] + 1; i++) {
-        for (let j = position[1] - 1; j <= position[1] + 1; j++) {
-            for (let k = position[2] - 1; k <= position[2] + 1; k++) {
-                attackedPositions.push([i,j,k])
-            }
-        }
-    }
-
-    // Offset Attacked Coords to match direction
-    if (equalDirections(direction, '+x')) {
-        attackedPositions = attackedPositions.map((position) => {
-            return [position[0] + 2, position[1], position[2]]
-        })
-    } else if (equalDirections(direction, '-x')) {
-        attackedPositions = attackedPositions.map((position) => {
-            return [position[0] - 2, position[1], position[2]]
-        })
-    } else if (equalDirections(direction, '+y')) {
-        attackedPositions = attackedPositions.map((position) => {
-            return [position[0], position[1] + 2, position[2]]
-        })
-    } else if (equalDirections(direction, '-y')) {
-        attackedPositions = attackedPositions.map((position) => {
-            return [position[0], position[1] - 2, position[2]]
-        })
-    } else if (equalDirections(direction, '+z')) {
-        attackedPositions = attackedPositions.map((position) => {
-            return [position[0], position[1], position[2] + 2]
-        })
-    } else if (equalDirections(direction, '-z')) {
-        attackedPositions = attackedPositions.map((position) => {
-            return [position[0], position[1], position[2] - 2]
-        })
-    }
-
-    attackedPositions = attackedPositions.filter((position) => {
-        return checkIfInArena(position)
-    })
-
-    return attackedPositions
-}
-
-const getAllAttackedPositionsKeys = (soldiers) => {
-    // Count of more many times a position is attack
-    let attackedPositionsCount = new Map()
-
-    for (const soldier of soldiers) {
-        const attackedPositions = getAttackedPositions(soldier.gamePosition, soldier.direction)
-
-        attackedPositions.forEach((position) => {
-
-            if (!checkIfInArena(position)) {
-                return
-            }
-
-            const positionKey = position.join('_');
-            const count = attackedPositionsCount.get(positionKey);
-
-            if (count !== undefined) {
-                attackedPositionsCount.set(positionKey, count + 1);
-            } else {
-                attackedPositionsCount.set(positionKey, 1);
-            }
-        })
-    }
-
-    // Return two lists, the first one with positions only attacked once, another with positions attacked more than once
-    const attackedOnce = []
-    const attackedMultiple = []
-
-    for (const [stringPosition, count] of attackedPositionsCount) {
-        if (count === 1) {
-            attackedOnce.push(stringPosition)
-        } else {
-            attackedMultiple.push(stringPosition)
-        }
-    }
-
-    return [attackedOnce, attackedMultiple]
-}
-
-
 
 const getMovePath = (pose1, pose2) => {
 
@@ -202,27 +112,6 @@ function getShortestRotationQuaternion(lookAtA, lookAtB) {
     const quaternion = new Quaternion().setFromUnitVectors(lookAtA, lookAtB);
 
     return quaternion;
-}
-
-function generateStarPositions(soldierPositions) {
-
-    const positions = []
-
-    // Generate a random number of stars up to the ARENA_LENGTH squared
-    const numStars = Math.floor(Math.random() * ARENA_LENGTH ** 2 / 2)
-
-    while (positions.length < numStars) {
-        const x = Math.floor(Math.random() * ARENA_LENGTH)
-        const y = Math.floor(Math.random() * ARENA_LENGTH)
-        const z = Math.floor(Math.random() * ARENA_LENGTH)
-
-        if (!checkIfPositionInArray([x, y, z], positions) && !checkIfPositionInArray([x, y, z], soldierPositions)) {
-            positions.push([x, y, z])
-        }
-    }
-
-    return positions
-    
 }
 
 const convertEulerToQuaternion = (rotation) => {
@@ -428,12 +317,9 @@ export {
     centerCoord,
     centerCoords,
     checkIfInArena,
-    getAttackedPositions,
-    getAllAttackedPositionsKeys,
     getMovePath,
     getLookAtRotation,
     getShortestRotationQuaternion,
-    generateStarPositions,
     convertEulerToQuaternion,
     getQuaternionFromLookAt,
     getEdgeEndPoints,

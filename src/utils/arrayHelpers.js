@@ -1,3 +1,5 @@
+//TODO: Will be redundant with positionHelpers
+
 // Subtracts arr2 from arr1 and returns the result
 const subtractArrays = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {

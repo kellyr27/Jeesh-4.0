@@ -206,7 +206,7 @@ export default function GalaxyApp() {
 					centerPosition={center}
 					size={0.01}
 					count={6000}
-					radius={generateRandomRadius(1, 3)}
+					radius={generateRandomRadius(3, 7)}
 					branches={generateRandomBranches(2,5)}
 					spin={1 }
 					randomness={0.7 }

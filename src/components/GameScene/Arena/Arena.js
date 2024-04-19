@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from "react";
 import ArenaNode from "./ArenaNodes/ArenaNode";
-import { getAllAttackedPositionsKeys, getEdgeEndPoints } from '../../../utils/displayHelpers';
+import { getEdgeEndPoints } from '../../../utils/displayHelpers';
 import ArenaEdge from "./ArenaEdges/ArenaEdge";
 import useArenaNodeControls from "./Arena.controls";
-import { arrayToKey, keyToArray, getEdgesFromPositionKeys } from "./Arena.utils";
+import { arrayToKey, keyToArray, getEdgesFromPositionKeys, getAllAttackedPositionsKeys } from "./Arena.utils";
 import { ARENA_LENGTH } from "../../../globals";
 
 const Arena = ({
