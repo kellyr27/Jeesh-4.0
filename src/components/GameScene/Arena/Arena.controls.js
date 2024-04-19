@@ -137,24 +137,20 @@ const useArenaNodeControls = () => {
     }
 
     const {
-        'Default': arenaEdgesDefaultLineWidth,
         'Attack Zone': arenaEdgesAttackZoneLineWidth,
-        'Border': arenaEdgesBorderLineWidth,
         'Hovered': arenaEdgesHoveredLineWidth,
     } = useControls('Arena', {
         'Arena Edges': folder({
             'Is Display': folder({
                 'Default': 1,
-                'Attack Zone': 8,
+                'Attack Zone': 15,
                 'Border': 1,
-                'Hovered': 1,
+                'Hovered': 6,
             })
         })
     })
-    const arenaEdgesLineWidth = {
-        default: arenaEdgesDefaultLineWidth,
+    const arenaEdgesLinewidth = {
         attackZone: arenaEdgesAttackZoneLineWidth,
-        border: arenaEdgesBorderLineWidth,
         hovered: arenaEdgesHoveredLineWidth
     }
 
@@ -165,7 +161,7 @@ const useArenaNodeControls = () => {
         arenaEdgesOpacity,
         arenaNodesIsDisplay,
         arenaEdgesIsDisplay,
-        arenaEdgesLineWidth
+        arenaEdgesLinewidth
     }
 }
 

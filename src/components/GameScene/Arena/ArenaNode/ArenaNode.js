@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 import { centerCoord } from '../../../../utils/displayHelpers';
 
 const ArenaNode = memo(({position, color, opacity}) => {
-
     return (
         <Box 
             args={[1,1,1]}

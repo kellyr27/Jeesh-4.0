@@ -1,7 +1,5 @@
 import { ARENA_LENGTH } from "../globals"
-import { getRelativeDirectionArray} from "./directionHelpers"
 import {LineCurve3, QuadraticBezierCurve3, Vector3, Object3D, Quaternion, Euler} from "three"
-import { subtractArrays, equalArrays } from './arrayHelpers';
 
 /**
  * Takes a coordinate and positions it to the centre of the Cube
@@ -65,36 +63,6 @@ const checkIfInArena = (coord) => {
     return true
 }
 
-
-const getMovePath = (pose1, pose2) => {
-
-    const { gamePosition: position1} = pose1
-    const { gamePosition: position2, direction: direction2 } = pose2
-
-    // Find the control point for the curve
-    const controlPoint = subtractArrays(position2, getRelativeDirectionArray(direction2))
-
-    if (equalArrays(controlPoint, position1)) {
-
-        const curve = new LineCurve3(
-            new Vector3(...position1),
-            new Vector3(...position2)
-        )
-
-        return curve
-    } else {
-        const controlPoint = subtractArrays(position2, getRelativeDirectionArray(direction2))
-
-        const curve = new QuadraticBezierCurve3(
-            new Vector3(...position1),
-            new Vector3(...controlPoint),
-            new Vector3(...position2)
-        )
-
-        return curve
-    }
-}
-
 function getLookAtRotation(target) {
 
     const dummyObject = new Object3D();
@@ -139,7 +107,6 @@ export {
     centerCoord,
     centerCoords,
     checkIfInArena,
-    getMovePath,
     getLookAtRotation,
     getShortestRotationQuaternion,
     convertEulerToQuaternion,

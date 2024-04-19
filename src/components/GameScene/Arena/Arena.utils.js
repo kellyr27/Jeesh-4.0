@@ -1,6 +1,7 @@
 import { addArrays } from "../../../utils/arrayHelpers"
 import { checkIfInArena } from "../../../utils/displayHelpers"
 import { equalDirections } from "../../../utils/directionHelpers"
+import {ARENA_LENGTH} from "../../../globals"
 
 const arrayToKey = (array) => {
     return array.join('_')
@@ -10,6 +11,18 @@ const keyToArray = (key) => {
     return key.split('_').map(Number)
 }
 
+/**
+ * This function calculates the edges of a 3D grid that are adjacent to a given set of positions.
+ * It takes as input an array of position keys, where each key is a string representation of a 3D coordinate.
+ * For each position, it calculates the adjacent edges in all three dimensions (x, y, z).
+ * An edge is considered adjacent if it shares at least one vertex with the position.
+ * The function then checks if each end of the edge is in the set of input positions.
+ * If exactly one or three ends are in the set, the edge is added to the output.
+ * The function returns an array of edges, where each edge is represented by a pair of position keys.
+ *
+ * @param {Array<string>} positionKeys - An array of position keys representing the positions to calculate adjacent edges for.
+ * @returns {Array<Array<string>>} - An array of edges adjacent to the input positions.
+ */
 const getEdgesFromPositionKeys = (positionKeys) => {
     const edges = []
     
@@ -88,7 +101,14 @@ const getEdgesFromPositionKeys = (positionKeys) => {
     return edges
 }
 
-
+/**
+ * This function calculates the positions that would be attacked by all soldiers in a given list.
+ * It counts how many times each position is attacked, and separates the positions into two lists:
+ * one for positions attacked only once, and one for positions attacked multiple times.
+ *
+ * @param {Array<Object>} soldiers - An array of soldier objects, each containing a 'gamePosition' property and a 'direction' property.
+ * @returns {Array<Array<string>>} - An array containing two lists of positions: one for positions attacked only once, and one for positions attacked multiple times.
+ */
 const getAttackedPositions = (position, direction) => {
 
     let attackedPositions = []
@@ -199,6 +219,71 @@ const getEdgeEndPoints = (node1Position, node2Position) => {
     }
 }
 
+/**
+ * This function generates the coordinates for the edges of a 3D arena.
+ * It calculates the start and end coordinates for each edge based on the arena length.
+ * The arena is assumed to be a cube, and each edge is represented by a pair of 3D coordinates.
+ * The function returns an array of these coordinate pairs, one for each edge of the arena.
+ *
+ * @returns {Array<Array<Array<number>>>} - An array of coordinate pairs representing the edges of the arena.
+ */
+const generateArenaEdgeCoordinates = () => {
+    const startEdgeCoordinate = 0 - 1/2
+    const endEdgeCoordinate = ARENA_LENGTH - 1/2
+    const arenaEdgeCoordinates = [
+        [
+            [startEdgeCoordinate, startEdgeCoordinate, startEdgeCoordinate],
+            [endEdgeCoordinate, startEdgeCoordinate, startEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, startEdgeCoordinate, startEdgeCoordinate],
+            [startEdgeCoordinate, endEdgeCoordinate, startEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, startEdgeCoordinate, startEdgeCoordinate],
+            [startEdgeCoordinate, startEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [endEdgeCoordinate, startEdgeCoordinate, startEdgeCoordinate],
+            [endEdgeCoordinate, endEdgeCoordinate, startEdgeCoordinate]
+        ],
+        [
+            [endEdgeCoordinate, startEdgeCoordinate, startEdgeCoordinate],
+            [endEdgeCoordinate, startEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, endEdgeCoordinate, startEdgeCoordinate],
+            [endEdgeCoordinate, endEdgeCoordinate, startEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, endEdgeCoordinate, startEdgeCoordinate],
+            [startEdgeCoordinate, endEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, startEdgeCoordinate, endEdgeCoordinate],
+            [endEdgeCoordinate, startEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, startEdgeCoordinate, endEdgeCoordinate],
+            [startEdgeCoordinate, endEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [endEdgeCoordinate, endEdgeCoordinate, startEdgeCoordinate],
+            [endEdgeCoordinate, endEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [startEdgeCoordinate, endEdgeCoordinate, endEdgeCoordinate],
+            [endEdgeCoordinate, endEdgeCoordinate, endEdgeCoordinate]
+        ],
+        [
+            [endEdgeCoordinate, startEdgeCoordinate, endEdgeCoordinate],
+            [endEdgeCoordinate, endEdgeCoordinate, endEdgeCoordinate]
+        ]
+    ]
+
+    return arenaEdgeCoordinates
+}
+
 
 
 
@@ -207,5 +292,6 @@ export {
     keyToArray,
     getEdgesFromPositionKeys,
     getAllAttackedPositionsKeys,
-    getEdgeEndPoints
+    getEdgeEndPoints,
+    generateArenaEdgeCoordinates
 }

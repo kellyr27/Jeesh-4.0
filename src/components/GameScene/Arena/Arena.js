@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from "react";
-import ArenaNode from "./ArenaNodes/ArenaNode";
-import ArenaEdge from "./ArenaEdges/ArenaEdge";
+import ArenaNode from "./ArenaNode/ArenaNode";
+import ArenaEdge from "./ArenaEdge/ArenaEdge";
 import useArenaNodeControls from "./Arena.controls";
-import { arrayToKey, keyToArray, getEdgesFromPositionKeys, getAllAttackedPositionsKeys, getEdgeEndPoints } from "./Arena.utils";
-import { ARENA_LENGTH } from "../../../globals";
+import { arrayToKey, keyToArray, getEdgesFromPositionKeys, getAllAttackedPositionsKeys, getEdgeEndPoints, generateArenaEdgeCoordinates } from "./Arena.utils";
 
 const Arena = ({
     soldierPoses,
@@ -17,7 +16,7 @@ const Arena = ({
         arenaEdgesOpacity,
         arenaNodesIsDisplay,
         arenaEdgesIsDisplay,
-        // arenaEdgesLineWidth
+        arenaEdgesLinewidth
     } = useArenaNodeControls()
 
     const [attackedOnceNodes, setAttackedOnceNodes] = useState([])
@@ -27,69 +26,11 @@ const Arena = ({
     const [arenaEdgePoints, setArenaEdgePoints] = useState([])
 
     /**
-     * 
-     */
-
-    /**
      * Set the arena Edges
      */
     useEffect(() => {
-
-        const startEdge = 0 - 1/2
-        const endEdge = ARENA_LENGTH - 1/2
-
-        const edgePoints = [
-            [
-                [startEdge, startEdge, startEdge],
-                [endEdge, startEdge, startEdge]
-            ],
-            [
-                [startEdge, startEdge, startEdge],
-                [startEdge, endEdge, startEdge]
-            ],
-            [
-                [startEdge, startEdge, startEdge],
-                [startEdge, startEdge, endEdge]
-            ],
-            [
-                [endEdge, startEdge, startEdge],
-                [endEdge, endEdge, startEdge]
-            ],
-            [
-                [endEdge, startEdge, startEdge],
-                [endEdge, startEdge, endEdge]
-            ],
-            [
-                [startEdge, endEdge, startEdge],
-                [endEdge, endEdge, startEdge]
-            ],
-            [
-                [startEdge, endEdge, startEdge],
-                [startEdge, endEdge, endEdge]
-            ],
-            [
-                [startEdge, startEdge, endEdge],
-                [endEdge, startEdge, endEdge]
-            ],
-            [
-                [startEdge, startEdge, endEdge],
-                [startEdge, endEdge, endEdge]
-            ],
-            [
-                [endEdge, endEdge, startEdge],
-                [endEdge, endEdge, endEdge]
-            ],
-            [
-                [startEdge, endEdge, endEdge],
-                [endEdge, endEdge, endEdge]
-            ],
-            [
-                [endEdge, startEdge, endEdge],
-                [endEdge, endEdge, endEdge]
-            ]
-        ]
-
-        setArenaEdgePoints(edgePoints)
+        const arenaEdgeCoordinates = generateArenaEdgeCoordinates()
+        setArenaEdgePoints(arenaEdgeCoordinates)
     }, [])
 
     /**
@@ -98,10 +39,8 @@ const Arena = ({
     useEffect(() => {
 
         if (currentHoveredPosition) {
-            //TODO: Rename this function to fit
-            const edgeNodes = getEdgesFromPositionKeys([arrayToKey(currentHoveredPosition)])
-
-            setHoveredPositionEdges(edgeNodes)
+            const updatedHoveredPositionEdges = getEdgesFromPositionKeys([arrayToKey(currentHoveredPosition)])
+            setHoveredPositionEdges(updatedHoveredPositionEdges)
         } else {
             setHoveredPositionEdges([])
         }
@@ -137,7 +76,7 @@ const Arena = ({
         <>
             {attackedOnceNodes.map((node, index) => {
 
-                const position = node.split('_').map(Number);
+                const position = keyToArray(node);
 
                 return (
                     <ArenaNode
@@ -151,7 +90,7 @@ const Arena = ({
             })}
             {attackedTwiceNodes.map((node, index) => {
 
-                const position = node.split('_').map(Number);
+                const position = keyToArray(node);
 
                 return (
                     <ArenaNode
@@ -171,7 +110,7 @@ const Arena = ({
                         key={index}
                         points={points}
                         color={arenaEdgesColors.attackZone}
-                        linewidth={6}
+                        linewidth={arenaEdgesLinewidth.attackZone}
                         opacity={arenaEdgesOpacity.attackZone}
                         isDisplay={arenaEdgesIsDisplay.attackZone}
                     />
@@ -193,7 +132,7 @@ const Arena = ({
                         key={index}
                         points={points}
                         color={arenaEdgesColors.hovered}
-                        linewidth={6}
+                        linewidth={arenaEdgesLinewidth.hovered}
                         opacity={arenaEdgesOpacity.hovered}
                         isDisplay={arenaEdgesIsDisplay.hovered}
                     />

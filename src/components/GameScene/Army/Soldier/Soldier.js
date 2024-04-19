@@ -1,12 +1,12 @@
 import { Cone } from "@react-three/drei"
 import React, { useState, useEffect, forwardRef, useRef, createRef } from "react"
-import { centerCoord, getMovePath, getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
+import { centerCoord, getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
 import { useFrame } from "react-three-fiber"
 import { Vector3 } from "three"
 import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
 import {ARENA_OFFSET} from '../../../../globals'
 import PastLines from "./PastLine/PastLines"
-import {getPointsUpToT} from './Soldier.utils'
+import {getPointsUpToT, getMovePath} from './Soldier.utils'
 import usePhaseTimeControls from '../../../../controls/usePhaseTimeContols'
 
 /**
