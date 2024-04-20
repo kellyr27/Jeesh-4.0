@@ -110,8 +110,22 @@ const loadStarTextures = async () => {
     return textures
 };
 
+const generateStars = (numStars, starSizes, starTextures) => {
+    const newPoints = [];
+    const numStarsPerMaterial = distributeStars(numStars, starTextures.length * starSizes.length);
+    let materialIndex = 0;
+    for (const size of starSizes) {
+        for (const texture of starTextures) {
+            const numStarsForThisMaterial = numStarsPerMaterial[materialIndex];
+            const points = generateStarPoints(numStarsForThisMaterial, texture, size, 175, 200);
+            newPoints.push(points);
+            materialIndex++;
+        }
+    }
+    return newPoints;
+}
+
 export {
-    distributeStars,
-    generateStarPoints,
-    loadStarTextures
+    loadStarTextures,
+	generateStars
 }

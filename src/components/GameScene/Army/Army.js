@@ -1,4 +1,4 @@
-import React, {useEffect, useState, createRef, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, {useEffect, useState, createRef, forwardRef } from 'react';
 import Soldier from './Soldier/Soldier';
 import {getQuaternionFromLookAt} from '../../../utils/displayHelpers'
 import { Vector3 } from 'three';
@@ -80,35 +80,31 @@ const Army = forwardRef(({
         soldierBlockedColor 
     } = soldierColors
 
-    /**
-     * Update the Soldier Colors // TODO
-     */
-    // const updateSoldierColors = () => {
-        
-    // }
 
     /**
      * Set the color of the soldiers based on the state of the selected and hovered soldiers
      */
     useEffect(() => {
-
-        soldierRefs.forEach(ref => {
-            // Check if the Soldier is selected 
-            if (selectedSoldier && equalMeshes(ref.current, selectedSoldier)) {
-                ref.current.material.color.set(soldierSelectedColor);
-            }
-            // Check if (another) Soldier is moving.
-            else if (moveState) {
-                ref.current.material.color.set(soldierBlockedColor)
-            }
-            // Check if the Soldier is hovered (and is not selected)
-            else if (hoveredSoldier && equalMeshes(ref.current, hoveredSoldier)) {
-                ref.current.material.color.set(soldierHoveredColor);
-            }
-            else {
-                ref.current.material.color.set(soldierDefaultColor);
-            }
-        });
+        const setColorOfSoldiers = () => {
+            soldierRefs.forEach(ref => {
+                // Check if the Soldier is selected 
+                if (selectedSoldier && equalMeshes(ref.current, selectedSoldier)) {
+                    ref.current.material.color.set(soldierSelectedColor);
+                }
+                // Check if (another) Soldier is moving.
+                else if (moveState) {
+                    ref.current.material.color.set(soldierBlockedColor)
+                }
+                // Check if the Soldier is hovered (and is not selected)
+                else if (hoveredSoldier && equalMeshes(ref.current, hoveredSoldier)) {
+                    ref.current.material.color.set(soldierHoveredColor);
+                }
+                else {
+                    ref.current.material.color.set(soldierDefaultColor);
+                }
+            });
+        }
+        setColorOfSoldiers()
     }, [soldierDefaultColor, soldierHoveredColor, soldierSelectedColor, selectedSoldier, hoveredSoldier, soldierRefs, moveState, soldierBlockedColor])
 
 

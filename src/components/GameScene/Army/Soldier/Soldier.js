@@ -1,13 +1,13 @@
 import { Cone } from "@react-three/drei"
 import React, { useState, useEffect, forwardRef, useRef, createRef } from "react"
-import { centerCoord, getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
+import { getQuaternionFromLookAt } from '../../../../utils/displayHelpers'
 import { useFrame } from "react-three-fiber"
 import { Vector3 } from "three"
 import {getRelativeDirectionArray} from '../../../../utils/directionHelpers';
 import {ARENA_OFFSET} from '../../../../globals'
 import PastLines from "./PastLine/PastLines"
 import {getPointsUpToT, getMovePath} from './Soldier.utils'
-import usePhaseTimeControls from '../../../../controls/usePhaseTimeContols'
+import {usePhaseTimeControls} from './Soilder.controls'
 
 /**
  * move in an object with the following structure:
@@ -23,7 +23,6 @@ import usePhaseTimeControls from '../../../../controls/usePhaseTimeContols'
  * }
  */
 
-//TODO: Need to offset the position before updating
 const Soldier = forwardRef(({
     initialPosition,
     initialQuaternionRotation,
@@ -100,7 +99,7 @@ const Soldier = forwardRef(({
             const targetPoseTangent = new Vector3(...getRelativeDirectionArray(targetPose.direction))
 
             /**
-             * Determine if we can skip Phases 2 & 4 //TODO: Implement this
+             * Determine if we can skip Phases 2 & 4
              */
             const phase1Skip = currentPoseTangent.equals(startMovePathTangent)
             const phase3Skip = endMovePathTangent.equals(targetPoseTangent)
@@ -292,7 +291,7 @@ const Soldier = forwardRef(({
     return (
         <>
             <Cone args={[0.4, 0.8]} ref={ref} name={name} />
-            <Cone args={[0.4, 0.8]} ref={wireframeMesh} name={name}>
+            <Cone args={[0.4, 0.8, 12]} ref={wireframeMesh} name={name}>
                 <meshBasicMaterial attach="material" wireframe />
             </Cone>
             <PastLines

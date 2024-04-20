@@ -1,5 +1,5 @@
 import { ARENA_LENGTH } from "../globals"
-import {LineCurve3, QuadraticBezierCurve3, Vector3, Object3D, Quaternion, Euler} from "three"
+import { Vector3, Object3D, Quaternion, Euler} from "three"
 
 /**
  * Takes a coordinate and positions it to the centre of the Cube

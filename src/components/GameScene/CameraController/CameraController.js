@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {  useFrame } from '@react-three/fiber';
+import {  useFrame } from 'react-three-fiber';
 import { TrackballControls } from "@react-three/drei";
 import { ARENA_LENGTH } from '../../../globals'
 import { Vector3 } from 'three';

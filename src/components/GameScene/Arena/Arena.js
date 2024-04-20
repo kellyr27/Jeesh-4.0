@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import ArenaNode from "./ArenaNode/ArenaNode";
 import ArenaEdge from "./ArenaEdge/ArenaEdge";
-import useArenaNodeControls from "./Arena.controls";
+import {useArenaNodeControls, useArenaEdgeControls} from "./Arena.controls";
 import { arrayToKey, keyToArray, getEdgesFromPositionKeys, getAllAttackedPositionsKeys, getEdgeEndPoints, generateArenaEdgeCoordinates } from "./Arena.utils";
 
 const Arena = ({
@@ -11,13 +11,16 @@ const Arena = ({
 
     const { 
         arenaNodesColors,
-        arenaEdgesColors,
         arenaNodesOpacity,
-        arenaEdgesOpacity,
         arenaNodesIsDisplay,
+    } = useArenaNodeControls()
+
+    const {
+        arenaEdgesColors,
+        arenaEdgesOpacity,
         arenaEdgesIsDisplay,
         arenaEdgesLinewidth
-    } = useArenaNodeControls()
+    } = useArenaEdgeControls()
 
     const [attackedOnceNodes, setAttackedOnceNodes] = useState([])
     const [attackedTwiceNodes, setAttackedTwiceNodes] = useState([])

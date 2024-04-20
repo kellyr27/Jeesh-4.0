@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { useThree } from 'react-three-fiber';
 import { Bloom } from '@react-three/postprocessing';
-import { distributeStars, generateStarPoints, loadStarTextures } from './Stars.utils';
+import { generateStars, loadStarTextures } from './Stars.utils';
 
 
 const starSizes = [3, 5, 7, 9]
@@ -26,36 +26,44 @@ const Stars = ({numStars}) => {
     }, []);
 
     /**
-     * This useEffect hook is responsible for generating and adding a star field to the scene.
-     * It runs whenever the scene, numStars, or starTextures change.
-     * If starTextures is not empty and the scene is defined, it distributes the total number of stars among the different combinations of star sizes and textures.
-     * For each combination of size and texture, it generates a set of points representing a portion of the star field, and adds these points to the scene.
+     * This useEffect hook is responsible for generating a star field and updating the scene with the new stars.
+     * It runs whenever the `scene`, `numStars`, `starTextures`, `generatePoints`, or `starPoints` change.
+     * If `starTextures` is not empty, the `scene` is defined, and `generatePoints` is `true`, it:
+     * 1. Removes the old points from the scene
+     * 2. Generates new points for each combination of star size and texture
+     * 3. Adds these new points to the scene
+     * 4. Updates the state with the new points
+     * After generating the points, it sets `generatePoints` to `false` to prevent unnecessary re-generation of points.
      */
     const [starPoints, setStarPoints] = useState([]);
+    const [generatePoints, setGeneratePoints] = useState(true);
 	useEffect(() => {
-		if (starTextures.length > 0 && scene) {
-
-            // Remove old points from the scene
-            for (const point of starPoints) {
+        const updateScene = (scene, oldPoints, newPoints) => {
+            for (const point of oldPoints) {
                 scene.remove(point);
             }
-
-            const newPoints = [];
-            const numStarsPerMaterial = distributeStars(numStars, starTextures.length * starSizes.length);
-            let materialIndex = 0
-			for (const size of starSizes) {
-				for (const texture of starTextures) {
-                    const numStarsForThisMaterial = numStarsPerMaterial[materialIndex];
-                    const points = generateStarPoints(numStarsForThisMaterial, texture, size, 175, 200);
-                    newPoints.push(points);
-                    scene.add(points);
-                    materialIndex++;
-				}
-			}
-
-            setStarPoints(newPoints);
+            for (const point of newPoints) {
+                scene.add(point);
+            }
+            return scene;
         }
-	}, [scene, numStars, starTextures]);
+
+		if (starTextures.length > 0 && scene && generatePoints) {
+            const newPoints = generateStars(numStars, starSizes, starTextures);
+            updateScene(scene, starPoints, newPoints);
+            setStarPoints(newPoints);
+            setGeneratePoints(false);
+        }
+	}, [scene, numStars, starTextures, generatePoints, starPoints]);
+
+    /**
+     * This useEffect hook is responsible for updating the star field when the number of stars changes.
+     * It runs whenever the numStars prop changes, and sets the generatePoints state variable to true.
+     * This triggers the generation of a new star field in the previous useEffect hook.
+     */
+    useEffect(() => {
+        setGeneratePoints(true);
+    }, [numStars]);
 
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import useDisplayAxesControls from '../../../controls/useDisplayAxesControls';
+import {useDisplayAxesControls} from './AxesHelperController.controls';
 import { ARENA_LENGTH } from '../../../globals';
 
 const AxesHelperController = () => {

@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect, useCallback, Suspense} from 'react';
-import { Canvas } from "@react-three/fiber";
+import { Canvas } from "react-three-fiber";
 import Army from '../../components/GameScene/Army/Army';
 import { useControls, folder } from 'leva';
 import StarField from '../../components/GameScene/StarField/StarField';
@@ -11,18 +11,16 @@ import { useSelectionPanelInteractionContext } from '../../context/SelectionPane
 import { addArrays } from '../../utils/arrayHelpers';
 import NightSky from '../../components/GameScene/NightSky/NightSky';
 
-//TODO: Move to utils
 const INITIAL_SOLDIERS = generateInitialSoldier()
 
 const GameScene = () => {
 
-    //TODO: Make function to extract position
-    const [starPositions, setStarPositions] = useState(generateStarPositions(INITIAL_SOLDIERS.map(soldier => soldier.gamePosition)))
+    const [starPositions] = useState(generateStarPositions(INITIAL_SOLDIERS.map(soldier => soldier.gamePosition)))
     const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
     const [unselectSoldier, setUnselectSoldier] = useState(false)
     const [moveState, setMoveState] = useState(null)
 
-    // Used to keep the theoretical positions and directions of all
+    // Used to keep the theoretical positions and directions of all soldiers
     const [soldierPoses, setSoldierPoses] = useState(INITIAL_SOLDIERS)
 
     const {
@@ -52,7 +50,6 @@ const GameScene = () => {
                     currentPose: selectedSoldierPose,
                     targetPose: {
                         gamePosition: addArrays(selectedSoldierPose.gamePosition, selectedRelativePose.position),
-                        //TODO Fix this
                         direction: selectedRelativePose.direction
                     }
                 }
@@ -80,7 +77,7 @@ const GameScene = () => {
 
         if (moveState) {
 
-            const {soldierId, move: {currentPose, targetPose}} = moveState
+            const {soldierId, move: {targetPose}} = moveState
             setNewSoldierPoses(soldierId, targetPose)
 
             setLockSelectionPanel(true)
@@ -142,7 +139,6 @@ const GameScene = () => {
         e.stopPropagation()
     }
 
-    //TODO: What if NULL
     const handleSelectedSoldierChange = (soldierId) => {
         setUnselectSoldier(false)
 

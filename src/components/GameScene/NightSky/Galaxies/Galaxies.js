@@ -11,12 +11,6 @@ const Galaxies = ({galaxyCount, showArrowHelper}) => {
 		const randomCenters = Array.from({length: galaxyCount}, () => generateRandomPointInSphere(175, 200))
 		setRandomCenters(randomCenters)
 
-        // Generate initial values for radius, branches, colorIn, and colorOut
-        const initialRadius = generateRandomRadius(3, 7);
-        const initialBranches = generateRandomBranches(2, 5);
-        const initialColorIn = generateRandomColor();
-        const initialColorOut = generateRandomColor();
-
         // Generate initial properties for galaxies
         const initialGalaxyProperties = randomCenters.map(() => ({
             radius: generateRandomRadius(3, 7),

@@ -1,4 +1,4 @@
-import React, {Fragment, useRef, useEffect, createRef} from "react"
+import React, {Fragment, createRef} from "react"
 import {centerCoord} from "../../../utils/displayHelpers"
 import {useFrame} from "react-three-fiber"
 

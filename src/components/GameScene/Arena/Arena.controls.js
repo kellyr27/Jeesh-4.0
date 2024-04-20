@@ -21,65 +21,37 @@ const useArenaNodeControls = () => {
     }
 
     const {
-        'Attack Zone': arenaEdgesAttackZoneColor,
-        'Border': arenaEdgesBorderColor,
-        'Hovered': arenaEdgesHoveredColor,
-    } = useControls('Arena', {
-        'Arena Edges': folder({
-            'Colors': folder({
-                'Attack Zone': 'black',
-                'Border': 'white',
-                'Hovered': 'yellow',
-            })
-        })
-    })
-    const arenaEdgesColors = {
-        attackZone: arenaEdgesAttackZoneColor,
-        border: arenaEdgesBorderColor,
-        hovered: arenaEdgesHoveredColor
-    }
-
-
-
-    const {
         'Attack Zone - Single': arenaNodesAttackZoneSingleOpacity,
         'Attack Zone - Shared': arenaNodesAttackZoneSharedOpacity,
         'Hovered': arenaNodesHoveredOpacity,
     } = useControls('Arena', {
         'Arena Nodes': folder({
             'Opacities': folder({
-                'Attack Zone - Single': 0.35,
-                'Attack Zone - Shared': 0.35,
-                'Hovered': 0.3,
+                'Attack Zone - Single':  {
+                    value: 0.35,
+                    min: 0,
+                    max: 1
+                },
+                'Attack Zone - Shared': {
+                    value: 0.35,
+                    min: 0,
+                    max: 1
+                },
+                'Hovered': {
+                    value: 0.3,
+                    min: 0,
+                    max: 1
+                },
             })
         })
     })
+
     const arenaNodesOpacity = {
         attackZoneSingle: arenaNodesAttackZoneSingleOpacity,
         attackZoneShared: arenaNodesAttackZoneSharedOpacity,
         hovered: arenaNodesHoveredOpacity
     }
 
-    const {
-        'Attack Zone': arenaEdgesAttackZoneOpacity,
-        'Border': arenaEdgesBorderOpacity,
-        'Hovered': arenaEdgesHoveredOpacity,
-    } = useControls('Arena', {
-        'Arena Edges': folder({
-            'Opacity': folder({
-                'Attack Zone': 1,
-                'Border': 1,
-                'Hovered': 1,
-            })
-        })
-    })
-    const arenaEdgesOpacity = {
-        attackZone: arenaEdgesAttackZoneOpacity,
-        border: arenaEdgesBorderOpacity,
-        hovered: arenaEdgesHoveredOpacity
-    }
-
-    
     const {
         'Attack Zone - Single': arenaNodesAttackZoneSingleIsDisplay,
         'Attack Zone - Shared': arenaNodesAttackZoneSharedIsDisplay,
@@ -99,6 +71,54 @@ const useArenaNodeControls = () => {
         hovered: arenaNodesHoveredIsDisplay
     }
 
+    return {
+        arenaNodesColors,
+        arenaNodesOpacity,
+        arenaNodesIsDisplay,
+    }
+}
+
+const useArenaEdgeControls = () => {
+
+    const {
+        'Attack Zone': arenaEdgesAttackZoneColor,
+        'Border': arenaEdgesBorderColor,
+        'Hovered': arenaEdgesHoveredColor,
+    } = useControls('Arena', {
+        'Arena Edges': folder({
+            'Colors': folder({
+                'Attack Zone': 'black',
+                'Border': 'white',
+                'Hovered': 'yellow',
+            })
+        })
+    })
+    const arenaEdgesColors = {
+        attackZone: arenaEdgesAttackZoneColor,
+        border: arenaEdgesBorderColor,
+        hovered: arenaEdgesHoveredColor
+    }
+
+    const {
+        'Attack Zone': arenaEdgesAttackZoneOpacity,
+        'Border': arenaEdgesBorderOpacity,
+        'Hovered': arenaEdgesHoveredOpacity,
+    } = useControls('Arena', {
+        'Arena Edges': folder({
+            'Opacity': folder({
+                'Attack Zone': { value: 1, min: 0, max: 1 },
+                'Border': { value: 1, min: 0, max: 1 },
+                'Hovered': { value: 1, min: 0, max: 1 },
+            })
+        })
+    })
+    const arenaEdgesOpacity = {
+        attackZone: arenaEdgesAttackZoneOpacity,
+        border: arenaEdgesBorderOpacity,
+        hovered: arenaEdgesHoveredOpacity
+    }
+
+    
     const {
         'Attack Zone': arenaEdgesAttackZoneIsDisplay,
         'Border': arenaEdgesBorderIsDisplay,
@@ -124,10 +144,10 @@ const useArenaNodeControls = () => {
         'Hovered': arenaEdgesHoveredLineWidth,
     } = useControls('Arena', {
         'Arena Edges': folder({
-            'Is Display': folder({
-                'Attack Zone': 15,
-                'Border': 1,
-                'Hovered': 6,
+            'Linewidth': folder({
+                'Attack Zone': { value: 15, min: 0, max: 20 },
+                'Border': { value: 1, min: 0, max: 20 },
+                'Hovered': { value: 6, min: 0, max: 20 },
             })
         })
     })
@@ -138,14 +158,11 @@ const useArenaNodeControls = () => {
     }
 
     return {
-        arenaNodesColors,
         arenaEdgesColors,
-        arenaNodesOpacity,
         arenaEdgesOpacity,
-        arenaNodesIsDisplay,
         arenaEdgesIsDisplay,
         arenaEdgesLinewidth
     }
 }
 
-export default useArenaNodeControls;
+export {useArenaNodeControls, useArenaEdgeControls};

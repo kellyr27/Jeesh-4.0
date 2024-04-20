@@ -12,4 +12,4 @@ const usePhaseTimeControls = () => {
     return { phase1Time, phase2Time, phase3Time }
 }
 
-export default usePhaseTimeControls
+export {usePhaseTimeControls}

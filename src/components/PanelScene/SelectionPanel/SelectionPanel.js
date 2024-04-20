@@ -14,8 +14,6 @@ const SelectionPanel = ({
     onMoveHovered,
     selectorSizes
 }) => {
-
-    //TODO: Move to context
     const [cardinalDirectionMap, setCardinalDirectionMap] = useState(initialCardinalDirectionMap)
 
     const {

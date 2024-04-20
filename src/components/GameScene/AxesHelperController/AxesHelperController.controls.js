@@ -8,4 +8,4 @@ const useDisplayAxesControls = () => {
     return showAxesHelper;
 }
 
-export default useDisplayAxesControls
+export {useDisplayAxesControls}

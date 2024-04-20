@@ -2,7 +2,7 @@ import React from 'react'
 import GameScene from './scenes/GameScene/GameScene'
 import PanelScene from './scenes/PanelScene/PanelScene'
 import './App.css';
-import usePanelSizeControls from './controls/usePanelSizeControls'
+import {usePanelSizeControls} from './App.controls'
 import CombinedProvider from './CombinedProvider';
 import FPSStats from 'react-fps-stats'
 

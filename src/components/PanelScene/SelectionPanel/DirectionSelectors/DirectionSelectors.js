@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Layer, Line } from 'react-konva';
 import {useControls, folder} from 'leva';
-import { getOpposingDirection } from '../../../../utils/directionHelpers';
 
 const DirectionSelectors = ({
     panelSize, 

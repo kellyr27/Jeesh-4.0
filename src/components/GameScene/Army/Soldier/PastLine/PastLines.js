@@ -1,7 +1,5 @@
-import PastLine from "./PastLine";
 import {Line} from '@react-three/drei';
-import React, { createRef, useEffect } from 'react';
-import { ARENA_OFFSET } from '../../../../../globals';
+import React from 'react';
 import {offsetLinePoints, offsetArrLinePoints} from './PastLines.utils'
 
 const PastLines = ({

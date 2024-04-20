@@ -1,3 +1,0 @@
-- Give it a Favicon for Chrome only
-- Add GIF in Markup? for description
-- Move controls to folder

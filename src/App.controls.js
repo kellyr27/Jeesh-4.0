@@ -15,4 +15,4 @@ const usePanelSizeControls = () => {
     return panelSize;
 }
 
-export default usePanelSizeControls
+export {usePanelSizeControls}
