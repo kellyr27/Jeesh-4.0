@@ -31,18 +31,29 @@ const Stars = ({numStars}) => {
      * If starTextures is not empty and the scene is defined, it distributes the total number of stars among the different combinations of star sizes and textures.
      * For each combination of size and texture, it generates a set of points representing a portion of the star field, and adds these points to the scene.
      */
+    const [starPoints, setStarPoints] = useState([]);
 	useEffect(() => {
 		if (starTextures.length > 0 && scene) {
+
+            // Remove old points from the scene
+            for (const point of starPoints) {
+                scene.remove(point);
+            }
+
+            const newPoints = [];
             const numStarsPerMaterial = distributeStars(numStars, starTextures.length * starSizes.length);
             let materialIndex = 0
 			for (const size of starSizes) {
 				for (const texture of starTextures) {
                     const numStarsForThisMaterial = numStarsPerMaterial[materialIndex];
                     const points = generateStarPoints(numStarsForThisMaterial, texture, size, 175, 200);
+                    newPoints.push(points);
                     scene.add(points);
                     materialIndex++;
 				}
 			}
+
+            setStarPoints(newPoints);
         }
 	}, [scene, numStars, starTextures]);
 

@@ -1,12 +1,16 @@
 import React from 'react';
 import Galaxies from './Galaxies/Galaxies';
 import Stars from './Stars/Stars';
+import useNightSkyControls from './Nightsky.controls';
 
 const NightSky = () => {
+
+    const { numStars, numGalaxies, showGalaxyNormals } = useNightSkyControls()
+
     return (
         <>
-            <Galaxies galaxyCount={100} />
-            <Stars numStars={10000} />
+            <Galaxies galaxyCount={numGalaxies} showArrowHelper={showGalaxyNormals} />
+            <Stars numStars={numStars} />
         </>
     )
 }

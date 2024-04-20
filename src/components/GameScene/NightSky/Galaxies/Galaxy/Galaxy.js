@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, memo } from "react";
 import { useThree, useFrame } from "react-three-fiber";
 import { Vector3, Color, BufferAttribute, Matrix4, AdditiveBlending, ArrowHelper } from "three";
 import {getTransformerMatrix, getNormalVector, generateGalaxy} from './Galaxy.utils'
@@ -66,6 +66,6 @@ const Galaxy = ({
 		]} />}
 	</>
   );
-};
+}
 
 export default Galaxy
