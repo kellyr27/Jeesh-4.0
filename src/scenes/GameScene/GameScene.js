@@ -9,7 +9,6 @@ import AxesHelperController from '../../components/GameScene/AxesHelperControlle
 import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions, generateInitialSoldier} from './GameScene.utils'
 import { useSelectionPanelInteractionContext } from '../../context/SelectionPanelInteractionContext';
 import { addArrays } from '../../utils/arrayHelpers';
-import StaryBackground from '../../components/GameScene/NightSky/StaryBackground';
 import NightSky from '../../components/GameScene/NightSky/NightSky';
 
 //TODO: Move to utils
@@ -195,7 +194,6 @@ const GameScene = () => {
                 <StarField starPositions={starPositions} />
             </Suspense>
             <AxesHelperController />
-            {/* <GalaxyApp /> */}
             <NightSky />
         </Canvas>
     )

@@ -25,7 +25,7 @@ const Galaxies = ({galaxyCount}) => {
                 randomnessPower={ 9 }
                 colorIn={generateRandomColor()}
                 colorOut={generateRandomColor()}
-                showArrowHelper={true}
+                showArrowHelper={false}
             />)}
         </Suspense>
 	);
