@@ -1,6 +1,5 @@
-import React, {useRef, useState, useContext, useEffect, useCallback, Suspense} from 'react';
+import React, {useRef, useState, useEffect, useCallback, Suspense} from 'react';
 import { Canvas } from "@react-three/fiber";
-import { Stars} from "@react-three/drei";
 import Army from '../../components/GameScene/Army/Army';
 import { useControls, folder } from 'leva';
 import StarField from '../../components/GameScene/StarField/StarField';
@@ -10,8 +9,8 @@ import AxesHelperController from '../../components/GameScene/AxesHelperControlle
 import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions, generateInitialSoldier} from './GameScene.utils'
 import { useSelectionPanelInteractionContext } from '../../context/SelectionPanelInteractionContext';
 import { addArrays } from '../../utils/arrayHelpers';
-import GalaxyApp from '../../components/GameScene/BackgroundField/Galaxy'
-import StaryBackground from '../../components/GameScene/BackgroundField/StaryBackground';
+import GalaxyApp from '../../components/GameScene/NightSky/Galaxy'
+import StaryBackground from '../../components/GameScene/NightSky/StaryBackground';
 
 
 //TODO: Move to utils
@@ -175,23 +174,10 @@ const GameScene = () => {
             onContextMenu={onContextMenuHandler}
         >
             <color attach="background" args={["#191920"]} />
-            {/* <Stars
-                radius={50}
-                depth={50}
-                count={5000}
-                factor={4}
-                saturation={1}
-                fade
-                speed={1}
-            /> */}
             <StaryBackground
                 numStars={100}
             />
-            {/* <Stary /> */}
-            <CameraController 
-                selectedSoldier={null}
-                selectedSoldierPose={selectedSoldierPose}
-            />
+            <CameraController />
             <Arena
                 soldierPoses={soldierPoses}
                 currentHoveredPosition={currentHoveredPosition}
