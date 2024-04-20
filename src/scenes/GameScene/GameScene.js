@@ -9,9 +9,8 @@ import AxesHelperController from '../../components/GameScene/AxesHelperControlle
 import {getCardinalDirectionMap, getPossibleMovePositions, generateStarPositions, generateInitialSoldier} from './GameScene.utils'
 import { useSelectionPanelInteractionContext } from '../../context/SelectionPanelInteractionContext';
 import { addArrays } from '../../utils/arrayHelpers';
-import GalaxyApp from '../../components/GameScene/NightSky/Galaxy'
 import StaryBackground from '../../components/GameScene/NightSky/StaryBackground';
-
+import NightSky from '../../components/GameScene/NightSky/NightSky';
 
 //TODO: Move to utils
 const INITIAL_SOLDIERS = generateInitialSoldier()
@@ -174,9 +173,9 @@ const GameScene = () => {
             onContextMenu={onContextMenuHandler}
         >
             <color attach="background" args={["#191920"]} />
-            <StaryBackground
+            {/* <StaryBackground
                 numStars={100}
-            />
+            /> */}
             <CameraController />
             <Arena
                 soldierPoses={soldierPoses}
@@ -196,7 +195,8 @@ const GameScene = () => {
                 <StarField starPositions={starPositions} />
             </Suspense>
             <AxesHelperController />
-            <GalaxyApp />
+            {/* <GalaxyApp /> */}
+            <NightSky />
         </Canvas>
     )
 }
