@@ -1,4 +1,4 @@
-import { addArrays } from "../../../utils/arrayHelpers"
+import { addArrays, equalArrays } from "../../../utils/arrayHelpers"
 import { checkIfInArena } from "../../../utils/displayHelpers"
 import { equalDirections } from "../../../utils/directionHelpers"
 import {ARENA_LENGTH} from "../../../globals"
@@ -284,6 +284,94 @@ const generateArenaEdgeCoordinates = () => {
     return arenaEdgeCoordinates
 }
 
+const generateArenaEdges = () => {
+
+    // Generate a list of all Nodes that have exactly 2 coordinates outside the Arena length
+    const nodesOuterBorder = []
+    for (let i = -1; i <= ARENA_LENGTH; i++) {
+        for (let j = -1; j <= ARENA_LENGTH; j++) {
+            for (let k = -1; k <= ARENA_LENGTH; k++) {
+                const countOuter = [i,j,k].map((coord) => {
+                    return coord < 0 || coord >= ARENA_LENGTH
+                }).filter((coord) => coord === true).length
+                if (countOuter === 2) {
+                    nodesOuterBorder.push([i,j,k])
+                }
+            }
+        }
+    }
+
+    // Generate a list of all EdgePoint pairs
+    const arenaEdges = nodesOuterBorder.map((node) => {
+        const innerNode = node.map((coord) => {
+            if (coord === -1) {
+                return 0
+            } else if (coord === ARENA_LENGTH) {
+                return ARENA_LENGTH - 1
+            } else {
+                return coord
+            }
+        })
+
+        return [
+            node,
+            innerNode
+        ]
+    })
+
+    return arenaEdges
+
+}
+
+const getEdgeNodesOuterBorder = (edgeNodes) => {
+    const edgeNodesOuterBorderKeys = edgeNodes.filter((edgeNodes) => {
+        const [node1Key, node2Key] = edgeNodes
+        const node1 = keyToArray(node1Key)
+        const node2 = keyToArray(node2Key)
+        
+        const node1CountOuter = node1.map((coord) => {
+            return coord < 0 || coord >= ARENA_LENGTH
+        }).filter((coord) => coord === true).length
+        const node2CountOuter = node2.map((coord) => {
+            return coord < 0 || coord >= ARENA_LENGTH
+        }).filter((coord) => coord === true).length
+
+        return (node1CountOuter === 2) || (node2CountOuter === 2)
+    })
+
+    const edgeNodesOuterBorder = edgeNodesOuterBorderKeys.map((edgeNodesKey) => {
+        const [node1Key, node2Key] = edgeNodesKey
+        const node1 = keyToArray(node1Key)
+        const node2 = keyToArray(node2Key)
+        return [node1, node2]
+    })
+
+    return edgeNodesOuterBorder
+}
+
+const isSameEdge = (edge1, edge2) => {
+    if (equalArrays(edge1[0], edge2[0]) && equalArrays(edge1[1], edge2[1])) {
+        return true
+    } else if (equalArrays(edge1[0], edge2[1]) && equalArrays(edge1[1], edge2[0])) {
+        return true
+    } else {
+        return false
+    }
+}
+
+const getArenaEdges = (attackZoneEdges) => {
+    const allArenaEdges = generateArenaEdges()
+    const edgeNodesOuterBorder = getEdgeNodesOuterBorder(attackZoneEdges)
+
+    const arenaEdgesNoConflict = allArenaEdges.filter((arenaEdge) => {
+        return edgeNodesOuterBorder.every((edgeNodes) => {
+            return !isSameEdge(arenaEdge, edgeNodes)
+        })
+    })
+
+    return arenaEdgesNoConflict
+}
+
 
 
 
@@ -293,5 +381,9 @@ export {
     getEdgesFromPositionKeys,
     getAllAttackedPositionsKeys,
     getEdgeEndPoints,
-    generateArenaEdgeCoordinates
+    generateArenaEdgeCoordinates,
+    generateArenaEdges,
+    getEdgeNodesOuterBorder,
+    isSameEdge,
+    getArenaEdges
 }

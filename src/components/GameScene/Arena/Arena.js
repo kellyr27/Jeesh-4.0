@@ -2,7 +2,14 @@ import React, {useState, useEffect} from "react";
 import ArenaNode from "./ArenaNode/ArenaNode";
 import ArenaEdge from "./ArenaEdge/ArenaEdge";
 import {useArenaNodeControls, useArenaEdgeControls} from "./Arena.controls";
-import { arrayToKey, keyToArray, getEdgesFromPositionKeys, getAllAttackedPositionsKeys, getEdgeEndPoints, generateArenaEdgeCoordinates } from "./Arena.utils";
+import { 
+    arrayToKey, 
+    keyToArray, 
+    getEdgesFromPositionKeys, 
+    getAllAttackedPositionsKeys, 
+    getEdgeEndPoints, 
+    getArenaEdges
+} from "./Arena.utils";
 
 const Arena = ({
     soldierPoses,
@@ -26,15 +33,15 @@ const Arena = ({
     const [attackedTwiceNodes, setAttackedTwiceNodes] = useState([])
     const [attackZoneEdges, setAttackZoneEdges] = useState([])
     const [hoveredPositionEdges, setHoveredPositionEdges] = useState([])
-    const [arenaEdgePoints, setArenaEdgePoints] = useState([])
+    const [arenaEdges, setArenaEdges] = useState([])
 
     /**
-     * Set the arena Edges
+     * Set the arena Edges whenever the attack zone edges changes
      */
     useEffect(() => {
-        const arenaEdgeCoordinates = generateArenaEdgeCoordinates()
-        setArenaEdgePoints(arenaEdgeCoordinates)
-    }, [])
+        const allArenaEdges = getArenaEdges(attackZoneEdges)
+        setArenaEdges(allArenaEdges)
+    }, [attackZoneEdges])
 
     /**
      * When the hovered position changes, update the edges that are being hovered over
@@ -69,7 +76,6 @@ const Arena = ({
         const attackZoneNodes = [...attackedOnceNodes, ...attackedTwiceNodes]
 
         const edgeNodes = getEdgesFromPositionKeys(attackZoneNodes)
-
         setAttackZoneEdges(edgeNodes)
 
     }, [attackedOnceNodes, attackedTwiceNodes])
@@ -141,12 +147,14 @@ const Arena = ({
                     />
                 )
             })}
-            {arenaEdgePoints.map((edgePoints, index) => {
+            {arenaEdges.map((edge, index) => {
+
+                const points = getEdgeEndPoints(edge[0], edge[1])
 
                 return (
                     <ArenaEdge
                         key={index}
-                        points={edgePoints}
+                        points={points}
                         color='white'
                         linewidth={10}
                         opacity={0.3}

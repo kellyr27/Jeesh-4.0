@@ -60,7 +60,7 @@ const CameraController = () => {
             controlsRef.current.object.position.copy(controlsRef.current.target).add(activateCameraChange.current.addVector);
 
             // Set the zoom limits for the camera
-            controlsRef.current.maxDistance = 500;
+            controlsRef.current.maxDistance = 190;
             controlsRef.current.minDistance = 1;
 
             // Reset the camera change activation state
