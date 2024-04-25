@@ -19,6 +19,7 @@ const GameScene = ({keyboardCycle, onKeyboardCompletion}) => {
     const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
     const [unselectSoldier, setUnselectSoldier] = useState(false)
     const [moveState, setMoveState] = useState(null)
+    const [lockKeyboardCycle, setLockKeyboardCycle] = useState(false)
 
     // Used to keep the theoretical positions and directions of all soldiers
     const [soldierPoses, setSoldierPoses] = useState(INITIAL_SOLDIERS)
@@ -69,7 +70,8 @@ const GameScene = ({keyboardCycle, onKeyboardCompletion}) => {
 
     /**
      * - When the move has changed states from null -> move, lock the Selection Panel 
-     * and reset all the context variables. Update the SoldierPoses with the new position
+     * and reset all the context variables. Update the SoldierPoses with the new position.
+     * Lock cycling through soldiers
      * 
      * - When the move has changed states from move -> null, unlock the Selection Panel
      */
@@ -82,13 +84,15 @@ const GameScene = ({keyboardCycle, onKeyboardCompletion}) => {
 
             setLockSelectionPanel(true)
             setAllowedRelativeMovePositions(null)
-            setSelectedSoldierId(null)
             setSelectedSoldierPose(null)
             setSelectedRelativePose(null)
             setRelativeHoveredPosition(null)
+            setLockKeyboardCycle(true)
 
         } else {
+            setSelectedSoldierId(null)
             setLockSelectionPanel(false)
+            setLockKeyboardCycle(false)
         }
 
     }, [
@@ -173,31 +177,34 @@ const GameScene = ({keyboardCycle, onKeyboardCompletion}) => {
      * After updating the selected soldier, it calls the onKeyboardCompletion function to handle any additional logic after the keyboard event.
      */
     useEffect(() => {
-        const numSoldiers = soldierPoses.length
+        
+        if (!lockKeyboardCycle) {
+            const numSoldiers = soldierPoses.length
+            
+            if (keyboardCycle === 'left') {
+                if (selectedSoldierId === null) {
+                    updateSelectedSoldier(numSoldiers - 1)
+                } else if (selectedSoldierId === 0) {
+                    updateSelectedSoldier(null)
+                } else {
+                    updateSelectedSoldier(selectedSoldierId - 1)
+                }
 
-        if (keyboardCycle === 'left') {
-            if (selectedSoldierId === null) {
-                updateSelectedSoldier(numSoldiers - 1)
-            } else if (selectedSoldierId === 0) {
-                updateSelectedSoldier(null)
-            } else {
-                updateSelectedSoldier(selectedSoldierId - 1)
-            }
-
-        } else if (keyboardCycle === 'right') {
-            if (selectedSoldierId === null) {
-                updateSelectedSoldier(0)
-            } else if (selectedSoldierId === numSoldiers - 1) {
-                updateSelectedSoldier(null)
-            } else {
-                updateSelectedSoldier(selectedSoldierId + 1)
+            } else if (keyboardCycle === 'right') {
+                if (selectedSoldierId === null) {
+                    updateSelectedSoldier(0)
+                } else if (selectedSoldierId === numSoldiers - 1) {
+                    updateSelectedSoldier(null)
+                } else {
+                    updateSelectedSoldier(selectedSoldierId + 1)
+                }
             }
         }
 
         onKeyboardCompletion()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [keyboardCycle])
+    }, [keyboardCycle, lockKeyboardCycle])
 
     const handleMoveCompletion = () => {
         setMoveState(null)
