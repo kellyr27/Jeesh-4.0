@@ -19,7 +19,8 @@ const Army = forwardRef(({
     onSelectedSoldierChange,
     unselectSoldier,
     move,
-    soldierPoses
+    soldierPoses,
+    buttonPressedSelectedSoldierId
 }, ref) => {
 
     /**
@@ -51,6 +52,21 @@ const Army = forwardRef(({
     useEffect(() => {
         setSelectedSoldierObject(selectedSoldier)
     }, [selectedSoldier, setSelectedSoldierObject])
+
+    /**
+     * This useEffect hook updates the selected soldier based on the buttonPressedSelectedSoldierId.
+     * It runs whenever buttonPressedSelectedSoldierId or soldierRefs change.
+     * If buttonPressedSelectedSoldierId is not null, it sets the selected soldier to the soldier with the corresponding ID in soldierRefs.
+     * If buttonPressedSelectedSoldierId is null, it sets the selected soldier to null.
+     */
+    useEffect(() => {
+        if (buttonPressedSelectedSoldierId !== null) {
+            const selectedSoldier = soldierRefs[buttonPressedSelectedSoldierId].current
+            setSelectedSoldier(selectedSoldier)
+        } else {
+            setSelectedSoldier(null)
+        }
+    }, [buttonPressedSelectedSoldierId, soldierRefs])
 
     /**
      * When move updates from null -> move, update the soldierPoses and Soldier colors

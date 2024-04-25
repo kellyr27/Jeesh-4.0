@@ -11,12 +11,31 @@ function App() {
   
 	const panelSize = usePanelSizeControls()
 
+	// When the left or right key is pressed
+	const [keyboardCycle, setKeyboardCycle] = React.useState(null)
+    const handleKeyPress = (e) => {
+        if (e.key === 'ArrowLeft') {
+            setKeyboardCycle('left')
+        }
+        else if (e.key === 'ArrowRight') {
+            setKeyboardCycle('right')
+        }
+    }
+
+	// When the keyboard cycle is completed
+	const handleKeyboardCompletion = () => {
+		setKeyboardCycle(null)
+	}
+
 	return (
 		<CombinedProvider>
 			<FPSStats />
-			<div className="app">
+			<div className="app" tabIndex={0} onKeyDown={handleKeyPress}>
 				<div className="game-scene">
-					<GameScene />
+					<GameScene
+						keyboardCycle={keyboardCycle}
+						onKeyboardCompletion={handleKeyboardCompletion}
+					/>
 				</div>
 				<div className="panel-scene" style={{ 
 					width: `${panelSize}px`, 

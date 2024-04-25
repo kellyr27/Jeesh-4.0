@@ -13,7 +13,7 @@ import NightSky from '../../components/GameScene/NightSky/NightSky';
 
 const INITIAL_SOLDIERS = generateInitialSoldier()
 
-const GameScene = () => {
+const GameScene = ({keyboardCycle, onKeyboardCompletion}) => {
 
     const [starPositions] = useState(generateStarPositions(INITIAL_SOLDIERS.map(soldier => soldier.gamePosition)))
     const [currentHoveredPosition, setCurrentHoveredPosition] = useState(null)
@@ -127,36 +127,77 @@ const GameScene = () => {
         })
     })
 
+    const updateSelectedSoldier = (soldierId) => {
+        if (soldierId !== null) {
+            setUnselectSoldier(false)
+
+            const soldierPositions = soldierPoses.map(soldierPose => soldierPose.gamePosition)
+            const currentSoldierPosition = soldierPositions[soldierId]
+            const allowedRelativeMovePositions = getPossibleMovePositions(
+                currentSoldierPosition, 
+                starPositions, 
+                soldierPositions
+            )
+            const cardinalDirectionMap = getCardinalDirectionMap(soldierPoses[soldierId].direction)
+            
+            // Set Context Variables
+            setAllowedRelativeMovePositions(allowedRelativeMovePositions)
+            setInitialCardinalDirectionMap(cardinalDirectionMap)
+            setSelectedSoldierId(soldierId)
+            setSelectedSoldierPose(soldierPoses[soldierId])
+        } else {
+            setUnselectSoldier(true)
+
+            // Set Context Variables
+            setAllowedRelativeMovePositions(null)
+            // setInitialCardinalDirectionMap(null)
+            setSelectedSoldierId(null)
+            setSelectedSoldierPose(null)
+        }
+    }
+
     const onContextMenuHandler = (e) => {
-        setUnselectSoldier(true)
-
-        // Set Context Variables
-        setAllowedRelativeMovePositions(null)
-        // setInitialCardinalDirectionMap(null)
-        setSelectedSoldierId(null)
-        setSelectedSoldierPose(null)
-
+        updateSelectedSoldier(null)
         e.stopPropagation()
     }
 
     const handleSelectedSoldierChange = (soldierId) => {
-        setUnselectSoldier(false)
-
-        const soldierPositions = soldierPoses.map(soldierPose => soldierPose.gamePosition)
-        const currentSoldierPosition = soldierPositions[soldierId]
-        const allowedRelativeMovePositions = getPossibleMovePositions(
-            currentSoldierPosition, 
-            starPositions, 
-            soldierPositions
-        )
-        const cardinalDirectionMap = getCardinalDirectionMap(soldierPoses[soldierId].direction)
-        
-        // Set Context Variables
-        setAllowedRelativeMovePositions(allowedRelativeMovePositions)
-        setInitialCardinalDirectionMap(cardinalDirectionMap)
-        setSelectedSoldierId(soldierId)
-        setSelectedSoldierPose(soldierPoses[soldierId])
+        updateSelectedSoldier(soldierId)
     }
+    
+    /**
+     * This useEffect hook is responsible for cycling through soldiers when the left or right arrow key is pressed.
+     * It runs whenever the keyboardCycle state changes.
+     * If the left arrow key is pressed (keyboardCycle === 'left'), it selects the previous soldier or deselects the current soldier if it's the first one.
+     * If the right arrow key is pressed (keyboardCycle === 'right'), it selects the next soldier or deselects the current soldier if it's the last one.
+     * After updating the selected soldier, it calls the onKeyboardCompletion function to handle any additional logic after the keyboard event.
+     */
+    useEffect(() => {
+        const numSoldiers = soldierPoses.length
+
+        if (keyboardCycle === 'left') {
+            if (selectedSoldierId === null) {
+                updateSelectedSoldier(numSoldiers - 1)
+            } else if (selectedSoldierId === 0) {
+                updateSelectedSoldier(null)
+            } else {
+                updateSelectedSoldier(selectedSoldierId - 1)
+            }
+
+        } else if (keyboardCycle === 'right') {
+            if (selectedSoldierId === null) {
+                updateSelectedSoldier(0)
+            } else if (selectedSoldierId === numSoldiers - 1) {
+                updateSelectedSoldier(null)
+            } else {
+                updateSelectedSoldier(selectedSoldierId + 1)
+            }
+        }
+
+        onKeyboardCompletion()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [keyboardCycle])
 
     const handleMoveCompletion = () => {
         setMoveState(null)
@@ -185,6 +226,7 @@ const GameScene = () => {
                 unselectSoldier={unselectSoldier}
                 move={moveState}
                 soldierPoses={soldierPoses}
+                buttonPressedSelectedSoldierId={selectedSoldierId}
             />
             <Suspense fallback={null}>
                 <StarField starPositions={starPositions} />
