@@ -146,7 +146,7 @@ const useArenaEdgeControls = () => {
         'Arena Edges': folder({
             'Linewidth': folder({
                 'Attack Zone': { value: 15, min: 0, max: 20 },
-                'Border': { value: 1, min: 0, max: 20 },
+                'Border': { value: 10, min: 0, max: 20 },
                 'Hovered': { value: 6, min: 0, max: 20 },
             })
         })

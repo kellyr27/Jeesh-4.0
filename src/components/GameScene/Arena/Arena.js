@@ -39,9 +39,9 @@ const Arena = ({
      * Set the arena Edges whenever the attack zone edges changes
      */
     useEffect(() => {
-        const allArenaEdges = getArenaEdges(attackZoneEdges)
+        const allArenaEdges = getArenaEdges(attackZoneEdges, arenaEdgesIsDisplay.attackZone)
         setArenaEdges(allArenaEdges)
-    }, [attackZoneEdges])
+    }, [attackZoneEdges, arenaEdgesIsDisplay.attackZone])
 
     /**
      * When the hovered position changes, update the edges that are being hovered over
@@ -155,10 +155,10 @@ const Arena = ({
                     <ArenaEdge
                         key={index}
                         points={points}
-                        color='white'
-                        linewidth={10}
-                        opacity={0.3}
-                        isDisplay={true}
+                        color={arenaEdgesColors.border}
+                        linewidth={arenaEdgesLinewidth.border}
+                        opacity={arenaEdgesOpacity.border}
+                        isDisplay={arenaEdgesIsDisplay.border}
                     />
                 )
             })}

@@ -359,8 +359,13 @@ const isSameEdge = (edge1, edge2) => {
     }
 }
 
-const getArenaEdges = (attackZoneEdges) => {
+const getArenaEdges = (attackZoneEdges, isAttackZoneDisplay) => {
     const allArenaEdges = generateArenaEdges()
+
+    if (!isAttackZoneDisplay) {
+        return allArenaEdges
+    }
+
     const edgeNodesOuterBorder = getEdgeNodesOuterBorder(attackZoneEdges)
 
     const arenaEdgesNoConflict = allArenaEdges.filter((arenaEdge) => {
